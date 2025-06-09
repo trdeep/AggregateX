@@ -1,0 +1,193 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'org.springframework.boot' version '3.5.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'cn.treedeep'
+version = '1.0.0'
+description = 'AggregateX - DDD & Event Sourcing Infrastructure Framework'
+
+// 配置为基础架构包，不生成可执行jar
+jar {
+    enabled = true
+    archiveClassifier = ''
+}
+
+// 禁用Spring Boot的可执行jar构建
+if (project.hasProperty('bootJar')) {
+    bootJar {
+        enabled = false
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://maven.aliyun.com/repository/public'
+    }
+}
+
+dependencies {
+    // Spring框架核心依赖 - 作为基础架构必需
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+    api 'org.springframework.boot:spring-boot-starter-aop'
+    api 'org.springframework:spring-tx'
+    api 'org.springframework:spring-context'
+
+    // 缓存支持
+    api 'org.springframework.boot:spring-boot-starter-cache'
+    api 'com.github.ben-manes.caffeine:caffeine:3.2.0'
+
+    // DDD规范注解 - 核心架构组件
+    api 'org.jmolecules.integrations:jmolecules-starter-ddd:0.26.0'
+    api 'org.jmolecules.integrations:jmolecules-jpa:0.26.0'
+
+    // 监控指标 - 基础架构监控
+    api 'io.micrometer:micrometer-core'
+
+    // JSON序列化
+    api 'com.fasterxml.jackson.core:jackson-databind'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    // 工具包
+    api 'com.google.guava:guava:33.4.8-jre'
+    api 'org.apache.commons:commons-lang3:3.17.0'
+
+    // Spring Retry - 架构级重试机制
+    api 'org.springframework.retry:spring-retry:2.0.0'
+    api 'org.aspectj:aspectjweaver:1.9.19'
+
+    // Validation - 领域验证
+    api 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+    api 'org.glassfish:jakarta.el:4.0.2'
+    api 'com.tngtech.archunit:archunit:1.4.1'
+
+    // 注解处理
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // 可选依赖 - 允许使用方选择性引入
+    compileOnly 'org.freemarker:freemarker:2.3.34'
+    compileOnly 'org.postgresql:postgresql:42.7.6'
+    compileOnly 'org.springframework.boot:spring-boot-starter-data-redis'
+    compileOnly 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.springframework.boot:spring-boot-starter-actuator'
+    compileOnly 'io.micrometer:micrometer-registry-prometheus'
+
+    // 测试依赖
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
+    testImplementation 'com.h2database:h2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+
+configurations {
+    configureEach {
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
+}
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// 生成源码jar
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+// 配置Javadoc
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+    options.encoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+    options.author = true
+    options.version = true
+    options.use = true
+    options.windowTitle = "${project.name} ${project.version} API"
+    options.docTitle = "${project.name} ${project.version} API"
+}
+
+// Maven发布配置
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            groupId = project.group
+            artifactId = 'aggregatex-ddd-framework'
+            version = project.version
+
+            pom {
+                name = 'AggregateX DDD Framework'
+                description = 'A comprehensive DDD and Event Sourcing infrastructure framework for Java applications'
+                url = 'https://github.com/trdeep/AggregateX'
+
+                licenses {
+                    license {
+                        name = 'MPL-2.0 License'
+                        url = 'https://www.mozilla.org/en-US/MPL/2.0/'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'treedeep'
+                        name = 'TreeDeep Team'
+                        email = 'shushen@treedeep.cn'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/trdeep/AggregateX.git'
+                    developerConnection = 'scm:git:ssh://github.com/trdeep/AggregateX.git'
+                    url = 'https://github.com/trdeep/AggregateX'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = project.version.endsWith('-SNAPSHOT') ?
+                'https://s01.oss.sonatype.org/content/repositories/snapshots/' :
+                'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+            credentials {
+                username = project.findProperty('mavenCentralUsername') ?: ''
+                password = project.findProperty('mavenCentralPassword') ?: ''
+            }
+        }
+    }
+}
+
+// 签名配置（发布到Maven Central需要）
+signing {
+    // 如果有签名密钥配置则启用签名
+    required { gradle.taskGraph.hasTask("publish") }
+    sign publishing.publications.maven
+}

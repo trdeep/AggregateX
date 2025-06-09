@@ -1,0 +1,140 @@
+spring:
+  application:
+    name: AggregateX
+
+  profiles:
+    active: dev
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 3000
+      pool-name: DatebookHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+      validation-timeout: 3000
+      login-timeout: 5
+      read-only: false
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    redis:
+      timeout: 60000
+      database: 0
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+
+  cache:
+    type: caffeine
+    cache-names:
+      - events
+      - snapshots
+      - archives
+      - aggregates
+    caffeine:
+      spec: maximumSize=10000,expireAfterWrite=3600s
+
+app:
+  event-store:
+    type: memory          # 事件存储类型：memory/jpa
+    table-name: events    # 事件表名称（JPA模式）
+    batch-size: 1000      # 批量操作大小
+    snapshot:
+      enabled: true       # 是否启用快照
+      frequency: 100      # 快照频率（事件数）
+
+  event-bus:
+    type: simple          # 事件总线类型：simple/rabbitmq
+    async: true           # 是否启用异步处理
+    pool-size: 5          # 异步处理线程池大小
+    retry:
+      max-attempts: 3     # 最大重试次数
+      initial-delay: 1000 # 初始重试延迟（毫秒）
+
+  cqrs:
+    async:
+      core-pool-size: 5
+      max-pool-size: 10
+      queue-capacity: 25
+      thread-name-prefix: async-command-
+    retry:
+      max-attempts: 3
+      initial-delay: 1000
+      multiplier: 2.0
+      max-delay: 10000
+    validation:
+      fail-fast: true
+      validation-enabled: true
+
+  architecture:
+    validation:
+      enabled: true
+
+  audit:
+    enabled: false
+
+  event-archive:
+    enabled: false
+
+# 日志配置
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    cn.treedeep.king: debug
+    org.hibernate.orm.connections.pooling: warn
+    org.springframework: warn
+
+# 监控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      access: read_only
+    prometheus:
+      access: read_only
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      env: ${spring.profiles.active}
+
+
+# Mybatis配置按需添加
+mybatis-plus:
+  configuration:
+    # 驼峰命名
+    map-underscore-to-camel-case: true
+    # 缓存开启
+    cache-enabled: true
+    # 延迟加载
+    lazy-loading-enabled: true
+    # 多结果集时是否允许使用列标签代替列名
+    use-column-label: true
+    # 允许JDBC生成主键
+    use-generated-keys: true
+    # 指定MyBatis默认执行器
+    default-executor-type: REUSE
+    # 事务超时时间
+    default-statement-timeout: 60
+    # 设置但JDBC类型为空时,某些驱动程序要指定值
+    jdbc-type-for-null: NULL

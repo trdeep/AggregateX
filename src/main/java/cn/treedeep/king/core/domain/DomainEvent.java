@@ -1,0 +1,46 @@
+package cn.treedeep.king.core.domain;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.Comment;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * 领域事件基类
+ * <p>
+ * 所有的领域事件都需要继承此类
+ */
+@Entity
+@Table(name = "domain_events")
+@Comment("领域事件表")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Data
+@org.jmolecules.event.annotation.DomainEvent
+public abstract class DomainEvent {
+
+    @Id
+    @Comment("事件ID")
+    @Column(name = "event_id")
+    private final String eventId;
+
+    @Comment("事件发生时间")
+    @Column(name = "occurred_on")
+    private final LocalDateTime occurredOn;
+
+    @Comment("聚合根ID")
+    @Column(name = "aggregate_id")
+    private String aggregateId;
+
+    @Comment("聚合根版本号")
+    @Column(name = "aggregate_version")
+    private Long aggregateVersion;
+
+    protected DomainEvent() {
+        this.eventId = UUID.randomUUID().toString();
+        this.occurredOn = LocalDateTime.now();
+    }
+
+}
+

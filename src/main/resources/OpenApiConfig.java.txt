@@ -1,0 +1,46 @@
+package cn.treedeep.king.config;
+
+import cn.treedeep.king.shared.properties.KingProperties;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
+
+@Configuration("king_doc_OpenApiConfig")
+public class OpenApiConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("KingAdmin API")
+                        .contact(new Contact().name("Rubin").url("https//treedeep.cn/").email("shushen@treedee.cn"))
+                        .version("1.0.0")
+                        .description("API documentation for KingAdmin application")
+                        .termsOfService("https://www.king-admin.com/api")
+                );
+    }
+
+
+    @EventListener
+    public void printDocumentUrl(final ApplicationStartedEvent event) {
+        Boolean knife4jEnable = event.getApplicationContext()
+                .getEnvironment().getProperty("knife4j.enable", Boolean.class);
+
+        if (Boolean.TRUE.equals(knife4jEnable)) {
+            KingProperties kingProperties = event.getApplicationContext().getBean(KingProperties.class);
+            String url = kingProperties.getServerURL();
+            String serverURL = url.lastIndexOf("/") == url.length() - 1 ? url.substring(0, url.length() - 1) : url;
+
+            Logger logger = LoggerFactory.getLogger(OpenApiConfig.class);
+            logger.info("Knife4j UI at {}/doc.html", serverURL);
+            logger.info("Swagger UI at {}/swagger-ui.html", serverURL);
+        }
+    }
+
+}

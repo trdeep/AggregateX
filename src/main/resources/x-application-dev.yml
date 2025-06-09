@@ -1,0 +1,95 @@
+server:
+  port: 9000
+  servlet:
+    context-path: /
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/ddd
+    username: root
+    password: 123456
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 123456
+
+  mail:
+    host: smtp.qq.com
+    port: 465
+    protocol: smtp
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+          auth: true
+          ssl:
+            enable: true
+
+app:
+  event-archive:
+    enabled: true
+  audit:
+    enabled: true
+
+
+king:
+  work-dir: .king
+  tls: false
+  host: localhost
+  server-url:
+  oss:
+    aliyun:
+      access-key-id:
+      access-key-secret:
+      bucket: sense-sports
+      endpoint: oss-cn-shanghai.aliyuncs.com
+      chunkSize: 8192
+
+  sms:
+    default-code: 996900
+    aliyun:
+      access-key-id:
+      access-key-secret:
+      endpoint: dysmsapi.aliyuncs.com
+      sign-name: 树深技术
+      template-code:
+        - SMS_478295043
+        - SMS_478195066
+
+knife4j:
+  enable: true
+  setting:
+    enable-footer-custom: true
+    footer-custom-content: KingAdmin API Documentation | Copyright ©️ 2025 Rubin
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: king-rest
+      paths-to-match:
+        - /api/users/**
+      packages-to-scan:
+        - cn.treedeep.king.interfaces.rest.user
+    - group: king-example
+      paths-to-match:
+        - /api/example/users/**
+      packages-to-scan:
+        - cn.treedeep.king.interfaces.rest.user
