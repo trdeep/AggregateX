@@ -21,13 +21,13 @@ import java.time.LocalDateTime;
 */
 @Entity
 @Table(name = "${moduleNameLower}s")
-@Comment("${moduleNameCamel}表")
+@Comment("${moduleComment}表")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ${moduleNameCamel} extends AggregateRoot<${moduleNameCamel}Id> {
 
     @EmbeddedId
-    @Comment("${moduleNameCamel} ID")
+    @Comment("ID")
     private ${moduleNameCamel}Id id;
 
     @Column(name = "name", length = 100, nullable = false)
