@@ -79,8 +79,7 @@ public class DDDModuleGenerator {
                 String response = null;
                 try {
                     response = scanner.nextLine().trim().toLowerCase();
-                } catch (Exception e) {
-                    continueGenerating = false;
+                } catch (Exception ignored) {
                 }
                 if (!"y".equals(response) && !"yes".equals(response)) {
                     continueGenerating = false;
