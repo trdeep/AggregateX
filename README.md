@@ -6,8 +6,9 @@ AggregateX 是一个基于领域驱动设计（DDD）原则构建的 Java 框架
 > 个人维护，有缘人可以借鉴参考学习，互相学习 🤝
 
 [![Latest Release](https://img.shields.io/github/v/release/trdeep/AggregateX)](https://github.com/trdeep/AggregateX/releases)
+[![Status](https://img.shields.io/badge/status-开发中-orange.svg)](https://github.com/trdeep/AggregateX)
 [![JDK Version](https://img.shields.io/badge/JDK-21+-blue.svg)](https://openjdk.java.net/projects/jdk/21/)
-[![License](https://img.shields.io/github/license/trdeep/AggregateX)](https://github.com/trdeep/AggregateX/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/license-MPL--2.0-green.svg)](https://www.mozilla.org/en-US/MPL/2.0/)
 
 ## 🚀 核心特性
 
