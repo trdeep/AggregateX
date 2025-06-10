@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
 * Copyright © ${copyright} 版权所有
 * <p>
-* ${moduleNameCamel} ID 值对象
+* ${moduleNameCamel}唯一标识符
 * </p>
 *
 * @author ${author}

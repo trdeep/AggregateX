@@ -17,9 +17,11 @@ package cn.treedeep.king.core.domain;
  * <p>
  * 示例用法：
  * <pre>
+ * {@code
  * public Order getOrder(OrderId orderId) {
  *     return repository.findById(orderId)
  *         .orElseThrow(() -> new AggregateNotFoundException(orderId.toString()));
+ * }
  * }
  * </pre>
  */

@@ -24,9 +24,11 @@ import java.util.List;
  * 4. 事件必须按照正确的顺序保存和重放
  * <p>
  * 示例用法：
+ * <pre>
  * {@code
  * Order order = aggregateLoader.load("order-123", Order.class);
  * }
+ * </pre>
  */
 @Component
 @RequiredArgsConstructor

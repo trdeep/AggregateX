@@ -25,6 +25,7 @@ import java.util.UUID;
  * <p>
  * 示例：
  * <pre>
+ * {@code
  * public class OrderId extends BaseIdentifier {
  *     public OrderId() {
  *         super(); // 使用自动生成的UUID
@@ -33,6 +34,7 @@ import java.util.UUID;
  *     public OrderId(String id) {
  *         super(id); // 使用指定的标识符
  *     }
+ * }
  * }
  * </pre>
  */

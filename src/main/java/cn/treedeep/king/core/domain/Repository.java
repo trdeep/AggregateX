@@ -14,11 +14,15 @@ import org.springframework.data.repository.NoRepositoryBean;
  * 3. 查询方法的名称应该反映领域概念<br>
  * 4. 复杂查询建议使用专门的查询对象或规范模式
  * <p>
- * 示例：<pre>
+ * 示例：
+ * <pre>
+ *     {@code
  * public interface OrderRepository extends Repository&lt;Order, OrderId&lt; {
  *      List&lt;Order&lt; findByCustomerId(CustomerId customerId);
  *      Optional&lt;Order&lt; findByOrderNumber(String orderNumber);
- * }</pre>
+ * }
+ * }
+ * </pre>
  *
  * @param <T>  聚合根类型
  * @param <ID> 聚合根标识符类型

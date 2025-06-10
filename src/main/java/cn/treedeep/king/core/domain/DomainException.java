@@ -22,12 +22,14 @@ import lombok.Getter;
  * <p>
  * 示例：
  * <pre>
+ *     {@code
  * public class InsufficientBalanceException extends DomainException {
  *     public InsufficientBalanceException(String accountId, Money balance, Money required) {
  *         super("INSUFFICIENT_BALANCE",
  *               String.format("账户 %s 余额不足。当前余额: %s, 需要: %s",
  *                           accountId, balance, required));
  *     }
+ * }
  * }
  * </pre>
  */
