@@ -12,5 +12,5 @@ hi~ here \\_//
                 __/ |
                |___/
 ${AnsiColor.GREEN}
-:: King Admin ::                                  ${AnsiColor.YELLOW}(v1.0.0)${AnsiColor.DEFAULT}${AnsiColor.MAGENTA}
+:: King Admin ::                                  ${AnsiColor.YELLOW}(v1.0.0) 🎄🦌${AnsiColor.DEFAULT}${AnsiColor.MAGENTA}
 :: Copyright  ::                                  ${AnsiColor.BLUE}https://github.com/trdeep/AggregateX${AnsiColor.DEFAULT}
