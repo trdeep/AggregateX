@@ -745,6 +745,8 @@ java -cp build/libs/AggregateX-1.0.0.jar cn.treedeep.king.tools.DDDModuleGenerat
 - [DDD 概念参考](https://domain-driven-design.org/zh/ddd-concept-reference.html)
 - [领域驱动设计DDD在B端营销系统的实践](https://tech.meituan.com/2024/05/27/ddd-in-business.html)
 - [DDD领域驱动设计基本理论知识总结](https://www.cnblogs.com/netfocus/archive/2011/10/10/2204949.html)
+- [DDD从理论到实践](https://blog.csdn.net/qq_41889508/article/details/124907312)
+- [领域驱动设计](https://tonydeng.github.io/2022/11/06/domain-driven-design/)
 - [维基百科 - 领域驱动设计](https://zh.wikipedia.org/wiki/%E9%A0%98%E5%9F%9F%E9%A9%85%E5%8B%95%E8%A8%AD%E8%A8%88)
 
 ## 🚀 监控与运维

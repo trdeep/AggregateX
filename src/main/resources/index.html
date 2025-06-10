@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AggregateX - DDD框架</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .status-dot {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+            <div class="text-center max-w-3xl mx-auto">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">AggregateX</h1>
+                <p class="text-xl md:text-2xl mb-8">基于领域驱动设计（DDD）的现代化 Java 框架</p>
+
+                <!-- Version Badges -->
+                <div class="flex flex-wrap justify-center gap-3 mb-8">
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm backdrop-blur">JDK 21+</span>
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm backdrop-blur">Spring Boot 3.5</span>
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm backdrop-blur">Version 1.0.0</span>
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm backdrop-blur">MPL-2.0 License</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#features" class="bg-white text-primary-700 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium shadow-md transition">
+                        了解特性
+                    </a>
+                    <a href="https://github.com/trdeep/AggregateX" target="_blank" class="bg-primary-700 text-white hover:bg-primary-800 px-6 py-3 rounded-lg font-medium shadow-md transition">
+                        <i class="fab fa-github mr-2"></i>GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Introduction Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">为什么选择 AggregateX ?</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                AggregateX 整合了 CQRS 模式、事件溯源、事件总线等 DDD 核心概念，为开发复杂业务系统提供完整的架构支持，帮助开发团队更好地实现领域驱动设计。
+            </p>
+        </div>
+
+        <!-- Features Grid -->
+        <div id="features" class="grid md:grid-cols-3 gap-8 mb-16">
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                <div class="text-primary-600 mb-4">
+                    <i class="fas fa-layer-group text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">完整的DDD分层架构</h3>
+                <p class="text-gray-600 mb-4">提供标准的领域驱动设计分层架构，确保代码结构清晰、职责明确。</p>
+                <ul class="text-sm text-gray-500 space-y-1">
+                    <li>• 领域层：聚合根、实体、值对象、领域事件</li>
+                    <li>• 应用层：命令处理、查询处理、应用服务</li>
+                    <li>• 基础设施层：持久化、消息、外部服务集成</li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                <div class="text-primary-600 mb-4">
+                    <i class="fas fa-exchange-alt text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">CQRS模式实现</h3>
+                <p class="text-gray-600 mb-4">读写分离的命令查询职责分离模式，提升系统性能和扩展性。</p>
+                <ul class="text-sm text-gray-500 space-y-1">
+                    <li>• 命令处理：状态变更、数据验证、事务管理</li>
+                    <li>• 查询处理：优化读取、灵活查询、数据组装</li>
+                    <li>• 并发控制：确保数据一致性</li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                <div class="text-primary-600 mb-4">
+                    <i class="fas fa-magic text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">智能代码生成器</h3>
+                <p class="text-gray-600 mb-4">内置强大的DDD模块代码生成器，快速搭建标准化的领域模块。</p>
+                <ul class="text-sm text-gray-500 space-y-1">
+                    <li>• 一键生成完整DDD模块结构</li>
+                    <li>• 基于FreeMarker的可定制模板</li>
+                    <li>• 交互式命令行界面</li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                <div class="text-primary-600 mb-4">
+                    <i class="fas fa-broadcast-tower text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">事件驱动架构</h3>
+                <p class="text-gray-600 mb-4">完善的事件总线和事件溯源机制，支持微服务间的异步通信。</p>
+                <ul class="text-sm text-gray-500 space-y-1">
+                    <li>• 领域事件发布与订阅</li>
+                    <li>• 事件溯源存储</li>
+                    <li>• 事件重放机制</li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                <div class="text-primary-600 mb-4">
+                    <i class="fas fa-shield-alt text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">企业级安全</h3>
+                <p class="text-gray-600 mb-4">内置安全特性，确保应用程序的安全性和可靠性。</p>
+                <ul class="text-sm text-gray-500 space-y-1">
+                    <li>• 访问控制和权限管理</li>
+                    <li>• 数据验证和输入过滤</li>
+                    <li>• 审计日志和监控</li>
+                </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                <div class="text-primary-600 mb-4">
+                    <i class="fas fa-rocket text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">高性能架构</h3>
+                <p class="text-gray-600 mb-4">优化的架构设计，支持高并发和大规模应用场景。</p>
+                <ul class="text-sm text-gray-500 space-y-1">
+                    <li>• 异步处理和反应式编程</li>
+                    <li>• 缓存策略和性能优化</li>
+                    <li>• 水平扩展支持</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quick Start Section -->
+        <div id="getting-started" class="bg-white rounded-lg p-8 mb-16 shadow-lg">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">🚀 快速开始</h2>
+                <p class="text-lg text-gray-600">三个步骤快速上手 AggregateX DDD 框架</p>
+            </div>
+            
+            <!-- Dependencies -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold mb-4">📦 添加依赖</h3>
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-md font-medium mb-2 text-gray-700">Gradle</h4>
+                        <div class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto">
+                            <pre><code><span class="text-blue-400">dependencies</span> {
+    <span class="text-green-400">implementation</span> <span class="text-yellow-400">'cn.treedeep:aggregatex-ddd-framework:1.0.0'</span>
+}</code></pre>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-md font-medium mb-2 text-gray-700">Maven</h4>
+                        <div class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto">
+                            <pre><code><span class="text-blue-400">&lt;dependency&gt;</span>
+    <span class="text-blue-400">&lt;groupId&gt;</span><span class="text-yellow-400">cn.treedeep</span><span class="text-blue-400">&lt;/groupId&gt;</span>
+    <span class="text-blue-400">&lt;artifactId&gt;</span><span class="text-yellow-400">aggregatex-ddd-framework</span><span class="text-blue-400">&lt;/artifactId&gt;</span>
+    <span class="text-blue-400">&lt;version&gt;</span><span class="text-yellow-400">1.0.0</span><span class="text-blue-400">&lt;/version&gt;</span>
+<span class="text-blue-400">&lt;/dependency&gt;</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enable Framework -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold mb-4">🚀 1. 启用框架</h3>
+                <p class="text-gray-600 mb-4">在主应用类上添加 <code class="bg-gray-200 px-2 py-1 rounded text-sm">@EnableAggregateX</code> 注解：</p>
+                <div class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto">
+                    <pre><code><span class="text-blue-400">@SpringBootApplication</span>
+<span class="text-blue-400">@EnableAggregateX</span>
+<span class="text-blue-400">public class</span> <span class="text-yellow-400">Application</span> {
+    <span class="text-blue-400">public static void</span> <span class="text-yellow-400">main</span>(<span class="text-blue-400">String</span>[] args) {
+        SpringApplication.run(Application.<span class="text-blue-400">class</span>, args);
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Code Generator -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold mb-4">⚡ 2. 使用代码生成器</h3>
+                <p class="text-gray-600 mb-4">快速生成标准的DDD模块结构：</p>
+                <div class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto mb-4">
+                    <pre><code><span class="text-green-400"># 运行代码生成器</span>
+java -cp build/libs/AggregateX-1.0.0.jar cn.treedeep.king.tools.DDDModuleGenerator
+
+<span class="text-green-400"># 交互式输入</span>
+📁 请输入项目路径 (默认为当前路径 '.'): 
+📦 请输入模块名称，可空格带注释 (如: user 用户, order 订单): <span class="text-yellow-400">user 用户管理</span></code></pre>
+                </div>
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+                    <p class="text-blue-800 text-sm">
+                        <strong>生成器将自动创建：</strong> 聚合根和实体ID、命令/查询处理器、REST控制器、JPA仓储实现、标准DTO和转换器
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-gray-600 mb-4">几分钟内，您就可以开始使用 AggregateX 构建您的 DDD 应用。</p>
+            <a href="https://github.com/trdeep/AggregateX" class="text-primary-600 hover:text-primary-700 font-medium inline-flex items-center">
+                查看完整文档 <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+
+        <!-- Technology Stack -->
+        <div class="bg-gradient-to-br from-primary-600 to-primary-800 text-white rounded-lg p-8 mb-16">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-4">🔧 技术栈</h2>
+                <p class="text-lg opacity-90">基于现代 Java 生态系统构建</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-primary-50 text-primary-700 rounded-lg p-4 text-center shadow-lg border border-primary-200">
+                    <div class="text-2xl mb-2">
+                        <i class="fab fa-java"></i>
+                    </div>
+                    <div class="font-semibold">Java 21+</div>
+                </div>
+                <div class="bg-primary-50 text-primary-700 rounded-lg p-4 text-center shadow-lg border border-primary-200">
+                    <div class="text-2xl mb-2">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="font-semibold">Spring Boot</div>
+                </div>
+                <div class="bg-primary-50 text-primary-700 rounded-lg p-4 text-center shadow-lg border border-primary-200">
+                    <div class="text-2xl mb-2">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="font-semibold">Spring Data</div>
+                </div>
+                <div class="bg-primary-50 text-primary-700 rounded-lg p-4 text-center shadow-lg border border-primary-200">
+                    <div class="text-2xl mb-2">
+                        <i class="fas fa-hammer"></i>
+                    </div>
+                    <div class="font-semibold">Gradle</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Examples -->
+        <div class="bg-white rounded-lg p-8 mb-16 shadow-lg">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">💻 代码示例</h2>
+                <p class="text-lg text-gray-600">看看如何使用 AggregateX 构建 DDD 应用</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Left Column: Domain Model -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-cube text-primary-600 mr-2"></i>
+                        领域聚合根
+                    </h3>
+                    <div class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto h-72">
+                        <pre><code><span class="text-blue-400">@AggregateRoot</span>
+<span class="text-blue-400">public class</span> <span class="text-yellow-400">User</span> <span class="text-blue-400">extends</span> <span class="text-yellow-400">BaseAggregateRoot</span>&lt;<span class="text-yellow-400">UserId</span>&gt; {
+    
+    <span class="text-blue-400">private</span> <span class="text-yellow-400">String</span> username;
+    <span class="text-blue-400">private</span> <span class="text-yellow-400">String</span> email;
+    <span class="text-blue-400">private</span> <span class="text-yellow-400">UserStatus</span> status;
+    
+    <span class="text-green-400">// 构造函数</span>
+    <span class="text-blue-400">public</span> <span class="text-yellow-400">User</span>(<span class="text-yellow-400">String</span> username, <span class="text-yellow-400">String</span> email) {
+        super(<span class="text-blue-400">new</span> <span class="text-yellow-400">UserId</span>());
+        this.username = username;
+        this.email = email;
+        this.status = UserStatus.INACTIVE;
+    }
+    
+    <span class="text-green-400">// 业务方法</span>
+    <span class="text-blue-400">public void</span> <span class="text-yellow-400">activate</span>() {
+        <span class="text-blue-400">if</span> (this.status == UserStatus.ACTIVE) {
+            <span class="text-blue-400">throw new</span> <span class="text-yellow-400">DomainException</span>(<span class="text-green-400">"用户已激活"</span>);
+        }
+        this.status = UserStatus.ACTIVE;
+        <span class="text-green-400">// 发布领域事件</span>
+        registerEvent(<span class="text-blue-400">new</span> <span class="text-yellow-400">UserActivatedEvent</span>(getId()));
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Right Column: Command Handler -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-cog text-primary-600 mr-2"></i>
+                        命令处理器
+                    </h3>
+                    <div class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto h-72">
+                        <pre><code><span class="text-blue-400">@Component</span>
+<span class="text-blue-400">public class</span> <span class="text-yellow-400">CreateUserCommandHandler</span> 
+    <span class="text-blue-400">implements</span> <span class="text-yellow-400">CommandHandler</span>&lt;<span class="text-yellow-400">CreateUserCommand</span>, <span class="text-yellow-400">UserId</span>&gt; {
+    
+    <span class="text-blue-400">private final</span> <span class="text-yellow-400">UserRepository</span> userRepository;
+    
+    <span class="text-blue-400">public</span> <span class="text-yellow-400">CreateUserCommandHandler</span>(<span class="text-yellow-400">UserRepository</span> repository) {
+        this.userRepository = repository;
+    }
+    
+    <span class="text-blue-400">@Override</span>
+    <span class="text-blue-400">public</span> <span class="text-yellow-400">UserId</span> <span class="text-yellow-400">handle</span>(<span class="text-yellow-400">CreateUserCommand</span> command) {
+        <span class="text-green-400">// 业务验证</span>
+        <span class="text-blue-400">if</span> (userRepository.existsByEmail(command.getEmail())) {
+            <span class="text-blue-400">throw new</span> <span class="text-yellow-400">BusinessException</span>(<span class="text-green-400">"邮箱已存在"</span>);
+        }
+        
+        <span class="text-green-400">// 创建聚合根</span>
+        <span class="text-yellow-400">User</span> user = <span class="text-blue-400">new</span> <span class="text-yellow-400">User</span>(
+            command.getUsername(),
+            command.getEmail()
+        );
+        
+        <span class="text-blue-400">return</span> userRepository.save(user).getId();
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Bottom Left: Query Handler -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-search text-primary-600 mr-2"></i>
+                        查询处理器
+                    </h3>
+                    <div class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto h-72">
+                        <pre><code><span class="text-blue-400">@Component</span>
+<span class="text-blue-400">public class</span> <span class="text-yellow-400">GetUserQueryHandler</span> 
+    <span class="text-blue-400">implements</span> <span class="text-yellow-400">QueryHandler</span>&lt;<span class="text-yellow-400">GetUserQuery</span>, <span class="text-yellow-400">UserDTO</span>&gt; {
+    
+    <span class="text-blue-400">private final</span> <span class="text-yellow-400">UserQueryRepository</span> queryRepository;
+    
+    <span class="text-blue-400">public</span> <span class="text-yellow-400">GetUserQueryHandler</span>(<span class="text-yellow-400">UserQueryRepository</span> repository) {
+        this.queryRepository = repository;
+    }
+    
+    <span class="text-blue-400">@Override</span>
+    <span class="text-blue-400">public</span> <span class="text-yellow-400">UserDTO</span> <span class="text-yellow-400">handle</span>(<span class="text-yellow-400">GetUserQuery</span> query) {
+        <span class="text-green-400">// 查询用户数据</span>
+        <span class="text-blue-400">return</span> queryRepository
+            .findById(query.getUserId())
+            .map(<span class="text-yellow-400">UserDTO</span>::from)
+            .orElseThrow(() -> <span class="text-blue-400">new</span> <span class="text-yellow-400">NotFoundException</span>(
+                <span class="text-green-400">"用户不存在: "</span> + query.getUserId()
+            ));
+    }
+    
+    <span class="text-green-400">// 批量查询支持</span>
+    <span class="text-blue-400">public</span> <span class="text-yellow-400">List</span>&lt;<span class="text-yellow-400">UserDTO</span>&gt; <span class="text-yellow-400">findActiveUsers</span>() {
+        <span class="text-blue-400">return</span> queryRepository.findByStatus(UserStatus.ACTIVE);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Bottom Right: REST Controller -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-globe text-primary-600 mr-2"></i>
+                        REST 控制器
+                    </h3>
+                    <div class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto h-72">
+                        <pre><code><span class="text-blue-400">@RestController</span>
+<span class="text-blue-400">@RequestMapping</span>(<span class="text-green-400">"/api/users"</span>)
+<span class="text-blue-400">public class</span> <span class="text-yellow-400">UserController</span> {
+    
+    <span class="text-blue-400">private final</span> <span class="text-yellow-400">CommandBus</span> commandBus;
+    <span class="text-blue-400">private final</span> <span class="text-yellow-400">QueryBus</span> queryBus;
+    
+    <span class="text-blue-400">public</span> <span class="text-yellow-400">UserController</span>(<span class="text-yellow-400">CommandBus</span> commandBus, 
+                         <span class="text-yellow-400">QueryBus</span> queryBus) {
+        this.commandBus = commandBus;
+        this.queryBus = queryBus;
+    }
+    
+    <span class="text-blue-400">@PostMapping</span>
+    <span class="text-blue-400">public</span> <span class="text-yellow-400">ResponseEntity</span>&lt;<span class="text-yellow-400">UserId</span>&gt; <span class="text-yellow-400">createUser</span>(
+            <span class="text-blue-400">@RequestBody</span> <span class="text-yellow-400">CreateUserRequest</span> request) {
+        
+        <span class="text-yellow-400">CreateUserCommand</span> command = <span class="text-blue-400">new</span> <span class="text-yellow-400">CreateUserCommand</span>(
+            request.getUsername(),
+            request.getEmail()
+        );
+        
+        <span class="text-yellow-400">UserId</span> userId = commandBus.send(command);
+        <span class="text-blue-400">return</span> ResponseEntity.ok(userId);
+    }
+    
+    <span class="text-blue-400">@GetMapping</span>(<span class="text-green-400">"/{id}"</span>)
+    <span class="text-blue-400">public</span> <span class="text-yellow-400">UserDTO</span> <span class="text-yellow-400">getUser</span>(<span class="text-blue-400">@PathVariable</span> <span class="text-yellow-400">String</span> id) {
+        <span class="text-blue-400">return</span> queryBus.send(<span class="text-blue-400">new</span> <span class="text-yellow-400">GetUserQuery</span>(id));
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <div class="bg-gradient-to-r from-primary-100 to-primary-50 border border-primary-200 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold text-primary-800 mb-2">🎯 完整的 DDD 实现</h4>
+                    <p class="text-primary-700 text-sm">
+                        以上代码展示了标准的 DDD 模式实现：<strong>聚合根</strong>封装业务逻辑，<strong>命令处理器</strong>处理状态变更，
+                        <strong>查询处理器</strong>优化数据读取，<strong>REST 控制器</strong>提供 API 接口。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Use Cases -->
+        <div id="use-cases" class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-building text-primary-600 mr-2"></i>
+                    复杂业务系统
+                </h3>
+                <p class="text-gray-600 mb-4">
+                    适用于业务逻辑复杂、需要严格建模的企业级应用系统，确保业务规则的一致性和完整性。
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-cubes text-primary-600 mr-2"></i>
+                    微服务架构
+                </h3>
+                <p class="text-gray-600 mb-4">
+                    为微服务提供标准化的DDD实现，确保服务间的一致性和可维护性，支持分布式架构。
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-tachometer-alt text-primary-600 mr-2"></i>
+                    高并发场景
+                </h3>
+                <p class="text-gray-600 mb-4">
+                    通过CQRS和事件驱动架构，支持高并发、高性能的业务处理，适应大规模应用需求。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="mb-4">
+                📚 查看项目文档和源码：
+                <a href="https://github.com/trdeep/AggregateX" target="_blank" class="text-primary-400 hover:text-primary-300 font-medium">
+                    GitHub Repository
+                </a>
+            </p>
+            <p class="text-gray-400">
+                个人维护项目 · 欢迎交流学习 🤝
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
