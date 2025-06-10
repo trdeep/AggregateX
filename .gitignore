@@ -36,7 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 /.king/
-/docs/
 /src/main/resources/application-prod.yml
 /.env
 /gradle.properties

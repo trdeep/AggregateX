@@ -5,6 +5,12 @@ spring:
   profiles:
     active: dev
 
+  mvc:
+    static-path-pattern: /**
+  web:
+    resources:
+      static-locations: classpath:/static/
+
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
