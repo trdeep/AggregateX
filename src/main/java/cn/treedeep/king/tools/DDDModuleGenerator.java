@@ -1,6 +1,7 @@
 package cn.treedeep.king.tools;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,15 +37,22 @@ public class DDDModuleGenerator {
      * 交互模式运行
      */
     private void runInteractiveMode() {
+        printBanner();
         try (Scanner scanner = new Scanner(System.in)) {
+            // todo 输入版权和作者信息
+
+            System.out.println("🎯 AggregateX DDD模块生成器");
+            System.out.println("═══════════════════════════");
+            System.out.println();
+
+            System.out.println("🧑‍💻 请输入作者信息: ");
+            String author = scanner.nextLine().trim();
+
+            System.out.println("©️ 请输入版权信息: ");
+            String copyright = scanner.nextLine().trim();
+
             boolean continueGenerating = true;
-
             while (continueGenerating) {
-                printBanner();
-
-                System.out.println("🎯 AggregateX DDD模块生成器");
-                System.out.println("═══════════════════════════");
-                System.out.println();
 
                 // 获取项目路径
                 System.out.print("📁 请输入项目路径 (默认为当前路径 '.'): ");
@@ -66,7 +74,7 @@ public class DDDModuleGenerator {
                 System.out.println("🚀 开始生成模块...");
 
                 try {
-                    generateModule(projectPath, moduleName);
+                    generateModule(projectPath, moduleName, copyright, author);
                     System.out.println();
                     System.out.println("🎉 模块生成成功!");
                     System.out.println("📍 请查看生成的文件并根据业务需求进行调整");
@@ -92,14 +100,21 @@ public class DDDModuleGenerator {
     /**
      * 生成DDD模块
      */
-    public void generateModule(String projectPath, String moduleName) throws IOException {
+    public void generateModule(String projectPath, String moduleName, String copyright, String author) throws IOException {
         String moduleComment = "";
 
+        if (StringUtils.isBlank(copyright)) {
+            copyright = "深圳市树深计算机系统有限公司";
+        }
+        if (StringUtils.isBlank(author)) {
+            author = "Rubin";
+        }
         if (moduleName.contains(" ")) {
             String[] info = moduleName.split(" ");
             moduleName = info[0];
             moduleComment = info[1];
         }
+
         validateInputs(projectPath, moduleName);
 
         Path javaSourcePath = determineJavaSourcePath(projectPath);
@@ -123,7 +138,7 @@ public class DDDModuleGenerator {
         createDirectoryStructure(modulePath);
 
         log.info("📝 生成模板文件...");
-        generateTemplateFiles(modulePath, moduleName, moduleComment);
+        generateTemplateFiles(modulePath, moduleName, moduleComment, copyright, author);
 
         log.info("✅ 模块 '{}' 生成完成", moduleName);
         log.info("📍 模块位置: {}", modulePath.toAbsolutePath());
@@ -202,7 +217,7 @@ public class DDDModuleGenerator {
     /**
      * 生成模板文件
      */
-    private void generateTemplateFiles(Path modulePath, String moduleName, String moduleComment) throws IOException {
+    private void generateTemplateFiles(Path modulePath, String moduleName, String moduleComment, String copyright, String author) throws IOException {
         String moduleNameCamel = toPascalCase(moduleName);
         String moduleNameLower = moduleName.toLowerCase();
 
@@ -210,7 +225,7 @@ public class DDDModuleGenerator {
             moduleComment = moduleNameCamel;
         }
 
-        DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(modulePath, moduleNameCamel, moduleNameLower, moduleComment);
+        DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(modulePath, moduleNameCamel, moduleNameLower, moduleComment, copyright, author);
 
         // 生成领域层文件
         templateGenerator.generateDomainFiles();

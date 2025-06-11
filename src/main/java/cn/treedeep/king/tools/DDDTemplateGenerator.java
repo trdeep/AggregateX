@@ -35,16 +35,21 @@ public class DDDTemplateGenerator {
     private final Configuration fmConfig;
     private final Map<String, Object> params = new HashMap<>();
 
+    public DDDTemplateGenerator(Path modulePath,
+                                String moduleNameCamel,
+                                String moduleNameLower,
+                                String moduleComment,
+                                String copyright,
+                                String author) throws IOException {
 
-    public DDDTemplateGenerator(Path modulePath, String moduleNameCamel, String moduleNameLower, String moduleComment) throws IOException {
         this.modulePath = modulePath;
         this.moduleNameCamel = moduleNameCamel;
 
         params.put("moduleNameCamel", moduleNameCamel);
         params.put("moduleNameLower", moduleNameLower);
         params.put("moduleComment", moduleComment);
-        params.put("copyright", "深圳市树深计算机系统有限公司");
-        params.put("author", "AggregateX");
+        params.put("copyright", copyright);
+        params.put("author", author + " power by AggregateX");
         params.put("dateTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         // Initialize FreeMarker configuration
