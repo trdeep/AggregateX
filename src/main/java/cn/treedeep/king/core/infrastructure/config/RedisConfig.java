@@ -13,7 +13,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration("king_data_RedisConfig")
 public class RedisConfig {
 
-    @Bean
+    @Bean("king_core_RedisTemplate")
     public <K, V> RedisTemplate<K, V> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<K, V> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
