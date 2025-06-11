@@ -23,18 +23,17 @@ import org.springframework.transaction.annotation.Transactional;
  * @since ${dateTime}
  */
 @Component
-@Slf4j
 @Transactional
+@Slf4j
 public class Create${moduleNameCamel}CommandHandler extends AbstractCommandHandler<Create${moduleNameCamel}Command, ${moduleNameCamel}> {
 
     private final AggregateRepository ${moduleNameLower}Repository;
     private final ${moduleNameCamel}DomainService ${moduleNameLower}DomainService;
 
-    protected Create${moduleNameCamel}CommandHandler(
-            EventBus eventBus,
-            CommandBus commandBus,
-            AggregateRepository ${moduleNameLower}Repository,
-            ${moduleNameCamel}DomainService ${moduleNameLower}DomainService) {
+    protected Create${moduleNameCamel}CommandHandler(EventBus eventBus,
+                                                     CommandBus commandBus,
+                                                     AggregateRepository ${moduleNameLower}Repository,
+                                                     ${moduleNameCamel}DomainService ${moduleNameLower}DomainService) {
         super(${moduleNameLower}Repository, eventBus, commandBus);
         this.${moduleNameLower}Repository = ${moduleNameLower}Repository;
         this.${moduleNameLower}DomainService = ${moduleNameLower}DomainService;

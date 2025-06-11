@@ -20,8 +20,8 @@ import java.util.List;
  * @since ${dateTime}
  */
 @Component
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class ${moduleNameCamel}ListQueryHandler extends AbstractQueryHandler<${moduleNameCamel}ListQuery, ${moduleNameCamel}ListQueryResult> {
 
     private final ${moduleNameCamel}ApplicationService ${moduleNameLower}ApplicationService;
