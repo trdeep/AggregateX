@@ -57,7 +57,7 @@ public class AggregatePerformanceAspect {
      * @return 方法执行结果
      * @throws Throwable 如果方法执行过程中发生异常
      */
-    @Around("execution(* cn.treedeep.king.core.domain.Repository+.*(..))")
+    @Around("execution(* cn.treedeep.king.core.domain.AggregateRepository+.*(..))")
     public Object monitorRepositoryMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getSimpleName();

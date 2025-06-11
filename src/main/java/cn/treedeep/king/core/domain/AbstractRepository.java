@@ -5,7 +5,6 @@ import org.jmolecules.ddd.types.Identifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.OptimisticLockingFailureException;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,7 +32,7 @@ import java.util.Optional;
  * @param <ID> 聚合根标识符类型
  */
 @RequiredArgsConstructor
-public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends Identifier> implements Repository<T, ID> {
+public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends Identifier> implements AggregateRepository<T, ID> {
 
     /**
      * 缓存管理器
@@ -52,7 +51,7 @@ public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends
 
     /**
      * 获取缓存名称
-     * 
+     *
      * @return 缓存名称，默认为"aggregates"
      */
     protected String getCacheName() {
@@ -61,7 +60,7 @@ public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends
 
     /**
      * 从持久化存储中加载实体
-     * 
+     *
      * @param id 聚合根标识符
      * @return 包含聚合根的Optional，如果不存在则为空
      */
@@ -69,14 +68,14 @@ public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends
 
     /**
      * 持久化实体到存储
-     * 
+     *
      * @param aggregate 要保存的聚合根
      */
     protected abstract void doSave(T aggregate);
 
     /**
      * 根据ID查找聚合根
-     * 
+     *
      * @param id 聚合根标识符
      * @return 包含聚合根的Optional，如果不存在则为空
      */
@@ -134,7 +133,7 @@ public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends
 
     /**
      * 删除聚合根（软删除）
-     * 
+     *
      * @param aggregate 要删除的聚合根
      */
     @Transactional

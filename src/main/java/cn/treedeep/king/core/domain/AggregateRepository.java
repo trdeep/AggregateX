@@ -17,9 +17,9 @@ import org.springframework.data.repository.NoRepositoryBean;
  * 示例：
  * <pre>
  *     {@code
- * public interface OrderRepository extends Repository&lt;Order, OrderId&lt; {
- *      List&lt;Order&lt; findByCustomerId(CustomerId customerId);
- *      Optional&lt;Order&lt; findByOrderNumber(String orderNumber);
+ * public interface OrderRepository extends Repository<Order, OrderId> {
+ *      List<Order> findByCustomerId(CustomerId customerId);
+ *      Optional<Order> findByOrderNumber(String orderNumber);
  * }
  * }
  * </pre>
@@ -28,11 +28,11 @@ import org.springframework.data.repository.NoRepositoryBean;
  * @param <ID> 聚合根标识符类型
  */
 @NoRepositoryBean
-public interface Repository<T extends AggregateRoot<ID>, ID extends Identifier> {
+public interface AggregateRepository<T extends AggregateRoot<ID>, ID extends Identifier> {
 
     /**
      * 保存聚合根
-     * 
+     *
      * @param entity 要保存的聚合根实体
      * @return 保存后的聚合根实体
      */

@@ -72,7 +72,7 @@ public class AggregateAuditAspect {
      * @return 删除操作的结果
      * @throws Throwable 如果操作执行过程中发生异常
      */
-    @Around("execution(* cn.treedeep.king.core.domain.Repository+.delete(..))")
+    @Around("execution(* cn.treedeep.king.core.domain.AbstractRepository+.delete(..))")
     public Object auditDelete(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         if (args.length > 0 && args[0] instanceof AggregateRoot<?> aggregate) {
