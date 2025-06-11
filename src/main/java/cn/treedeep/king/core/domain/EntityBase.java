@@ -64,9 +64,32 @@ public abstract class EntityBase<ID extends Identifier> {
 
 
     @Getter
+    @Comment("是否已删除")
     private boolean isDeleted;
 
+    /**
+     * 标记实体是否为"脏"状态（已变更但未持久化）。
+     *
+     * <p>核心用途：
+     * <ol>
+     *   <li><b>持久化优化</b> - 仅保存脏实体，避免全量更新</li>
+     *   <li><b>变更追踪</b> - 识别需要生成领域事件的实体</li>
+     *   <li><b>乐观锁协同</b> - 与{@code version}字段配合控制并发</li>
+     *   <li><b>审计支持</b> - 记录变更实体用于日志</li>
+     * </ol>
+     *
+     * <p>使用规范：
+     * <ul>
+     *   <li>修改实体属性后<em>必须</em>调用{@link #markAsDirty()}</li>
+     *   <li>持久化成功后<em>必须</em>调用{@link #clearDirtyFlag()}</li>
+     *   <li>子实体变更时需同步标记父聚合根为脏</li>
+     * </ul>
+     *
+     * @see #getVersion() 乐观锁版本号
+     * @see #isDeleted() 删除状态标记
+     */
     @Getter
+    @Comment("是否为\"脏\"状态（已变更但未持久化）")
     private boolean isDirty;
 
     /**
