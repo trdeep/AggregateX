@@ -1,9 +1,9 @@
 package cn.treedeep.king.shared.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -12,14 +12,11 @@ import java.util.Map;
 /**
  * 提供基于Jackson库的JSON工具方法。
  */
+@Slf4j
 public class JsonUtils {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    static {
-        // 启用序列化特性，使JSON输出更美观
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    }
 
     /**
      * 将对象转换为JSON字符串。
@@ -31,6 +28,7 @@ public class JsonUtils {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
+            log.error("Failed to convert object to JSON string", e);
             return "{\"error\": \"Failed to convert object to JSON string\"}";
         }
     }
@@ -47,6 +45,7 @@ public class JsonUtils {
         try {
             return objectMapper.readValue(json, clazz);
         } catch (IOException e) {
+            log.error("Failed to convert JSON string to object", e);
             return null;
         }
     }
@@ -62,6 +61,7 @@ public class JsonUtils {
             return objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {
             });
         } catch (IOException e) {
+            log.error("Failed to convert JSON string to Map", e);
             return Collections.emptyMap();
         }
     }
@@ -76,6 +76,7 @@ public class JsonUtils {
         try {
             return objectMapper.writeValueAsString(map);
         } catch (JsonProcessingException e) {
+            log.error("Failed to convert map to JSON string", e);
             return "{\"error\": \"Failed to convert map to JSON string\"}";
         }
     }
@@ -92,6 +93,7 @@ public class JsonUtils {
         try {
             return objectMapper.readValue(json, typeReference);
         } catch (IOException e) {
+            log.error("Failed to convert JSON string to object", e);
             return null;
         }
     }
