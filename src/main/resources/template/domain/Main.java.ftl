@@ -50,7 +50,7 @@ public class ${moduleNameCamel} extends AggregateRoot<${moduleNameCamel}Id> {
         }
 
         // 发布领域事件
-        this.registerEvent(new ${moduleNameCamel}CreatedEvent(this));
+        this.registerEvent(new ${moduleNameCamel}CreatedEvent(aggregate));
     }
 
 }
