@@ -3,36 +3,33 @@ package cn.treedeep.king.${moduleNameLower}.application.command;
 import cn.treedeep.king.core.application.cqrs.command.AbstractCommandHandler;
 import cn.treedeep.king.core.application.cqrs.command.CommandBus;
 import cn.treedeep.king.core.domain.EventBus;
-import cn.treedeep.king.core.domain.Repository;
-import cn.treedeep.king.${moduleNameLower}.application.command.Create${moduleNameCamel}Command;
 import cn.treedeep.king.${moduleNameLower}.domain.*;
-import cn.treedeep.king.${moduleNameLower}.domain.event.${moduleNameCamel}CreatedEvent;
 import cn.treedeep.king.${moduleNameLower}.domain.service.${moduleNameCamel}DomainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* 创建${moduleComment}命令处理器
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * 创建${moduleComment}命令处理器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Component
 @Slf4j
 @Transactional
 public class Create${moduleNameCamel}CommandHandler extends AbstractCommandHandler<Create${moduleNameCamel}Command, ${moduleNameCamel}> {
 
-    private final ${moduleNameCamel}Repository ${moduleNameLower}Repository;
+    private final AggregateRepository ${moduleNameLower}Repository;
     private final ${moduleNameCamel}DomainService ${moduleNameLower}DomainService;
 
     protected Create${moduleNameCamel}CommandHandler(
             EventBus eventBus,
             CommandBus commandBus,
-            ${moduleNameCamel}Repository ${moduleNameLower}Repository,
+            AggregateRepository ${moduleNameLower}Repository,
             ${moduleNameCamel}DomainService ${moduleNameLower}DomainService) {
         super(${moduleNameLower}Repository, eventBus, commandBus);
         this.${moduleNameLower}Repository = ${moduleNameLower}Repository;
@@ -50,9 +47,11 @@ public class Create${moduleNameCamel}CommandHandler extends AbstractCommandHandl
 
         // 创建聚合根
         ${moduleNameCamel}Id id = ${moduleNameCamel}Id.generate();
-        ${moduleNameCamel} ${moduleNameLower} = new ${moduleNameCamel}(id, command.getName(), command.getDescription());
+        ${moduleNameCamel}Item ${moduleNameLower} = ${moduleNameCamel}Item.create(command.getName() + "子项", command.getDescription());
+
+        ${moduleNameCamel} ${moduleNameLower}Aggregate = new ${moduleNameCamel}(id, "测试${moduleComment}", ${moduleNameLower});
 
         log.info("${moduleNameCamel} created successfully: {}", id);
-        return ${moduleNameLower};
+        return ${moduleNameLower}Aggregate;
     }
 }

@@ -68,9 +68,11 @@ public class DDDTemplateGenerator {
     public void generateDomainFiles() throws IOException {
         generateAggregateId();
         generateAggregateRoot();
-        generateRepository();
         generateDomainEvent();
         generateDomainService();
+        generateAggregateRepository();
+        generateDescription();
+        generateItem();
     }
 
     public void generateApplicationFiles() throws IOException {
@@ -81,12 +83,15 @@ public class DDDTemplateGenerator {
         generateQueryHandler();
         generateDto();
         generateDtoConverter();
+        generateItemDto();
+        generateApplicationService();
     }
 
     public void generateInfrastructureFiles() throws IOException {
         generateJpaRepository();
-        generateRepositoryImpl();
         generateModuleConfig();
+        generateAggregateJpaRepository();
+        generateAggregateRepositoryImpl();
     }
 
     public void generatePresentationFiles() throws IOException {
@@ -132,6 +137,11 @@ public class DDDTemplateGenerator {
                          * - 消息队列处理
                          * - 外部API客户端
                          * - 系统间数据传输对象""");
+
+        // 生成子包的 package-info 文件
+        generateDomainServicePackageInfo();
+        generateApplicationServicePackageInfo();
+        generateInfrastructureServicePackageInfo();
     }
 
     private String processTemplate(String templateName, Map<String, Object> params) throws IOException {
@@ -161,10 +171,6 @@ public class DDDTemplateGenerator {
         writeFile(modulePath.resolve("domain/" + moduleNameCamel + ".java"), content);
     }
 
-    private void generateRepository() throws IOException {
-        String content = processTemplate("domain/Repository.java.ftl", params);
-        writeFile(modulePath.resolve("domain/" + moduleNameCamel + "Repository.java"), content);
-    }
 
     private void generateDomainEvent() throws IOException {
         String content = processTemplate("domain/event/CreatedEvent.java.ftl", params);
@@ -216,11 +222,6 @@ public class DDDTemplateGenerator {
         writeFile(modulePath.resolve("infrastructure/repository/" + moduleNameCamel + "JpaRepository.java"), content);
     }
 
-    private void generateRepositoryImpl() throws IOException {
-        String content = processTemplate("infrastructure/repository/RepositoryImpl.java.ftl", params);
-        writeFile(modulePath.resolve("infrastructure/repository/" + moduleNameCamel + "RepositoryImpl.java"), content);
-    }
-
     private void generateModuleConfig() throws IOException {
         String content = processTemplate("infrastructure/ModuleConfig.java.ftl", params);
         writeFile(modulePath.resolve("infrastructure/ModuleConfig.java"), content);
@@ -248,5 +249,83 @@ public class DDDTemplateGenerator {
 
         String content = processTemplate(layer + "/package-info.java.ftl", params);
         writeFile(modulePath.resolve(layer + "/package-info.java"), content);
+    }
+
+    // 新增的领域层文件生成方法
+    private void generateAggregateRepository() throws IOException {
+        String content = processTemplate("domain/AggregateRepository.java.ftl", params);
+        writeFile(modulePath.resolve("domain/AggregateRepository.java"), content);
+    }
+
+    private void generateDescription() throws IOException {
+        String content = processTemplate("domain/Description.java.ftl", params);
+        writeFile(modulePath.resolve("domain/Description.java"), content);
+    }
+
+    private void generateItem() throws IOException {
+        String content = processTemplate("domain/Item.java.ftl", params);
+        writeFile(modulePath.resolve("domain/" + moduleNameCamel + "Item.java"), content);
+    }
+
+    // 新增的应用层文件生成方法
+    private void generateItemDto() throws IOException {
+        String content = processTemplate("application/dto/ItemDto.java.ftl", params);
+        writeFile(modulePath.resolve("application/dto/" + moduleNameCamel + "ItemDto.java"), content);
+    }
+
+    private void generateApplicationService() throws IOException {
+        String content = processTemplate("application/service/ApplicationService.java.ftl", params);
+        writeFile(modulePath.resolve("application/service/" + moduleNameCamel + "ApplicationService.java"), content);
+    }
+
+    // 新增的基础设施层文件生成方法
+    private void generateAggregateJpaRepository() throws IOException {
+        String content = processTemplate("infrastructure/repository/AggregateJpaRepository.java.ftl", params);
+        writeFile(modulePath.resolve("infrastructure/repository/AggregateJpaRepository.java"), content);
+    }
+
+    private void generateAggregateRepositoryImpl() throws IOException {
+        String content = processTemplate("infrastructure/repository/AggregateRepositoryImpl.java.ftl", params);
+        writeFile(modulePath.resolve("infrastructure/repository/AggregateRepositoryImpl.java"), content);
+    }
+
+    // 新增的 package-info 文件生成方法
+    private void generateDomainServicePackageInfo() throws IOException {
+        params.put("layerName", "领域服务层");
+        params.put("description", """
+                包含领域逻辑和业务规则的服务：
+                 * - 复杂业务逻辑处理
+                 * - 跨聚合根操作
+                 * - 领域规则验证""");
+        params.put("layer", "domain/service");
+
+        String content = processTemplate("domain/service/package-info.java.ftl", params);
+        writeFile(modulePath.resolve("domain/service/package-info.java"), content);
+    }
+
+    private void generateApplicationServicePackageInfo() throws IOException {
+        params.put("layerName", "应用服务层");
+        params.put("description", """
+                应用层服务实现：
+                 * - 业务用例协调
+                 * - 事务管理
+                 * - 领域层和基础设施层的桥梁""");
+        params.put("layer", "application/service");
+
+        String content = processTemplate("application/service/package-info.java.ftl", params);
+        writeFile(modulePath.resolve("application/service/package-info.java"), content);
+    }
+
+    private void generateInfrastructureServicePackageInfo() throws IOException {
+        params.put("layerName", "基础设施服务层");
+        params.put("description", """
+                基础设施层服务实现：
+                 * - 外部系统集成
+                 * - 第三方服务调用
+                 * - 消息发布和订阅""");
+        params.put("layer", "infrastructure/service");
+
+        String content = processTemplate("infrastructure/service/package-info.java.ftl", params);
+        writeFile(modulePath.resolve("infrastructure/service/package-info.java"), content);
     }
 }

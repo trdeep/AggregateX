@@ -1,6 +1,7 @@
 package cn.treedeep.king.${moduleNameLower}.domain.event;
 
 import cn.treedeep.king.core.domain.DomainEvent;
+import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel}Item;
 import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel}Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +22,7 @@ import org.hibernate.annotations.Comment;
 */
 @Entity
 @Table(name = "${moduleNameLower}_created_events")
-@Comment("创建商品事件表")
+@Comment("【创建${moduleComment}】事件表")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ${moduleNameCamel}CreatedEvent extends DomainEvent {
@@ -34,9 +35,9 @@ public class ${moduleNameCamel}CreatedEvent extends DomainEvent {
     @Comment("名称")
     private  String name;
 
-    public ${moduleNameCamel}CreatedEvent(${moduleNameCamel}Id ${moduleNameLower}Id, String name) {
+    public ${moduleNameCamel}CreatedEvent(${moduleNameCamel}Id ${moduleNameLower}Id, String ${moduleNameLower}Name) {
         super();
         this.${moduleNameLower}Id = ${moduleNameLower}Id;
-        this.name = name;
+        this.name = ${moduleNameLower}Name;
     }
 }

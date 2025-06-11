@@ -1,7 +1,7 @@
 package cn.treedeep.king.${moduleNameLower}.domain.service;
 
 import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel};
-import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel}Repository;
+import cn.treedeep.king.${moduleNameLower}.domain.AggregateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ${moduleNameCamel}DomainService {
 
-    private final ${moduleNameCamel}Repository ${moduleNameLower}Repository;
+    private final AggregateRepository ${moduleNameLower}Repository;
 
     /**
      * 验证${moduleNameCamel}名称唯一性
