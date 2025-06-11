@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * 【创建${moduleComment}】命令
+ * 创建${moduleComment}「命令」
  * <p>
  * Power by AggregateX
  *

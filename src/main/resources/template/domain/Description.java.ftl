@@ -12,7 +12,7 @@ import org.jmolecules.ddd.annotation.ValueObject;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * 【Description】值对象
+ * Description「值对象」
  * <p>
  * Power by AggregateX
  *

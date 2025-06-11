@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "${moduleNameLower}_items")
-@Comment("【${moduleComment}子项】实体表")
+@Comment("${moduleComment}子项表【实体】")
 @NoArgsConstructor
 @Getter
 public class ${moduleNameCamel}Item extends EntityBase<UIdentifier> {

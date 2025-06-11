@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "${moduleNameLower}s")
-@Comment("【${moduleComment}】聚合表")
+@Comment("${moduleComment}表【聚合】")
 @NoArgsConstructor
 @Getter
 public class ${moduleNameCamel} extends AggregateRoot<${moduleNameCamel}Id> {

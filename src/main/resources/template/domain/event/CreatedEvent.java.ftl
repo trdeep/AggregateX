@@ -22,7 +22,7 @@ import org.hibernate.annotations.Comment;
  */
 @Entity
 @Table(name = "${moduleNameLower}_created_events")
-@Comment("【创建${moduleComment}】事件表")
+@Comment("创建${moduleComment}事件表【事件】")
 @NoArgsConstructor
 @Getter
 public class ${moduleNameCamel}CreatedEvent extends DomainEvent {
@@ -36,6 +36,6 @@ public class ${moduleNameCamel}CreatedEvent extends DomainEvent {
         this.name = aggregate.getName();
         setAggregateId(aggregate.getId().getValue());
         setAggregateVersion(aggregate.getVersion());
-        setData(JsonUtils.toJson(this));
+        setData(JsonUtils.toJson(this)); // 实际数据自定义
     }
 }

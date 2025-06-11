@@ -9,7 +9,7 @@ import lombok.Setter;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * 【创建${moduleComment}】请求
+ * 创建${moduleComment}「请求」
  * <p>
  * Power by AggregateX
  *
