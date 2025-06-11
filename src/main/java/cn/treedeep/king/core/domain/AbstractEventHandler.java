@@ -1,9 +1,9 @@
 package cn.treedeep.king.core.domain;
 
+import cn.treedeep.king.core.domain.validation.BusinessConstraintValidator;
 import cn.treedeep.king.core.domain.validation.CustomValidationRegistry;
 import cn.treedeep.king.core.domain.validation.DomainEventValidator;
 import cn.treedeep.king.core.domain.validation.EventIntegrityChecker;
-import cn.treedeep.king.core.domain.validation.BusinessConstraintValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;

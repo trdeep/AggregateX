@@ -1,7 +1,5 @@
 package cn.treedeep.king.core.domain.validation;
 
-import cn.treedeep.king.core.domain.DomainEvent;
-
 /**
  * 上下文感知验证器接口
  * <p>
