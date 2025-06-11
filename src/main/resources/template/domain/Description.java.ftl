@@ -2,7 +2,7 @@ package cn.treedeep.king.${moduleNameLower}.domain;
 
 
 import cn.treedeep.king.core.domain.ValueObjectBase;
-import cn.treedeep.king.shared.utils.JsonUtils;
+import cn.treedeep.king.shared.utils.JsonUtil;
 import jakarta.persistence.AttributeConverter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,12 +41,12 @@ public class Description extends ValueObjectBase {
     public static class DescriptionJsonConverter implements AttributeConverter<Description, String> {
         @Override
         public String convertToDatabaseColumn(Description desc) {
-            return JsonUtils.toJson(desc);
+            return JsonUtil.toJson(desc);
         }
 
         @Override
         public Description convertToEntityAttribute(String json) {
-            return JsonUtils.fromJson(json, Description.class);
+            return JsonUtil.fromJson(json, Description.class);
         }
     }
 }

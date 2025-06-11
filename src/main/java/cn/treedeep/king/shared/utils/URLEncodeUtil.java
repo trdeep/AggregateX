@@ -4,7 +4,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-public class URLEncodeUtils {
+public class URLEncodeUtil {
 
     public static String encodeUtf8(String value) {
         if (value == null) {

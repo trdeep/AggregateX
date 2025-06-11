@@ -4,7 +4,7 @@ import cn.treedeep.king.core.domain.DomainEvent;
 import cn.treedeep.king.core.domain.ValidationException;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -19,7 +19,7 @@ public class DefaultEventIntegrityChecker implements EventIntegrityChecker {
             return;
         }
 
-        LocalDateTime previousTimestamp = null;
+        OffsetDateTime previousTimestamp = null;
         Long previousVersion = null;
         String aggregateId = events.getFirst().getAggregateId();
 

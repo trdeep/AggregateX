@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.Comment;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 聚合根快照实体
@@ -76,6 +76,6 @@ public class AggregateSnapshot {
      */
     @Column(name = "created_at")
     @Comment("创建时间")
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
 }

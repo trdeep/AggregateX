@@ -3,7 +3,7 @@ package cn.treedeep.king.user.application.query;
 import cn.treedeep.king.user.domain.UserStatus;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 用户查询结果DTO
@@ -15,15 +15,15 @@ public class UserQueryResult {
     private String username;
     private String email;
     private UserStatus status;
-    private LocalDateTime lastLoginAt;
+    private OffsetDateTime lastLoginAt;
     private String lastLoginIp;
     private Integer loginCount;
-    private LocalDateTime createdAt;
-    private LocalDateTime lastModifiedAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime lastModifiedAt;
 
     public UserQueryResult(String userId, String username, String email, UserStatus status,
-                          LocalDateTime lastLoginAt, String lastLoginIp, Integer loginCount,
-                          LocalDateTime createdAt, LocalDateTime lastModifiedAt) {
+                          OffsetDateTime lastLoginAt, String lastLoginIp, Integer loginCount,
+                          OffsetDateTime createdAt, OffsetDateTime lastModifiedAt) {
         this.userId = userId;
         this.username = username;
         this.email = email;

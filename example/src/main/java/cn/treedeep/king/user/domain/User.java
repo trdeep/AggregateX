@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 用户聚合根
@@ -47,7 +47,7 @@ public class User extends AggregateRoot<UserId> {
 
     @Column(name = "last_login_at")
     @Comment("最后登录时间")
-    private LocalDateTime lastLoginAt;
+    private OffsetDateTime lastLoginAt;
 
     @Column(name = "last_login_ip", length = 45)
     @Comment("最后登录IP")
@@ -87,7 +87,7 @@ public class User extends AggregateRoot<UserId> {
             throw new IllegalStateException("用户已被禁用，无法登录");
         }
 
-        this.lastLoginAt = LocalDateTime.now();
+        this.lastLoginAt = OffsetDateTime.now();
         this.lastLoginIp = loginIp;
         this.loginCount++;
         updateVersion();

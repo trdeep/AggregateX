@@ -6,7 +6,7 @@ import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 事件归档实体
@@ -61,12 +61,12 @@ public class ArchivedEvent {
     @Column(name = "archived_at")
     @CreatedDate
     @Comment("归档时间")
-    private LocalDateTime archivedAt;
+    private OffsetDateTime archivedAt;
 
     /**
      * 原始事件发生时间
      */
     @Column(name = "original_timestamp")
     @Comment("原始事件发生时间")
-    private LocalDateTime originalTimestamp;
+    private OffsetDateTime originalTimestamp;
 }

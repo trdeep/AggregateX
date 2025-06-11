@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * Copyright © ${copyright} 版权所有
@@ -31,7 +31,7 @@ public class ${moduleNameCamel}Item extends EntityBase<UIdentifier> {
         this.id = UIdentifier.generate();
         this.name = name;
         this.description = new Description(id.getValue(), description);
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = OffsetDateTime.now();
     }
 
     @EmbeddedId
@@ -56,12 +56,12 @@ public class ${moduleNameCamel}Item extends EntityBase<UIdentifier> {
 
     @Column(name = "created_at", nullable = false)
     @Comment("创建时间")
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @Setter
     @Column(name = "updated_at")
     @Comment("更新时间")
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 
 
     public void updateName(String name) {
@@ -69,7 +69,7 @@ public class ${moduleNameCamel}Item extends EntityBase<UIdentifier> {
             throw new IllegalArgumentException("Name cannot be null or empty");
         }
         this.name = name;
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = OffsetDateTime.now();
     }
 
 

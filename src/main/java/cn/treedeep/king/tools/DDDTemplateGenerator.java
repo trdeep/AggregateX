@@ -12,7 +12,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +50,7 @@ public class DDDTemplateGenerator {
         params.put("moduleComment", moduleComment);
         params.put("copyright", copyright);
         params.put("author", author);
-        params.put("dateTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        params.put("dateTime", OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         // Initialize FreeMarker configuration
         this.fmConfig = new Configuration(Configuration.VERSION_2_3_31);

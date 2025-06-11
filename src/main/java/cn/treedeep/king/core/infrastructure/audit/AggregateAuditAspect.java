@@ -8,7 +8,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 聚合根操作审计切面
@@ -52,7 +52,7 @@ public class AggregateAuditAspect {
             auditLog.setAggregateType(aggregateType);
             auditLog.setAggregateId(aggregateId);
             auditLog.setOperation(operation);
-            auditLog.setOperationTime(LocalDateTime.now());
+            auditLog.setOperationTime(OffsetDateTime.now());
             auditLog.setTransactionId(getCurrentTransactionId());
 
             // 保存审计日志
@@ -81,7 +81,7 @@ public class AggregateAuditAspect {
             auditLog.setAggregateType(aggregate.getClass().getSimpleName());
             auditLog.setAggregateId(aggregate.getId().toString());
             auditLog.setOperation("DELETE");
-            auditLog.setOperationTime(LocalDateTime.now());
+            auditLog.setOperationTime(OffsetDateTime.now());
             auditLog.setTransactionId(getCurrentTransactionId());
 
             // 执行实际的删除操作

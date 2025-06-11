@@ -15,7 +15,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -159,7 +159,7 @@ public class JpaEventStore implements EventStore {
                 snapshot.setAggregateType(lastEvent.getClass().getName());
                 snapshot.setVersion(lastEvent.getAggregateVersion());
                 snapshot.setSnapshotData(objectMapper.writeValueAsString(lastEvent));
-                snapshot.setCreatedAt(LocalDateTime.now());
+                snapshot.setCreatedAt(OffsetDateTime.now());
 
                 snapshotRepository.save(snapshot);
                 metrics.getSnapshotsSavedCounter().increment();

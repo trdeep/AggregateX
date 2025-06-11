@@ -6,12 +6,12 @@ import org.springframework.util.FileCopyUtils;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class ResourceUtils {
+public class ResourceUtil {
 
     public static String readResource(String path) {
         try {
             // 优先尝试从开发环境路径读取
-            InputStream stream = ResourceUtils.class.getResourceAsStream(path);
+            InputStream stream = ResourceUtil.class.getResourceAsStream(path);
             if (stream != null && stream.available() > 0) {
                 return new String(FileCopyUtils.copyToByteArray(stream), StandardCharsets.UTF_8);
             }

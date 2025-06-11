@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -19,8 +19,8 @@ public interface EventArchiveRepository extends JpaRepository<ArchivedEvent, Lon
      */
     @Query("SELECT e FROM ArchivedEvent e WHERE e.archivedAt BETWEEN :startDate AND :endDate")
     List<ArchivedEvent> findByArchiveDateBetween(
-        @Param("startDate") LocalDateTime startDate,
-        @Param("endDate") LocalDateTime endDate);
+        @Param("startDate") OffsetDateTime startDate,
+        @Param("endDate") OffsetDateTime endDate);
 
     /**
      * 查找指定聚合根的归档事件

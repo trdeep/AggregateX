@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Comment;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 审计日志实体
@@ -31,7 +31,7 @@ public class AuditLog {
     private String operation;
 
     @Comment("操作时间")
-    private LocalDateTime operationTime;
+    private OffsetDateTime operationTime;
 
     @Comment("事务ID")
     private String transactionId;

@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -95,7 +95,7 @@ public class EventArchiveService {
     @Transactional
     public void scheduledArchiving() {
         log.info("开始执行定期归档任务");
-        LocalDateTime cutoffDate = LocalDateTime.now().minusDays(EVENT_RETENTION_DAYS);
+        OffsetDateTime cutoffDate = OffsetDateTime.now().minusDays(EVENT_RETENTION_DAYS);
 
         try {
             // 分页查询老事件并归档

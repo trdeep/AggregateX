@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Comment;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
@@ -30,7 +30,7 @@ public abstract class DomainEvent {
 
     @Comment("事件发生时间")
     @Column(name = "occurred_on")
-    private final LocalDateTime occurredOn;
+    private final OffsetDateTime occurredOn;
 
     @Comment("聚合根ID")
     @Column(name = "aggregate_id")
@@ -43,7 +43,7 @@ public abstract class DomainEvent {
 
     protected DomainEvent() {
         this.eventId = UUID.randomUUID().toString();
-        this.occurredOn = LocalDateTime.now();
+        this.occurredOn = OffsetDateTime.now();
     }
 
 }

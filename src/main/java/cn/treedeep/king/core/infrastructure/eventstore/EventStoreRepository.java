@@ -4,7 +4,7 @@ import cn.treedeep.king.core.domain.DomainEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -29,5 +29,5 @@ public interface EventStoreRepository extends JpaRepository<DomainEvent, String>
      * @param cutoffDate 查找截止时间
      * @return 该时间点之前的所有事件列表
      */
-    List<DomainEvent> findByOccurredOnBefore(LocalDateTime cutoffDate);
+    List<DomainEvent> findByOccurredOnBefore(OffsetDateTime cutoffDate);
 }

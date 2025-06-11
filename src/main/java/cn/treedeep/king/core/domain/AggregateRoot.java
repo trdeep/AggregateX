@@ -10,7 +10,7 @@ import org.hibernate.annotations.Comment;
 import org.jmolecules.ddd.types.Identifier;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +61,7 @@ public abstract class AggregateRoot<ID extends Identifier> extends AbstractAggre
      */
     @Column(name = "last_modified_at")
     @Comment("最后更新时间")
-    private LocalDateTime lastModifiedAt;
+    private OffsetDateTime lastModifiedAt;
 
     /**
      * 创建时间
@@ -70,7 +70,7 @@ public abstract class AggregateRoot<ID extends Identifier> extends AbstractAggre
      */
     @Column(name = "created_at", updatable = false)
     @Comment("创建时间")
-    private final LocalDateTime createdAt;
+    private final OffsetDateTime createdAt;
 
     /**
      * 领域事件列表
@@ -96,7 +96,7 @@ public abstract class AggregateRoot<ID extends Identifier> extends AbstractAggre
      * 初始化创建时间和最后修改时间为当前时间
      */
     protected AggregateRoot() {
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = OffsetDateTime.now();
         this.lastModifiedAt = this.createdAt;
     }
 
@@ -123,7 +123,7 @@ public abstract class AggregateRoot<ID extends Identifier> extends AbstractAggre
      * 更新最后修改时间
      */
     protected void updateLastModifiedAt() {
-        this.lastModifiedAt = LocalDateTime.now();
+        this.lastModifiedAt = OffsetDateTime.now();
     }
 
     /**

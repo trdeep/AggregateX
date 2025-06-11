@@ -322,7 +322,7 @@ public class User extends AggregateRoot<UserId> {
     
     private String hashedPassword;
     private UserStatus status;
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     public static User register(String username, String email, String password) {
         User user = new User();
@@ -331,7 +331,7 @@ public class User extends AggregateRoot<UserId> {
         user.email = email;
         user.hashedPassword = hashPassword(password);
         user.status = UserStatus.ACTIVE;
-        user.createdAt = LocalDateTime.now();
+        user.createdAt = OffsetDateTime.now();
         
         // 发布领域事件
         user.registerEvent(new UserRegisteredEvent(user.id, username, email));
@@ -342,7 +342,7 @@ public class User extends AggregateRoot<UserId> {
         if (status != UserStatus.ACTIVE) {
             throw new ValidationException("用户状态异常，无法登录");
         }
-        this.lastLoginAt = LocalDateTime.now();
+        this.lastLoginAt = OffsetDateTime.now();
         registerEvent(new UserLoggedInEvent(this.id, username));
     }
 }

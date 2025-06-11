@@ -22,7 +22,7 @@ package cn.treedeep.king.shared.utils;
  * <li>查询结果的对象组装</li>
  * </ul>
  */
-public class BeanUtils extends org.springframework.beans.BeanUtils {
+public class BeanUtil extends org.springframework.beans.BeanUtils {
 
     public static void copyPropertiesIgnoreNull(Object source, Object target) {
         if (source == null || target == null) {
