@@ -1,5 +1,6 @@
 package cn.treedeep.king.${moduleNameLower}.application.dto;
 
+import cn.treedeep.king.shared.utils.DateTimeUtil;
 import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel};
 import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel}Item;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class ${moduleNameCamel}DtoConverter {
                 .id(${moduleNameLower}.getId().getValue())
                 .name(${moduleNameLower}.getName())
                 .items(${moduleNameLower}.getItems().stream().map(this::toDto).toList())
-                .createdAt(${moduleNameLower}.getCreatedAt())
+                .createdAt(DateTimeUtil.format(${moduleNameLower}.getCreatedAt()))
                 .updatedAt(${moduleNameLower}.getLastModifiedAt())
                 .build();
     }
@@ -33,8 +34,8 @@ public class ${moduleNameCamel}DtoConverter {
                 .name(item.getName())
                 .${moduleNameLower}Id(item.get${moduleNameCamel}().getId().getValue())
                 .description(item.getDescription().getValue())
-                .createdAt(item.getCreatedAt())
-                .updatedAt(item.getUpdatedAt())
+                .createdAt(DateTimeUtil.toLocalDateTime(item.getCreatedAt()))
+                .updatedAt(DateTimeUtil.toTimestamp(item.getUpdatedAt()))
                 .build();
     }
 }

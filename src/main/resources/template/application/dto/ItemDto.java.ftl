@@ -3,7 +3,7 @@ package cn.treedeep.king.${moduleNameLower}.application.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 /**
  * Copyright © ${copyright} 版权所有
@@ -23,6 +23,6 @@ public class ${moduleNameCamel}ItemDto {
     private String ${moduleNameLower}Id;
     private String name;
     private String description;
-    private OffsetDateTime createdAt;
-    private OffsetDateTime updatedAt;
+    private LocalDateTime createdAt;
+    private Long updatedAt;
 }

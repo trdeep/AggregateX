@@ -235,16 +235,16 @@ public class DateTimeUtil {
      * 将时间戳（毫秒）转换为 {@link OffsetDateTime}，使用指定的时区。
      *
      * @param timestamp 时间戳（毫秒）
-     * @param zoneId 指定的时区，为 null 时使用 UTC
+     * @param zoneId 指定的时区，为 null 时使用服务器默认时区
      * @return 转换后的 {@link OffsetDateTime} 对象，如果输入为 0 则返回 null
      */
-    public static OffsetDateTime fromTimestamp(long timestamp, ZoneId zoneId) {
+    public static OffsetDateTime toOffsetDateTime(long timestamp, ZoneId zoneId) {
         if (timestamp == 0L) {
             log.error("Attempted to convert a zero timestamp to OffsetDateTime.", new NullPointerException());
             return null;
         }
         if (zoneId == null) {
-            zoneId = ZoneOffset.UTC;
+            zoneId = SERVER_ZONE_ID;
         }
         return Instant.ofEpochMilli(timestamp).atZone(zoneId).toOffsetDateTime();
     }
@@ -255,7 +255,7 @@ public class DateTimeUtil {
      * @param timestamp 时间戳（毫秒）
      * @return 转换后的 {@link LocalDateTime} 对象，如果输入为 0 则返回 null
      */
-    public static LocalDateTime fromTimestamp2LocalDateTime(long timestamp) {
+    public static LocalDateTime toLocalDateTime(long timestamp) {
         if (timestamp == 0L) {
             log.error("Attempted to convert a zero timestamp to LocalDateTime.", new NullPointerException());
             return null;

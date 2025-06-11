@@ -23,6 +23,6 @@ public class ${moduleNameCamel}Dto {
     private final String id;
     private final String name;
     private final List<${moduleNameCamel}ItemDto> items;
-    private final OffsetDateTime createdAt;
+    private final String createdAt;
     private final OffsetDateTime updatedAt;
 }
