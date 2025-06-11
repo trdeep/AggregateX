@@ -23,6 +23,6 @@ public class ${moduleNameCamel}ItemDto {
     private String ${moduleNameLower}Id;
     private String name;
     private String description;
-    private LocalDateTime createdAt;
-    private Long updatedAt;
+    private Long createdAt;
+    private LocalDateTime updatedAt;
 }

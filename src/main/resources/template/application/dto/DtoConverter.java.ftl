@@ -34,8 +34,8 @@ public class ${moduleNameCamel}DtoConverter {
                 .name(item.getName())
                 .${moduleNameLower}Id(item.get${moduleNameCamel}().getId().getValue())
                 .description(item.getDescription().getValue())
-                .createdAt(DateTimeUtil.toLocalDateTime(item.getCreatedAt()))
-                .updatedAt(DateTimeUtil.toTimestamp(item.getUpdatedAt()))
+                .createdAt(DateTimeUtil.toTimestamp(item.getCreatedAt()))
+                .updatedAt(DateTimeUtil.toLocalDateTime(item.getUpdatedAt()))
                 .build();
     }
 }
