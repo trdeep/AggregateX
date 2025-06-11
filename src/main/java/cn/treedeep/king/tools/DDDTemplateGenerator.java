@@ -49,7 +49,7 @@ public class DDDTemplateGenerator {
         params.put("moduleNameLower", moduleNameLower);
         params.put("moduleComment", moduleComment);
         params.put("copyright", copyright);
-        params.put("author", author + " power by AggregateX");
+        params.put("author", author);
         params.put("dateTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         // Initialize FreeMarker configuration

@@ -39,7 +39,6 @@ public class DDDModuleGenerator {
     private void runInteractiveMode() {
         printBanner();
         try (Scanner scanner = new Scanner(System.in)) {
-            // todo 输入版权和作者信息
 
             System.out.println("🎯 AggregateX DDD模块生成器");
             System.out.println("═══════════════════════════");
@@ -107,7 +106,7 @@ public class DDDModuleGenerator {
             copyright = "深圳市树深计算机系统有限公司";
         }
         if (StringUtils.isBlank(author)) {
-            author = "Rubin";
+            author = "AggregateX";
         }
         if (moduleName.contains(" ")) {
             String[] info = moduleName.split(" ");

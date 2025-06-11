@@ -21,8 +21,8 @@ public class SimpleGeneratorTest {
 
         try {
             // 生成product模块
-            generator.generateModule(path.toString(), "order 订单", null, null);
-            System.out.println("✅ Product模块生成成功!");
+            generator.generateModule(path.toString(), "order", null, null);
+            System.out.println("✅ 模块生成成功!");
 
             // 验证文件是否存在
             Path productPath = path.resolve("order");

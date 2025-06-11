@@ -25,7 +25,7 @@ import java.util.Optional;
  * @since ${dateTime}
  */
 @Primary
-@Repository("${moduleNameLower}_aggregateRepository")
+@Repository("${moduleNameLower}AggregateRepository")
 public class AggregateRepositoryImpl extends AbstractRepository<${moduleNameCamel}, ${moduleNameCamel}Id> implements AggregateRepository {
 
     @Resource(name = "${moduleNameLower}AggregateJpaRepository")
