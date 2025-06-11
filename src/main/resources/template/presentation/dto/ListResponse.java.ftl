@@ -8,14 +8,15 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* ${moduleComment}列表响应
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * ${moduleComment}列表响应
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Getter
 @RequiredArgsConstructor
 @Schema(description = "${moduleComment}列表响应")

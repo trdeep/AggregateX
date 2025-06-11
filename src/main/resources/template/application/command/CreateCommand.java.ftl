@@ -5,14 +5,15 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* 创建${moduleComment}命令
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * 创建${moduleComment}命令
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Getter
 @RequiredArgsConstructor
 public class Create${moduleNameCamel}Command extends Command {

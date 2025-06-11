@@ -15,19 +15,20 @@ import java.util.List;
 import java.util.Optional;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* ${moduleNameCamel} 仓储实现
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * ${moduleNameCamel} 聚合仓储实现
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Primary
-@Repository
+@Repository("${moduleNameLower}_aggregateRepository")
 public class AggregateRepositoryImpl extends AbstractRepository<${moduleNameCamel}, ${moduleNameCamel}Id> implements AggregateRepository {
 
-    @Resource(name = "${moduleNameLower}AggregateRepository")
+    @Resource(name = "${moduleNameLower}AggregateJpaRepository")
     private AggregateRepository aggregateRepository;
 
     public AggregateRepositoryImpl(

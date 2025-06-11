@@ -12,8 +12,9 @@ import org.jmolecules.ddd.annotation.ValueObject;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * 将值对象序列化为 JSON 存储在单个列中（需数据库支持 JSON 类型，如 PostgreSQL、MySQL 5.7+）。
- * </p>
+ * Description 值对象（多属性的一般序列化为 JSON 存储在单个列中）
+ * <p>
+ * Power by AggregateX
  *
  * @author ${author}
  * @since ${dateTime}

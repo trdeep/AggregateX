@@ -7,15 +7,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* ${moduleNameCamel} JPA 仓储
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
-@Repository("${moduleNameLower}AggregateRepository")
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * ${moduleNameCamel} 聚合 JPA仓储
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
+@Repository("${moduleNameLower}AggregateJpaRepository")
 public interface AggregateJpaRepository extends JpaRepository<${moduleNameCamel}, ${moduleNameCamel}Id>, AggregateRepository {
 
 }

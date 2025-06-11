@@ -6,14 +6,15 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* ${moduleComment}列表查询
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * ${moduleComment}列表查询
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = true)

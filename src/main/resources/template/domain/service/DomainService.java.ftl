@@ -6,14 +6,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* ${moduleNameCamel} 领域服务
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * ${moduleNameCamel} 领域服务
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Service
 @RequiredArgsConstructor
 public class ${moduleNameCamel}DomainService {

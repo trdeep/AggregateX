@@ -18,14 +18,15 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* ${moduleComment} REST 控制器
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * ${moduleComment} REST 控制器
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @RestController
 @RequestMapping("/api/${moduleNameLower}s")
 @RequiredArgsConstructor

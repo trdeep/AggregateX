@@ -7,7 +7,8 @@ import java.util.Optional;
  * Copyright © ${copyright} 版权所有
  * <p>
  * ${moduleNameCamel} 仓储接口
- * </p>
+ * <p>
+ * Power by AggregateX
  *
  * @author ${author}
  * @since ${dateTime}

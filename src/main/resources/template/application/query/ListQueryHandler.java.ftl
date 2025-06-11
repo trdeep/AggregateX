@@ -10,14 +10,15 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* ${moduleComment}列表查询处理器
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * ${moduleComment}列表查询处理器
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Component
 @Slf4j
 @RequiredArgsConstructor

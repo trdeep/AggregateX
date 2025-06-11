@@ -11,14 +11,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* ${moduleComment}模块配置
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * ${moduleComment}模块配置
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Configuration("ModuleConfig.${moduleNameCamel}")
 @RequiredArgsConstructor
 public class ModuleConfig {

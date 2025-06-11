@@ -10,6 +10,16 @@ import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
 
+/**
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * ${moduleNameCamel}Item 实体
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Entity
 @Table(name = "${moduleNameLower}_items")
 @Comment("【${moduleComment}子项】实体表")

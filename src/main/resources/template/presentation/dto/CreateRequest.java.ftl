@@ -7,14 +7,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* 创建${moduleComment}请求
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * 创建${moduleComment}请求
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Getter
 @Setter
 @Schema(description = "创建${moduleComment}请求")

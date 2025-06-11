@@ -7,14 +7,15 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* ${moduleComment}列表查询结果
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * ${moduleComment}列表查询结果
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Getter
 @RequiredArgsConstructor
 public class ${moduleNameCamel}ListQueryResult {

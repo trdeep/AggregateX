@@ -12,14 +12,15 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 /**
-* Copyright © ${copyright} 版权所有
-* <p>
-* ${moduleNameCamel} 创建事件
-* </p>
-*
-* @author ${author}
-* @since ${dateTime}
-*/
+ * Copyright © ${copyright} 版权所有
+ * <p>
+ * ${moduleNameCamel} 创建事件
+ * <p>
+ * Power by AggregateX
+ *
+ * @author ${author}
+ * @since ${dateTime}
+ */
 @Entity
 @Table(name = "${moduleNameLower}_created_events")
 @Comment("【创建${moduleComment}】事件表")

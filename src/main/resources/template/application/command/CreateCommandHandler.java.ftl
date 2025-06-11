@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Copyright © ${copyright} 版权所有
  * <p>
  * 创建${moduleComment}命令处理器
- * </p>
+ * <p>
+ * Power by AggregateX
  *
  * @author ${author}
  * @since ${dateTime}
