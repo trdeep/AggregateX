@@ -48,6 +48,11 @@ public final class ArchitectureValidator {
     private static final Logger log = LoggerFactory.getLogger(ArchitectureValidator.class);
     private final ArchitectureValidationProperties properties;
 
+    /**
+     * 创建架构校验器实例
+     *
+     * @param properties 架构校验配置属性
+     */
     public ArchitectureValidator(ArchitectureValidationProperties properties) {
         this.properties = properties;
     }

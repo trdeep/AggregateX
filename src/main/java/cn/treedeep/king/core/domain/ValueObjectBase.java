@@ -28,6 +28,7 @@ import java.util.Arrays;
  * <p>
  * 示例：
  * <pre>
+ *     {@code
  * public class Money extends ValueObjectBase {
  *     private final BigDecimal amount;
  *     private final Currency currency;
@@ -38,6 +39,7 @@ import java.util.Arrays;
  *         }
  *         return new Money(this.amount.add(other.amount), this.currency);
  *     }
+ * }
  * }
  * </pre>
  */

@@ -23,6 +23,11 @@ import java.lang.reflect.Type;
 public abstract class AbstractQueryHandler<Q extends Query<R>, R> implements QueryHandler<Q, R> {
     private final Class<Q> queryType;
 
+    /**
+     * 默认构造函数
+     * <p>
+     * 自动解析查询类型，用于类型安全的查询处理
+     */
     @SuppressWarnings("unchecked")
     protected AbstractQueryHandler() {
         Type type = getClass().getGenericSuperclass();
@@ -59,6 +64,11 @@ public abstract class AbstractQueryHandler<Q extends Query<R>, R> implements Que
     /**
      * 验证查询参数
      */
+    /**
+     * 验证查询参数
+     * 
+     * @param query 要验证的查询对象
+     */
     protected void validateQuery(Q query) {
         if (query == null) {
             throw new IllegalArgumentException("查询对象不能为空");
@@ -67,6 +77,14 @@ public abstract class AbstractQueryHandler<Q extends Query<R>, R> implements Que
 
     /**
      * 执行具体的查询逻辑
+     */
+    /**
+     * 执行具体的查询逻辑
+     * <p>
+     * 子类必须实现此方法来处理特定的查询请求
+     * 
+     * @param query 查询对象
+     * @return 查询结果
      */
     protected abstract R doHandle(Q query);
 

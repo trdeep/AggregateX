@@ -4,9 +4,6 @@ import cn.treedeep.king.core.domain.validation.CustomValidationRegistry;
 import cn.treedeep.king.core.domain.validation.DomainEventValidator;
 import cn.treedeep.king.core.domain.validation.EventIntegrityChecker;
 import cn.treedeep.king.core.domain.validation.BusinessConstraintValidator;
-import cn.treedeep.king.core.domain.validation.CustomValidationRegistry;
-import cn.treedeep.king.core.domain.validation.DomainEventValidator;
-import cn.treedeep.king.core.domain.validation.EventIntegrityChecker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +25,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public abstract class AbstractEventHandler<T extends DomainEvent> implements EventHandler<T> {
 
+    /**
+     * 领域事件验证器
+     */
     private final DomainEventValidator<T> validator;
+
+    /**
+     * 业务约束验证器
+     */
     private final BusinessConstraintValidator businessValidator;
+
+    /**
+     * 事件完整性检查器
+     */
     private final EventIntegrityChecker integrityChecker;
+
+    /**
+     * 自定义验证注册表
+     */
     private final CustomValidationRegistry customValidationRegistry;
 
     @Override
@@ -50,6 +62,9 @@ public abstract class AbstractEventHandler<T extends DomainEvent> implements Eve
 
             // 3. 执行自定义验证规则
             customValidationRegistry.validate(event);
+// todo 事件与聚合根的关联验证
+//            businessValidator.validateStateTransition(event, null);
+//            businessValidator.validateBusinessRule(event, null, null);
 
             // 4. 处理事件
             doHandle(event);

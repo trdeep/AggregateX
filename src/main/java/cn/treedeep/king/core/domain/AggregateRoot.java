@@ -108,6 +108,10 @@ public abstract class AggregateRoot<ID extends Identifier> extends AbstractAggre
         this.updateLastModifiedAt();
     }
 
+    /**
+     * 更新版本号
+     * 如果版本号为空则不更新
+     */
     public void updateVersion() {
         if (this.version == null) {
             return;
@@ -123,7 +127,9 @@ public abstract class AggregateRoot<ID extends Identifier> extends AbstractAggre
     }
 
     /**
-     * 是否不可修改
+     * 检查聚合根是否不可修改
+     * 
+     * @return 如果聚合根已被删除则返回true，否则返回false
      */
     protected boolean immutable() {
         return this.deleted;
@@ -131,6 +137,8 @@ public abstract class AggregateRoot<ID extends Identifier> extends AbstractAggre
 
     /**
      * 获取聚合根的唯一标识符
+     * 
+     * @return 聚合根的唯一标识符
      */
     public abstract ID getId();
 
@@ -149,6 +157,11 @@ public abstract class AggregateRoot<ID extends Identifier> extends AbstractAggre
         domainEvents.add(event);
     }
 
+    /**
+     * 获取所有领域事件
+     * 
+     * @return 领域事件列表的副本
+     */
     public List<DomainEvent> getDomainEvents() {
         return new ArrayList<>(domainEvents);
     }
@@ -165,6 +178,5 @@ public abstract class AggregateRoot<ID extends Identifier> extends AbstractAggre
         super.clearDomainEvents();
         this.clearChanges();
     }
-
 }
 

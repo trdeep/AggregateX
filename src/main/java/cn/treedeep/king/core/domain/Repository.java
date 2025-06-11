@@ -30,5 +30,11 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface Repository<T extends AggregateRoot<ID>, ID extends Identifier> {
 
+    /**
+     * 保存聚合根
+     * 
+     * @param entity 要保存的聚合根实体
+     * @return 保存后的聚合根实体
+     */
     T save(T entity);
 }

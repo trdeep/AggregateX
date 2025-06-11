@@ -12,25 +12,48 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 通用仓储实现
+ * 抽象仓储实现基类
  * <p>
- * 提供:
- * 1. 二级缓存支持
- * 2. 乐观锁并发控制
- * 3. 事务管理
+ * 提供聚合根持久化的通用功能实现，包括：
+ * <ul>
+ * <li>二级缓存支持 - 提高查询性能</li>
+ * <li>乐观锁并发控制 - 防止并发冲突</li>
+ * <li>事务管理 - 确保数据一致性</li>
+ * <li>事件存储 - 支持事件溯源</li>
+ * <li>领域事件发布 - 支持事件驱动架构</li>
+ * </ul>
+ * <p>
+ * 子类需要实现具体的持久化逻辑：
+ * <ul>
+ * <li>{@link #doLoad(Identifier)} - 从存储中加载聚合根</li>
+ * <li>{@link #doSave(AggregateRoot)} - 将聚合根保存到存储</li>
+ * </ul>
  *
- * @param <T>  聚合根类型
- * @param <ID> 标识符类型
+ * @param <T> 聚合根类型
+ * @param <ID> 聚合根标识符类型
  */
 @RequiredArgsConstructor
 public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends Identifier> implements Repository<T, ID> {
 
+    /**
+     * 缓存管理器
+     */
     private final CacheManager cacheManager;
+
+    /**
+     * 事件存储
+     */
     private final EventStore eventStore;
+
+    /**
+     * 领域事件发布器
+     */
     private final DomainEventPublisher eventPublisher;
 
     /**
      * 获取缓存名称
+     * 
+     * @return 缓存名称，默认为"aggregates"
      */
     protected String getCacheName() {
         return "aggregates";
@@ -38,14 +61,25 @@ public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends
 
     /**
      * 从持久化存储中加载实体
+     * 
+     * @param id 聚合根标识符
+     * @return 包含聚合根的Optional，如果不存在则为空
      */
     protected abstract Optional<T> doLoad(ID id);
 
     /**
      * 持久化实体到存储
+     * 
+     * @param aggregate 要保存的聚合根
      */
     protected abstract void doSave(T aggregate);
 
+    /**
+     * 根据ID查找聚合根
+     * 
+     * @param id 聚合根标识符
+     * @return 包含聚合根的Optional，如果不存在则为空
+     */
     @Transactional(readOnly = true)
     public Optional<T> findById(ID id) {
         // 1. 尝试从一级缓存获取
@@ -98,6 +132,11 @@ public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends
         }
     }
 
+    /**
+     * 删除聚合根（软删除）
+     * 
+     * @param aggregate 要删除的聚合根
+     */
     @Transactional
     public void delete(T aggregate) {
         // 1. 标记为已删除

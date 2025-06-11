@@ -33,6 +33,13 @@ public class ConcurrentModificationException extends DomainException {
 
     private static final String ERROR_CODE = "CONCURRENT_MODIFICATION";
 
+    /**
+     * 构造并发修改异常
+     *
+     * @param aggregateId 聚合根ID
+     * @param expectedVersion 预期的版本号
+     * @param actualVersion 实际的版本号
+     */
     public ConcurrentModificationException(String aggregateId, long expectedVersion, long actualVersion) {
         super(ERROR_CODE,
                 String.format("Concurrent modification detected for aggregate '%s'. Expected version: %d, actual version: %d",

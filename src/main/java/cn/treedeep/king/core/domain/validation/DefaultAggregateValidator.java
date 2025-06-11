@@ -10,6 +10,16 @@ import java.util.function.Predicate;
 
 /**
  * 默认聚合根验证器实现
+ * <p>
+ * 提供聚合根的完整性验证，包括：
+ * <ul>
+ * <li>聚合根状态完整性验证</li>
+ * <li>事件与聚合根的关联验证</li>
+ * <li>版本一致性验证</li>
+ * <li>业务不变量验证</li>
+ * </ul>
+ * 
+ * @param <T> 聚合根类型
  */
 @Component
 public class DefaultAggregateValidator<T extends AggregateRoot<?>> implements AggregateValidator<T> {

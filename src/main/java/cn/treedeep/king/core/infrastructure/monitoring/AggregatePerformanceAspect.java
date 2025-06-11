@@ -13,18 +13,50 @@ import java.util.concurrent.TimeUnit;
 /**
  * 聚合根性能监控切面
  * <p>
- * 监控:<br>
- * 1. 方法执行时间<br>
- * 2. 错误率<br>
- * 3. 调用计数
+ * 基于Micrometer实现的性能监控，自动收集聚合根相关操作的性能指标。
+ * <p>
+ * 监控维度：
+ * <ul>
+ * <li>方法执行时间 - 使用Timer测量</li>
+ * <li>错误率 - 统计成功/失败比例</li>
+ * <li>调用计数 - 统计方法调用次数</li>
+ * <li>操作类型 - 区分不同的仓储操作</li>
+ * </ul>
+ * <p>
+ * 监控范围：
+ * <ul>
+ * <li>Repository接口的所有方法</li>
+ * <li>聚合根的关键业务方法</li>
+ * <li>命令处理器和事件处理器</li>
+ * </ul>
+ * <p>
+ * 指标标签：
+ * <ul>
+ * <li>class - 类名</li>
+ * <li>method - 方法名</li>
+ * <li>status - 执行状态(success/error)</li>
+ * <li>exception - 异常类型（仅失败时）</li>
+ * </ul>
  */
 @Aspect
 @Component
 @RequiredArgsConstructor
 public class AggregatePerformanceAspect {
 
+    /**
+     * Micrometer指标注册表，用于记录性能指标
+     */
     private final MeterRegistry meterRegistry;
 
+    /**
+     * 监控仓储方法执行
+     * <p>
+     * 拦截所有Repository接口的方法调用，记录执行时间和状态
+     *
+     * @param joinPoint 连接点
+     * @return 方法执行结果
+     * @throws Throwable 如果方法执行过程中发生异常
+     */
     @Around("execution(* cn.treedeep.king.core.domain.Repository+.*(..))")
     public Object monitorRepositoryMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
@@ -57,6 +89,15 @@ public class AggregatePerformanceAspect {
         }
     }
 
+    /**
+     * 监控聚合根方法执行
+     * <p>
+     * 拦截所有AggregateRoot类的方法调用，记录执行时间和状态
+     *
+     * @param joinPoint 连接点
+     * @return 方法执行结果
+     * @throws Throwable 如果方法执行过程中发生异常
+     */
     @Around("execution(* cn.treedeep.king.core.domain.AggregateRoot+.*(..))")
     public Object monitorAggregateMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();

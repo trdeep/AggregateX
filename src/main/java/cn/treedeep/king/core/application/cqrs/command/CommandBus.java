@@ -15,11 +15,38 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 命令总线
  * <p>
- * 负责注册和分发命令到对应的处理器。提供了:
- * 1. 命令处理器注册
- * 2. 同步命令分发
- * 3. 命令执行监控
- * 4. 幂等性控制
+ * 作为CQRS架构中的核心组件，负责将命令路由到相应的处理器执行。
+ * 提供了命令执行的统一入口，并集成了多种横切关注点。
+ * <p>
+ * 主要功能：
+ * <ul>
+ * <li>命令处理器注册和管理</li>
+ * <li>命令路由和分发</li>
+ * <li>同步和异步命令执行</li>
+ * <li>命令验证和前置检查</li>
+ * <li>幂等性控制</li>
+ * <li>性能监控和指标收集</li>
+ * <li>异常处理和日志记录</li>
+ * </ul>
+ * <p>
+ * 设计特点：
+ * <ul>
+ * <li>类型安全 - 编译时验证命令和处理器的匹配</li>
+ * <li>线程安全 - 支持多线程环境下的并发访问</li>
+ * <li>可扩展性 - 支持插件式的功能扩展</li>
+ * <li>监控友好 - 内置指标收集和链路追踪</li>
+ * </ul>
+ * <p>
+ * 使用示例：
+ * <pre>
+ * {@code
+ * // 执行命令
+ * commandBus.execute(new CreateOrderCommand(customerId, items));
+ * 
+ * // 异步执行命令
+ * CompletableFuture<Void> future = commandBus.executeAsync(command);
+ * }
+ * </pre>
  */
 @Slf4j
 @Service
@@ -30,6 +57,13 @@ public class CommandBus {
     private final CommandMetrics commandMetrics;
     private final CommandIdempotencyControl idempotencyControl;
 
+    /**
+     * 构造命令总线
+     * 
+     * @param commandValidator 命令验证器
+     * @param commandMetrics 命令指标收集器
+     * @param idempotencyControl 幂等性控制器
+     */
     public CommandBus(CommandValidator commandValidator,
                       CommandMetrics commandMetrics,
                       CommandIdempotencyControl idempotencyControl) {
@@ -100,6 +134,7 @@ public class CommandBus {
      * 异步处理命令
      *
      * @param command 要处理的命令
+     * @param <T> 命令类型
      * @return 异步结果
      */
     @Async("commandExecutor")

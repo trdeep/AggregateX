@@ -4,7 +4,34 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * CQRS配置属性
+ * CQRS配置属性类
+ * <p>
+ * 定义CQRS架构相关的所有配置项，支持通过application.yml或application.properties进行配置。
+ * 配置前缀为'app.cqrs'，提供类型安全的配置绑定。
+ * <p>
+ * 主要配置域：
+ * <ul>
+ * <li>异步执行配置 - 控制命令异步处理的线程池参数</li>
+ * <li>重试配置 - 定义命令执行失败时的重试策略</li>
+ * <li>验证配置 - 控制命令和查询的验证行为</li>
+ * <li>监控配置 - 配置性能指标收集和链路追踪</li>
+ * </ul>
+ * <p>
+ * 配置示例：
+ * <pre>{@code
+ * app:
+ *   cqrs:
+ *     async:
+ *       core-pool-size: 5
+ *       max-pool-size: 10
+ *       queue-capacity: 25
+ *     retry:
+ *       max-attempts: 3
+ *       backoff-delay: 1000
+ *     validation:
+ *       enabled: true
+ *       }
+ * </pre>
  */
 @Data
 @ConfigurationProperties(prefix = "app.cqrs")
@@ -25,6 +52,11 @@ public class CqrsProperties {
      */
     private ValidationProperties validation = new ValidationProperties();
 
+    /**
+     * 异步执行配置属性
+     * <p>
+     * 配置命令异步执行的线程池参数
+     */
     @Data
     public static class AsyncProperties {
         /**
@@ -48,6 +80,11 @@ public class CqrsProperties {
         private String threadNamePrefix = "async-command-";
     }
 
+    /**
+     * 重试配置属性
+     * <p>
+     * 配置命令执行失败时的重试策略参数
+     */
     @Data
     public static class RetryProperties {
         /**
@@ -71,6 +108,16 @@ public class CqrsProperties {
         private long maxDelay = 10000;
     }
 
+    /**
+     * 验证配置属性
+     * <p>
+     * 配置命令和查询的验证行为参数
+     */
+    /**
+     * 验证配置属性
+     * <p>
+     * 配置命令和查询的验证行为参数
+     */
     @Data
     public static class ValidationProperties {
         /**

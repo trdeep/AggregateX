@@ -5,7 +5,34 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * 架构校验配置
+ * 架构验证配置属性类
+ * <p>
+ * 定义DDD架构验证的相关配置项，用于确保代码结构符合领域驱动设计的架构约束。
+ * 基于ArchUnit框架实现编译期和运行期的架构合规性检查。
+ * <p>
+ * 验证规则：
+ * <ul>
+ * <li>分层架构约束 - 确保各层之间的依赖关系正确</li>
+ * <li>聚合根完整性 - 验证聚合根的设计是否合规</li>
+ * <li>仓储模式 - 检查仓储接口和实现的正确性</li>
+ * <li>领域服务 - 验证领域服务的职责边界</li>
+ * <li>事件发布 - 检查领域事件的正确使用</li>
+ * </ul>
+ * <p>
+ * 配置示例：
+ * <pre>
+ *     {@code
+ * app:
+ *   architecture:
+ *     validation:
+ *       enabled: true
+ *       fail-on-violation: true
+ *       base-package: "com.example.domain"
+ *       ignored-packages:
+ *         - "..test.."
+ *         - "..example.."
+ *         }
+ * </pre>
  */
 @Data
 @Component
@@ -55,9 +82,16 @@ public class ArchitectureValidationProperties {
 
     /**
      * 分层架构配置
+     * <p>
+     * 定义DDD分层架构中各层的包路径模式
      */
     private LayerConfig layers = new LayerConfig();
 
+    /**
+     * 分层架构配置类
+     * <p>
+     * 定义DDD分层架构中各层的包路径模式，用于架构验证
+     */
     @Data
     public static class LayerConfig {
         /**

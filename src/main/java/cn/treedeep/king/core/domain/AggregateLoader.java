@@ -34,6 +34,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AggregateLoader {
 
+    /**
+     * 事件存储，用于获取聚合根的历史事件
+     */
     private final EventStore eventStore;
 
     /**

@@ -8,6 +8,18 @@ import java.util.Map;
 
 /**
  * 默认上下文感知验证器实现
+ * <p>
+ * 提供基于领域上下文的事件验证功能，能够根据当前的业务上下文
+ * 对领域事件进行更精确的验证。
+ * <p>
+ * 主要功能：
+ * <ul>
+ * <li>上下文完整性验证</li>
+ * <li>基于上下文的事件验证</li>
+ * <li>验证结果缓存</li>
+ * </ul>
+ * 
+ * @param <T> 领域事件类型
  */
 @Component
 public class DefaultContextAwareValidator<T extends DomainEvent> implements ContextAwareValidator<T> {

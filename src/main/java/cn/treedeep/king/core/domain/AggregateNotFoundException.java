@@ -29,6 +29,11 @@ public class AggregateNotFoundException extends DomainException {
 
     private static final String ERROR_CODE = "AGGREGATE_NOT_FOUND";
 
+    /**
+     * 创建一个聚合根未找到异常实例
+     *
+     * @param aggregateId 未找到的聚合根ID
+     */
     public AggregateNotFoundException(String aggregateId) {
         super(ERROR_CODE, String.format("Aggregate with id '%s' not found", aggregateId));
     }

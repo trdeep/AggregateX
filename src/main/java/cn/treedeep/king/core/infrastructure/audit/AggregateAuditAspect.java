@@ -26,6 +26,15 @@ public class AggregateAuditAspect {
 
     private final AuditLogRepository auditLogRepository;
 
+    /**
+     * 审计保存操作
+     * <p>
+     * 拦截所有Repository的save方法，记录聚合根的创建和更新操作
+     *
+     * @param joinPoint 连接点
+     * @return 保存操作的结果
+     * @throws Throwable 如果操作执行过程中发生异常
+     */
     @Around("execution(* cn.treedeep.king.core.domain.AbstractRepository+.save(..))")
     public Object auditSave(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
@@ -54,6 +63,15 @@ public class AggregateAuditAspect {
         return joinPoint.proceed();
     }
 
+    /**
+     * 审计删除操作
+     * <p>
+     * 拦截所有Repository的delete方法，记录聚合根的删除操作
+     *
+     * @param joinPoint 连接点
+     * @return 删除操作的结果
+     * @throws Throwable 如果操作执行过程中发生异常
+     */
     @Around("execution(* cn.treedeep.king.core.domain.Repository+.delete(..))")
     public Object auditDelete(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();

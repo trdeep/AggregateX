@@ -15,6 +15,8 @@ import java.util.Map;
  * 1. 合并连续的相同类型事件<br>
  * 2. 删除被后续事件覆盖的状态变更<br>
  * 3. 保留所有重要的业务事件
+ * 
+ * @param compressionThreshold 压缩阈值，当事件数量超过此值时触发压缩
  */
 @Slf4j
 public record DefaultEventCompressor(int compressionThreshold) implements EventCompressor {

@@ -1,7 +1,9 @@
 package cn.treedeep.king.core.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
+import org.hibernate.annotations.Comment;
 import org.jmolecules.ddd.types.Identifier;
 
 import java.util.UUID;
@@ -40,19 +42,20 @@ import java.util.UUID;
  */
 @Getter
 @MappedSuperclass
-@org.hibernate.annotations.Comment("标识符基类")
 public abstract class BaseIdentifier implements Identifier {
 
     /**
      * 标识符值
      */
-    private final String id;
+    @Column(name = "id", length = 36, nullable = false)
+    @Comment("ID")
+    private final String value;
 
     /**
      * 默认构造函数，生成UUID作为标识符
      */
     protected BaseIdentifier() {
-        this.id = UUID.randomUUID().toString();
+        this.value = UUID.randomUUID().toString();
     }
 
     /**
@@ -61,7 +64,7 @@ public abstract class BaseIdentifier implements Identifier {
      * @param id 标识符值
      */
     protected BaseIdentifier(String id) {
-        this.id = id;
+        this.value = id;
     }
 
     @Override
@@ -73,16 +76,16 @@ public abstract class BaseIdentifier implements Identifier {
             return false;
         }
         BaseIdentifier that = (BaseIdentifier) obj;
-        return id.equals(that.id);
+        return value.equals(that.value);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return value.hashCode();
     }
 
     @Override
     public String toString() {
-        return String.format("%s[%s]", getClass().getSimpleName(), getId());
+        return String.format("%s[%s]", getClass().getSimpleName(), getValue());
     }
 }
