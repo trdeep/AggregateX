@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel} 聚合根
+ * ${moduleNameCamel}「聚合」
  * <p>
  * Power by AggregateX
  *

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel} DTO
+ * ${moduleNameCamel}「DTO」
  * <p>
  * Power by AggregateX
  *

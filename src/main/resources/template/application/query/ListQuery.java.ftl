@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleComment}列表查询
+ * ${moduleComment}列表「查询」
  * <p>
  * Power by AggregateX
  *

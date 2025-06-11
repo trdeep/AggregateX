@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleComment} REST 控制器
+ * ${moduleComment}「REST 控制器」
  * <p>
  * Power by AggregateX
  *

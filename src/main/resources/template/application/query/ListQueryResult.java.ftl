@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleComment}列表查询结果
+ * ${moduleComment}列表查询「结果」
  * <p>
  * Power by AggregateX
  *

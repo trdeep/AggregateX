@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel} 聚合 JPA仓储
+ * ${moduleNameCamel}「聚合仓储（JPA 实现）」
  * <p>
  * Power by AggregateX
  *

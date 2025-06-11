@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleComment} 应用服务
+ * ${moduleComment}「应用服务」
  * <p>
  * Power by AggregateX
  *

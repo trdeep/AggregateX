@@ -6,7 +6,7 @@ import java.util.Optional;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel} 仓储接口
+ * ${moduleNameCamel}「仓储接口」
  * <p>
  * Power by AggregateX
  *

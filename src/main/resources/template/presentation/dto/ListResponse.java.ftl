@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleComment}列表响应
+ * ${moduleComment}列表「响应」
  * <p>
  * Power by AggregateX
  *

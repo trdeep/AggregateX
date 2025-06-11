@@ -13,7 +13,7 @@ import org.hibernate.annotations.Comment;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel} 创建事件
+ * ${moduleComment}创建「事件」
  * <p>
  * Power by AggregateX
  *

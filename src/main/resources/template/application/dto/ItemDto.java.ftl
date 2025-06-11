@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel}Item DTO
+ * ${moduleNameCamel}Item「DTO」
  * <p>
  * Power by AggregateX
  *

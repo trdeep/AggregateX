@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel} 聚合仓储实现
+ * ${moduleNameCamel}「聚合仓储实现（主要）」
  * <p>
  * Power by AggregateX
  *

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleComment}列表查询处理器
+ * ${moduleComment}列表查询「处理器」
  * <p>
  * Power by AggregateX
  *

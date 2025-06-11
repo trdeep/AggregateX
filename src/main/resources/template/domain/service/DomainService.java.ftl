@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel} 领域服务
+ * ${moduleNameCamel}「领域服务」
  * <p>
  * Power by AggregateX
  *

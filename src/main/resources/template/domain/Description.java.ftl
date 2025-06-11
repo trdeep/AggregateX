@@ -12,7 +12,7 @@ import org.jmolecules.ddd.annotation.ValueObject;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * Description 值对象（多属性的一般序列化为 JSON 存储在单个列中）
+ * 【Description】值对象
  * <p>
  * Power by AggregateX
  *
@@ -35,6 +35,8 @@ public class Description extends ValueObjectBase {
 
     /**
      * 定义JSON转换器
+     * <p>
+     * 多属性的一般序列化为 JSON 存储在单个列中
      */
     public static class DescriptionJsonConverter implements AttributeConverter<Description, String> {
         @Override

@@ -13,7 +13,7 @@ import org.springframework.context.event.EventListener;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleComment}模块配置
+ * ${moduleComment}「模块配置」
  * <p>
  * Power by AggregateX
  *

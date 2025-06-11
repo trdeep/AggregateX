@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel} DTO 转换器
+ * ${moduleNameCamel}「DTO 转换器」
  * <p>
  * Power by AggregateX
  *
