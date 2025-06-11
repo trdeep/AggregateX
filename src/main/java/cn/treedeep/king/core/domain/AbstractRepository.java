@@ -71,6 +71,7 @@ public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends
      *
      * @param aggregate 要保存的聚合根
      */
+    @Transactional
     protected abstract void doSave(T aggregate);
 
     /**
