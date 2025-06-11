@@ -218,7 +218,8 @@ public final class ArchitectureValidator {
         classes().that().haveNameMatching(".*RepositoryImpl")
                 .or().haveNameMatching(".*Jpa.*Repository")
                 .should().beAssignableTo("Repository")
-                .orShould().beAssignableTo("cn.treedeep.king.core.domain.Repository")
+                .orShould().beAssignableTo("cn.treedeep.king.core.domain.AggregateRepository")
+                .orShould().beAssignableTo("org.springframework.data.jpa.repository.JpaRepository")
                 .because("仓储实现应该实现Repository接口")
                 .allowEmptyShould(true)
                 .check(classes);
