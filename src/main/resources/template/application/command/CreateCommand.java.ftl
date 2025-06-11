@@ -14,8 +14,8 @@ import lombok.RequiredArgsConstructor;
  * @author ${author}
  * @since ${dateTime}
  */
-@Getter
 @RequiredArgsConstructor
+@Getter
 public class Create${moduleNameCamel}Command extends Command {
 
     private final String name;

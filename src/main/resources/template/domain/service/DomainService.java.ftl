@@ -1,7 +1,7 @@
 package cn.treedeep.king.${moduleNameLower}.domain.service;
 
-import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel};
 import cn.treedeep.king.${moduleNameLower}.domain.AggregateRepository;
+import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel};
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

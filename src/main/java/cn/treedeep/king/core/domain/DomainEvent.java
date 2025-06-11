@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "domain_events")
-@Comment("领域事件表")
+@Comment("领域事件表 - 请勿直接使用，而是继承自定义事件")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
 public abstract class DomainEvent {

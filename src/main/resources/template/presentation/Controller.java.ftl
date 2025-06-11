@@ -10,12 +10,11 @@ import cn.treedeep.king.${moduleNameLower}.presentation.dto.${moduleNameCamel}Li
 import cn.treedeep.king.shared.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
 
 /**
  * Copyright © ${copyright} 版权所有

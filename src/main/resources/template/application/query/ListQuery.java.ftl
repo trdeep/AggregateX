@@ -15,9 +15,9 @@ import lombok.RequiredArgsConstructor;
  * @author ${author}
  * @since ${dateTime}
  */
-@Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@Getter
 public class ${moduleNameCamel}ListQuery extends Query<${moduleNameCamel}ListQueryResult> {
 
     private final int page;

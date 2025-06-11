@@ -3,7 +3,6 @@ package cn.treedeep.king.${moduleNameLower}.domain;
 import cn.treedeep.king.core.domain.AggregateRoot;
 import cn.treedeep.king.${moduleNameLower}.domain.event.${moduleNameCamel}CreatedEvent;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -25,7 +24,7 @@ import java.util.List;
 @Entity
 @Table(name = "${moduleNameLower}s")
 @Comment("【${moduleComment}】聚合表")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Getter
 public class ${moduleNameCamel} extends AggregateRoot<${moduleNameCamel}Id> {
 
@@ -51,7 +50,7 @@ public class ${moduleNameCamel} extends AggregateRoot<${moduleNameCamel}Id> {
         }
 
         // 发布领域事件
-        this.registerEvent(new ${moduleNameCamel}CreatedEvent(this.id, this.name));
+        this.registerEvent(new ${moduleNameCamel}CreatedEvent(this));
     }
 
 }

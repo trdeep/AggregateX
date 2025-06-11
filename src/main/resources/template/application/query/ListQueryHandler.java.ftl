@@ -1,8 +1,8 @@
 package cn.treedeep.king.${moduleNameLower}.application.query;
 
 import cn.treedeep.king.core.application.cqrs.query.AbstractQueryHandler;
-import cn.treedeep.king.${moduleNameLower}.application.service.${moduleNameCamel}ApplicationService;
 import cn.treedeep.king.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
+import cn.treedeep.king.${moduleNameLower}.application.service.${moduleNameCamel}ApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

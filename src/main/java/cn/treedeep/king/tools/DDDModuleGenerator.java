@@ -44,11 +44,12 @@ public class DDDModuleGenerator {
             System.out.println("═══════════════════════════");
             System.out.println();
 
-            System.out.println("🧑‍💻 请输入作者信息: ");
+            System.out.print("🧑‍💻 请输入作者信息: ");
             String author = scanner.nextLine().trim();
 
-            System.out.println("©️ 请输入版权信息: ");
+            System.out.print("©️ 请输入版权信息: ");
             String copyright = scanner.nextLine().trim();
+            System.out.println();
 
             boolean continueGenerating = true;
             while (continueGenerating) {
@@ -61,11 +62,11 @@ public class DDDModuleGenerator {
                 }
 
                 // 获取模块名称
-                System.out.print("📦 请输入模块名称，可空格带注释 (如: user 用户, order 订单, product 商品}): ");
-                String moduleName = scanner.nextLine().trim();
+                System.out.print("📦 请输入模块信息，可空格带注释 (如: order 订单}): ");
+                String moduleInfo = scanner.nextLine().trim();
 
-                if (moduleName.isEmpty()) {
-                    log.error("❌ 模块名称不能为空");
+                if (moduleInfo.isEmpty()) {
+                    log.error("❌ 模块信息不能为空");
                     continue;
                 }
 
@@ -73,7 +74,14 @@ public class DDDModuleGenerator {
                 System.out.println("🚀 开始生成模块...");
 
                 try {
-                    generateModule(projectPath, moduleName, copyright, author);
+
+                    if (moduleInfo.contains(" ")) {
+                        String[] split = moduleInfo.split(" ");
+                        generateModule(projectPath, split[0], split[1], copyright, author);
+                    } else {
+                        generateModule(projectPath, moduleInfo, null, copyright, author);
+                    }
+
                     System.out.println();
                     System.out.println("🎉 模块生成成功!");
                     System.out.println("📍 请查看生成的文件并根据业务需求进行调整");
@@ -95,23 +103,17 @@ public class DDDModuleGenerator {
         }
     }
 
-
     /**
      * 生成DDD模块
      */
-    public void generateModule(String projectPath, String moduleName, String copyright, String author) throws IOException {
-        String moduleComment = "";
+    public void generateModule(String projectPath, String moduleName, String moduleComment, String copyright, String author) throws IOException {
+        log.info("🏗️ 工程目录：{}", projectPath);
 
         if (StringUtils.isBlank(copyright)) {
             copyright = "深圳市树深计算机系统有限公司";
         }
         if (StringUtils.isBlank(author)) {
             author = "AggregateX";
-        }
-        if (moduleName.contains(" ")) {
-            String[] info = moduleName.split(" ");
-            moduleName = info[0];
-            moduleComment = info[1];
         }
 
         validateInputs(projectPath, moduleName);

@@ -17,8 +17,8 @@ import java.util.List;
  * @author ${author}
  * @since ${dateTime}
  */
-@Getter
 @RequiredArgsConstructor
+@Getter
 @Schema(description = "${moduleComment}列表响应")
 public class ${moduleNameCamel}ListResponse {
 

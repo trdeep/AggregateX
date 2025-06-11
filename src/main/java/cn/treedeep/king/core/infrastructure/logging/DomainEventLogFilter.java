@@ -4,6 +4,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 import cn.treedeep.king.core.domain.DomainEvent;
+import cn.treedeep.king.shared.utils.SpringBeanUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.MDC;
 
@@ -15,7 +16,7 @@ import java.util.UUID;
  * 为领域事件相关的日志添加额外的上下文信息
  */
 public class DomainEventLogFilter extends Filter<ILoggingEvent> {
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = SpringBeanUtil.getBean("defaultObjectMapper", ObjectMapper.class);
 
     @Override
     public FilterReply decide(ILoggingEvent event) {

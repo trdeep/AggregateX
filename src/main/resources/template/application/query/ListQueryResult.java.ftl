@@ -16,8 +16,8 @@ import java.util.List;
  * @author ${author}
  * @since ${dateTime}
  */
-@Getter
 @RequiredArgsConstructor
+@Getter
 public class ${moduleNameCamel}ListQueryResult {
 
     private final List<${moduleNameCamel}Dto> ${moduleNameLower}s;

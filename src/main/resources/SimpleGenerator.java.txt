@@ -1,5 +1,3 @@
-package cn.treedeep.king.tools.generator;
-
 import cn.treedeep.king.tools.DDDModuleGenerator;
 
 import java.nio.file.Path;
@@ -7,7 +5,7 @@ import java.nio.file.Path;
 /**
  * 简单的生成器
  */
-public class SimpleGeneratorTest {
+public class SimpleGenerator {
 
     public static void main(String[] args) {
 
@@ -22,13 +20,11 @@ public class SimpleGeneratorTest {
 
         try {
             // 生成模块
-            generator.generateModule(path.toString(), moduleName, moduleComment, null, null);
+            generator.generateModule(path.toString(), moduleName ,moduleComment, null, null);
             System.out.println("✅ 模块生成成功!");
         } catch (Exception e) {
             System.err.println("❌ 生成失败: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
 }
-

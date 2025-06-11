@@ -18,8 +18,8 @@ import java.util.UUID;
  * @since ${dateTime}
  */
 @Embeddable
-@Getter
 @EqualsAndHashCode(callSuper = true)
+@Getter
 public class ${moduleNameCamel}Id extends BaseIdentifier {
 
     public ${moduleNameCamel}Id() {
