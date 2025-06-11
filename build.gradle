@@ -49,6 +49,9 @@ dependencies {
     api 'org.springframework:spring-tx'
     api 'org.springframework:spring-context'
 
+    // 模板引擎
+    api 'org.freemarker:freemarker:2.3.34'
+
     // 缓存支持
     api 'org.springframework.boot:spring-boot-starter-cache'
     api 'com.github.ben-manes.caffeine:caffeine:3.2.0'
@@ -85,7 +88,6 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
 
     // 可选依赖 - 允许使用方选择性引入
-    compileOnly 'org.freemarker:freemarker:2.3.34'
     compileOnly 'org.postgresql:postgresql:42.7.6'
     compileOnly 'org.springframework.boot:spring-boot-starter-data-redis'
     compileOnly 'org.springframework.boot:spring-boot-starter-web'
