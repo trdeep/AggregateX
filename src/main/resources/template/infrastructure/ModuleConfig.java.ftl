@@ -1,10 +1,10 @@
-package cn.treedeep.king.${moduleNameLower}.infrastructure;
+package ${packageName}.${moduleNameLower}.infrastructure;
 
 import cn.treedeep.king.core.application.cqrs.command.CommandBus;
 import cn.treedeep.king.core.application.cqrs.query.QueryBus;
-import cn.treedeep.king.${moduleNameLower}.application.command.Create${moduleNameCamel}Command;
-import cn.treedeep.king.${moduleNameLower}.application.command.Create${moduleNameCamel}CommandHandler;
-import cn.treedeep.king.${moduleNameLower}.application.query.${moduleNameCamel}ListQueryHandler;
+import ${packageName}.${moduleNameLower}.application.command.Create${moduleNameCamel}Command;
+import ${packageName}.${moduleNameLower}.application.command.Create${moduleNameCamel}CommandHandler;
+import ${packageName}.${moduleNameLower}.application.query.${moduleNameCamel}ListQueryHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;

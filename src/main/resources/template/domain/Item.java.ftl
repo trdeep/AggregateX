@@ -1,4 +1,4 @@
-package cn.treedeep.king.${moduleNameLower}.domain;
+package ${packageName}.${moduleNameLower}.domain;
 
 import cn.treedeep.king.core.domain.EntityBase;
 import cn.treedeep.king.core.domain.UIdentifier;

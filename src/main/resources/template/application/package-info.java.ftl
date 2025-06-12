@@ -7,4 +7,4 @@
  * - 数据传输对象: ${moduleNameCamel}Dto<br>
  * - 应用服务: ${moduleNameCamel}ApplicationService
  */
-package cn.treedeep.king.${moduleNameLower}.application;
+package ${packageName}.${moduleNameLower}.application;

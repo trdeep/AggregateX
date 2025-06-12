@@ -1,4 +1,4 @@
-package cn.treedeep.king.${moduleNameLower}.application.query;
+package ${packageName}.${moduleNameLower}.application.query;
 
 import cn.treedeep.king.core.application.cqrs.query.Query;
 import lombok.EqualsAndHashCode;

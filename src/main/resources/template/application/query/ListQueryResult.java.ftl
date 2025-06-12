@@ -1,6 +1,6 @@
-package cn.treedeep.king.${moduleNameLower}.application.query;
+package ${packageName}.${moduleNameLower}.application.query;
 
-import cn.treedeep.king.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
+import ${packageName}.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

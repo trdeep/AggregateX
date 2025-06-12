@@ -1,7 +1,7 @@
-package cn.treedeep.king.${moduleNameLower}.domain.event;
+package ${packageName}.${moduleNameLower}.domain.event;
 
 import cn.treedeep.king.core.domain.DomainEvent;
-import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel};
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel};
 import cn.treedeep.king.shared.utils.JsonUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +36,6 @@ public class ${moduleNameCamel}CreatedEvent extends DomainEvent {
         this.name = aggregate.getName();
         setAggregateId(aggregate.getId().getValue());
         setAggregateVersion(aggregate.getVersion());
-        setData(JsonUtil.toJson(this)); // 实际数据自定义
+        setData(JsonUtil.toJson(aggregate)); // 实际数据自定义
     }
 }

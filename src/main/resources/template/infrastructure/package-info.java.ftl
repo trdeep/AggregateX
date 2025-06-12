@@ -7,4 +7,4 @@
  * - 外部服务客户端<br>
  * - 消息发布器实现
  */
-package cn.treedeep.king.${moduleNameLower}.infrastructure;
+package ${packageName}.${moduleNameLower}.infrastructure;

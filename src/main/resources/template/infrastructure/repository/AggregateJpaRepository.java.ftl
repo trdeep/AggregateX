@@ -1,8 +1,8 @@
-package cn.treedeep.king.${moduleNameLower}.infrastructure.repository;
+package ${packageName}.${moduleNameLower}.infrastructure.repository;
 
-import cn.treedeep.king.${moduleNameLower}.domain.AggregateRepository;
-import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel};
-import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel}Id;
+import ${packageName}.${moduleNameLower}.domain.AggregateRepository;
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel};
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}Id;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,8 +1,8 @@
-package cn.treedeep.king.${moduleNameLower}.application.dto;
+package ${packageName}.${moduleNameLower}.application.dto;
 
 import cn.treedeep.king.shared.utils.DateTimeUtil;
-import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel};
-import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel}Item;
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel};
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}Item;
 import org.springframework.stereotype.Component;
 
 /**

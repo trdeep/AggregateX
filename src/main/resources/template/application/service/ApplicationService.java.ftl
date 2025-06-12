@@ -1,8 +1,8 @@
-package cn.treedeep.king.${moduleNameLower}.application.service;
+package ${packageName}.${moduleNameLower}.application.service;
 
-import cn.treedeep.king.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
-import cn.treedeep.king.${moduleNameLower}.application.dto.${moduleNameCamel}DtoConverter;
-import cn.treedeep.king.${moduleNameLower}.domain.AggregateRepository;
+import ${packageName}.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
+import ${packageName}.${moduleNameLower}.application.dto.${moduleNameCamel}DtoConverter;
+import ${packageName}.${moduleNameLower}.domain.AggregateRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

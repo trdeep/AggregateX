@@ -7,4 +7,4 @@
  * - 外部API客户端<br>
  * - 系统间数据传输对象
  */
-package cn.treedeep.king.${moduleNameLower}.interfaces;
+package ${packageName}.${moduleNameLower}.interfaces;

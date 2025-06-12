@@ -819,18 +819,23 @@ public final class ArchitectureValidator {
      */
     private ImportOption createIgnoredPackagesImportOption() {
         return location -> {
-            String[] ignoredPackages = properties.getIgnoredPackages();
-            if (ignoredPackages == null || ignoredPackages.length == 0) {
-                return true; // 如果没有配置忽略包，则包含所有包
+            String locationPath = location.toString();
+            String path = location.asURI().getPath();
+
+            // 忽略所有 package-info.class 文件
+            if (path.endsWith("package-info.class")) {
+                return false; // 忽略 package-info.java 文件
             }
 
-            String locationPath = location.toString();
+            String[] ignoredPackages = properties.getIgnoredPackages();
+            if (ignoredPackages == null) {
+                return true; // 如果没有配置忽略包，则包含所有包
+            }
 
             // 检查是否匹配任何忽略的包模式
             for (String ignoredPackage : ignoredPackages) {
                 if (matchesPackagePattern(locationPath, ignoredPackage)) {
                     if (properties.isVerboseLogging() && properties.isLogShowIgnoredClass()) {
-                        String path = location.asURI().getPath();
                         log.debug("忽略：{} -> {}", path.substring(path.lastIndexOf("/") + 1), ignoredPackage);
                     }
                     return false; // 忽略此包

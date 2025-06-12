@@ -1,4 +1,4 @@
-package cn.treedeep.king.${moduleNameLower}.presentation.dto;
+package ${packageName}.${moduleNameLower}.presentation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

@@ -1,4 +1,4 @@
-package cn.treedeep.king.${moduleNameLower}.application.command;
+package ${packageName}.${moduleNameLower}.application.command;
 
 import cn.treedeep.king.core.application.cqrs.command.Command;
 import lombok.Getter;

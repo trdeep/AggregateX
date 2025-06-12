@@ -8,4 +8,4 @@
  * - 领域服务: ${moduleNameCamel}DomainService<br>
  * - 仓储接口: ${moduleNameCamel}Repository
  */
-package cn.treedeep.king.${moduleNameLower}.domain;
+package ${packageName}.${moduleNameLower}.domain;

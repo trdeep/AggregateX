@@ -1,7 +1,7 @@
-package cn.treedeep.king.${moduleNameLower}.domain;
+package ${packageName}.${moduleNameLower}.domain;
 
 import cn.treedeep.king.core.domain.AggregateRoot;
-import cn.treedeep.king.${moduleNameLower}.domain.event.${moduleNameCamel}CreatedEvent;
+import ${packageName}.${moduleNameLower}.domain.event.${moduleNameCamel}CreatedEvent;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,7 +50,7 @@ public class ${moduleNameCamel} extends AggregateRoot<${moduleNameCamel}Id> {
         }
 
         // 发布领域事件
-        this.registerEvent(new ${moduleNameCamel}CreatedEvent(aggregate));
+        this.registerEvent(new ${moduleNameCamel}CreatedEvent(this));
     }
 
 }

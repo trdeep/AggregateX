@@ -9,4 +9,4 @@
  * <p>
  * 无业务逻辑：仅执行技术指令，不参与业务决策。
  */
-package cn.treedeep.king.${moduleNameLower}.infrastructure.service;
+package ${packageName}.${moduleNameLower}.infrastructure.service;

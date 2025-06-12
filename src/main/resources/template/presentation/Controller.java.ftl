@@ -1,12 +1,12 @@
-package cn.treedeep.king.${moduleNameLower}.presentation;
+package ${packageName}.${moduleNameLower}.presentation;
 
 import cn.treedeep.king.core.application.cqrs.command.CommandBus;
 import cn.treedeep.king.core.application.cqrs.query.QueryBus;
-import cn.treedeep.king.${moduleNameLower}.application.command.Create${moduleNameCamel}Command;
-import cn.treedeep.king.${moduleNameLower}.application.query.${moduleNameCamel}ListQuery;
-import cn.treedeep.king.${moduleNameLower}.application.query.${moduleNameCamel}ListQueryResult;
-import cn.treedeep.king.${moduleNameLower}.presentation.dto.Create${moduleNameCamel}Request;
-import cn.treedeep.king.${moduleNameLower}.presentation.dto.${moduleNameCamel}ListResponse;
+import ${packageName}.${moduleNameLower}.application.command.Create${moduleNameCamel}Command;
+import ${packageName}.${moduleNameLower}.application.query.${moduleNameCamel}ListQuery;
+import ${packageName}.${moduleNameLower}.application.query.${moduleNameCamel}ListQueryResult;
+import ${packageName}.${moduleNameLower}.presentation.dto.Create${moduleNameCamel}Request;
+import ${packageName}.${moduleNameLower}.presentation.dto.${moduleNameCamel}ListResponse;
 import cn.treedeep.king.shared.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

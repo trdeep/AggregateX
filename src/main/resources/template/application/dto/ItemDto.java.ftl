@@ -1,4 +1,4 @@
-package cn.treedeep.king.${moduleNameLower}.application.dto;
+package ${packageName}.${moduleNameLower}.application.dto;
 
 import lombok.Builder;
 import lombok.Getter;

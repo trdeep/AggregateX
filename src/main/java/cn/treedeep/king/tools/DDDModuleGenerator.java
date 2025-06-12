@@ -77,9 +77,9 @@ public class DDDModuleGenerator {
 
                     if (moduleInfo.contains(" ")) {
                         String[] split = moduleInfo.split(" ");
-                        generateModule(projectPath, split[0], split[1], copyright, author);
+                        generateModule(projectPath, BASE_PACKAGE_PATH, false, split[0], split[1], copyright, author);
                     } else {
-                        generateModule(projectPath, moduleInfo, null, copyright, author);
+                        generateModule(projectPath, BASE_PACKAGE_PATH, false, moduleInfo, null, copyright, author);
                     }
 
                     System.out.println();
@@ -106,7 +106,7 @@ public class DDDModuleGenerator {
     /**
      * 生成DDD模块
      */
-    public void generateModule(String projectPath, String moduleName, String moduleComment, String copyright, String author) throws IOException {
+    public void generateModule(String projectPath, String packageName, boolean isCover, String moduleName, String moduleComment, String copyright, String author) throws IOException {
         log.info("🏗️ 工程目录：{}", projectPath);
 
         if (StringUtils.isBlank(copyright)) {
@@ -116,30 +116,48 @@ public class DDDModuleGenerator {
             author = "AggregateX";
         }
 
-        validateInputs(projectPath, moduleName);
+        // 处理包名，如果为空则使用默认包路径
+        String actualPackageName;
+        String actualPackagePath;
+        if (StringUtils.isBlank(packageName)) {
+            actualPackageName = BASE_PACKAGE_PATH.replace("/", ".");
+            actualPackagePath = BASE_PACKAGE_PATH;
+        } else {
+            actualPackageName = packageName;
+            actualPackagePath = packageName.replace(".", "/");
+        }
 
-        Path javaSourcePath = determineJavaSourcePath(projectPath);
+        validateInputs(projectPath, moduleName.toLowerCase());
+
+        Path javaSourcePath = determineJavaSourcePath(projectPath, actualPackagePath);
         Path modulePath = javaSourcePath.resolve(moduleName);
 
         // 检查模块是否已存在
         if (Files.exists(modulePath)) {
             log.warn("⚠️ 模块 '{}' 已存在于路径: {}", moduleName, modulePath);
-            try (Scanner scanner = new Scanner(System.in)) {
-                System.out.print("是否要覆盖现有模块? (y/N): ");
-                String response = scanner.nextLine().trim().toLowerCase();
-                if (!"y".equals(response) && !"yes".equals(response)) {
-                    log.info("操作已取消");
-                    return;
+
+            if (isCover) {
+                log.warn("覆盖操作！");
+                deleteDirectory(modulePath);
+            } else {
+                try (Scanner scanner = new Scanner(System.in)) {
+                    System.out.print("是否要覆盖现有模块? (y/N): ");
+                    String response = scanner.nextLine().trim().toLowerCase();
+                    if (!"y".equals(response) && !"yes".equals(response)) {
+                        log.info("操作已取消");
+                        return;
+                    }
                 }
+                deleteDirectory(modulePath);
             }
-            deleteDirectory(modulePath);
+
         }
 
         log.info("📁 创建目录结构...");
         createDirectoryStructure(modulePath);
 
         log.info("📝 生成模板文件...");
-        generateTemplateFiles(modulePath, moduleName, moduleComment, copyright, author);
+        generateTemplateFiles(modulePath, actualPackageName, moduleName, moduleComment, copyright, author);
 
         log.info("✅ 模块 '{}' 生成完成", moduleName);
         log.info("📍 模块位置: {}", modulePath.toAbsolutePath());
@@ -164,17 +182,17 @@ public class DDDModuleGenerator {
     /**
      * 确定Java源码路径
      */
-    private Path determineJavaSourcePath(String projectPath) {
+    private Path determineJavaSourcePath(String projectPath, String packagePath) {
         Path projectDir = Paths.get(projectPath);
 
         // 优先检查标准路径
-        Path standardPath = projectDir.resolve("src/main/java").resolve(BASE_PACKAGE_PATH);
+        Path standardPath = projectDir.resolve("src/main/java").resolve(packagePath);
         if (Files.exists(standardPath)) {
             return standardPath;
         }
 
         // 检查example路径
-        Path examplePath = projectDir.resolve("example/src/main/java").resolve(BASE_PACKAGE_PATH);
+        Path examplePath = projectDir.resolve("example/src/main/java").resolve(packagePath);
         if (Files.exists(examplePath)) {
             return examplePath;
         }
@@ -192,8 +210,6 @@ public class DDDModuleGenerator {
      * 创建目录结构
      */
     private void createDirectoryStructure(Path modulePath) throws IOException {
-        String moduleName = modulePath.getFileName().toString();
-
         // 领域层目录
         Files.createDirectories(modulePath.resolve("domain/event"));
         Files.createDirectories(modulePath.resolve("domain/service"));
@@ -218,7 +234,7 @@ public class DDDModuleGenerator {
     /**
      * 生成模板文件
      */
-    private void generateTemplateFiles(Path modulePath, String moduleName, String moduleComment, String copyright, String author) throws IOException {
+    private void generateTemplateFiles(Path modulePath, String packageName, String moduleName, String moduleComment, String copyright, String author) throws IOException {
         String moduleNameCamel = toPascalCase(moduleName);
         String moduleNameLower = moduleName.toLowerCase();
 
@@ -226,7 +242,7 @@ public class DDDModuleGenerator {
             moduleComment = moduleNameCamel;
         }
 
-        DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(modulePath, moduleNameCamel, moduleNameLower, moduleComment, copyright, author);
+        DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(modulePath, packageName, moduleNameCamel, moduleNameLower, moduleComment, copyright, author);
 
         // 生成领域层文件
         templateGenerator.generateDomainFiles();
@@ -242,6 +258,9 @@ public class DDDModuleGenerator {
 
         // 生成包信息文件
         templateGenerator.generatePackageInfoFiles();
+
+        // 生成 README.md 文件
+        templateGenerator.generateReadmeFiles();
     }
 
     /**

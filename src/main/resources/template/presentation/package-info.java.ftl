@@ -7,4 +7,4 @@
  * - 响应DTO: ${moduleNameCamel}ListResponse<br>
  * - 数据验证和转换
  */
-package cn.treedeep.king.${moduleNameLower}.presentation;
+package ${packageName}.${moduleNameLower}.presentation;

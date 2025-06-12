@@ -1,4 +1,4 @@
-package cn.treedeep.king.${moduleNameLower}.domain;
+package ${packageName}.${moduleNameLower}.domain;
 
 import java.util.List;
 import java.util.Optional;

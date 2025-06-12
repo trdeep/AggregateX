@@ -1,6 +1,6 @@
-package cn.treedeep.king.${moduleNameLower}.presentation.dto;
+package ${packageName}.${moduleNameLower}.presentation.dto;
 
-import cn.treedeep.king.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
+import ${packageName}.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

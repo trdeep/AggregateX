@@ -1,7 +1,5 @@
 import cn.treedeep.king.tools.DDDModuleGenerator;
 
-import java.nio.file.Path;
-
 /**
  * AggregateX 项目代码生成器
  */
@@ -10,21 +8,24 @@ public class CodeGenerator {
     public static void main(String[] args) {
 
         // 工程目录
-        Path path = Path.of(".");
+        String path = ".";
 
-        String moduleName = "user";
-        String moduleComment = "用户";
+        // 模块信息
+        String moduleName = "order";
+        String moduleComment = "订单";
 
         // 创建生成器实例
         DDDModuleGenerator generator = new DDDModuleGenerator();
 
         try {
             // 生成模块
-            generator.generateModule(path.toString(), moduleName, moduleComment, "好运力", "周广明");
-            System.out.println("✅ 生成成功");
+            generator.generateModule(path.toString(), true, moduleName, moduleComment, null, null);
+            System.out.println("✅ 模块生成成功!");
         } catch (Exception e) {
             System.err.println("❌ 生成失败: " + e.getMessage());
             e.printStackTrace();
         }
+
     }
+
 }

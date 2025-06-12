@@ -9,4 +9,4 @@
  * <p>
  * 技术无关性：不直接处理数据库、消息队列等细节。
  */
-package cn.treedeep.king.${moduleNameLower}.application.service;
+package ${packageName}.${moduleNameLower}.application.service;

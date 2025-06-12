@@ -36,6 +36,7 @@ public class DDDTemplateGenerator {
     private final Map<String, Object> params = new HashMap<>();
 
     public DDDTemplateGenerator(Path modulePath,
+                                String packageName,
                                 String moduleNameCamel,
                                 String moduleNameLower,
                                 String moduleComment,
@@ -45,6 +46,7 @@ public class DDDTemplateGenerator {
         this.modulePath = modulePath;
         this.moduleNameCamel = moduleNameCamel;
 
+        params.put("packageName", packageName);
         params.put("moduleNameCamel", moduleNameCamel);
         params.put("moduleNameLower", moduleNameLower);
         params.put("moduleComment", moduleComment);
@@ -327,5 +329,10 @@ public class DDDTemplateGenerator {
 
         String content = processTemplate("infrastructure/service/package-info.java.ftl", params);
         writeFile(modulePath.resolve("infrastructure/service/package-info.java"), content);
+    }
+
+    public void generateReadmeFiles() throws IOException {
+        String content = processTemplate("README.md.ftl", params);
+        writeFile(modulePath.resolve("README.md"), content);
     }
 }

@@ -1,13 +1,13 @@
-package cn.treedeep.king.${moduleNameLower}.application.command;
+package ${packageName}.${moduleNameLower}.application.command;
 
 import cn.treedeep.king.core.application.cqrs.command.AbstractCommandHandler;
 import cn.treedeep.king.core.application.cqrs.command.CommandBus;
 import cn.treedeep.king.core.domain.EventBus;
-import cn.treedeep.king.${moduleNameLower}.domain.AggregateRepository;
-import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel};
-import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel}Id;
-import cn.treedeep.king.${moduleNameLower}.domain.${moduleNameCamel}Item;
-import cn.treedeep.king.${moduleNameLower}.domain.service.${moduleNameCamel}DomainService;
+import ${packageName}.${moduleNameLower}.domain.AggregateRepository;
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel};
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}Id;
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}Item;
+import ${packageName}.${moduleNameLower}.domain.service.${moduleNameCamel}DomainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
