@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Getter
-public class Create${moduleNameCamel}Command extends Command {
+public class Create${entityNameCamel}Command extends Command {
 
     private final String name;
     private final String description;

@@ -9,7 +9,7 @@
  * </ul>
  *
  * <p><b>示例：</b>
- * {@code ${moduleNameCamel}PaymentService.processPayment()} 协调${moduleComment}和账户的支付逻辑，
+ * {@code ${entityNameCamel}PaymentService.processPayment()} 协调${moduleComment}和账户的支付逻辑，
  * {@code PricingService.calculateDiscount()} 计算动态折扣。
  */
 package ${packageName}.${moduleNameLower}.domain.service;

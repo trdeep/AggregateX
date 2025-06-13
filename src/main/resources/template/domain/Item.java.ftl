@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel}Item「实体」
+ * ${entityNameCamel}Item「实体」
  * <p>
  * Power by AggregateX
  *
@@ -21,13 +21,13 @@ import java.time.OffsetDateTime;
  * @since ${dateTime}
  */
 @Entity
-@Table(name = "${moduleNameLower}_items")
+@Table(name = "${entityNameLower}_items")
 @Comment("${moduleComment}子项表【实体】")
 @NoArgsConstructor
 @Getter
-public class ${moduleNameCamel}Item extends EntityBase<UIdentifier> {
+public class ${entityNameCamel}Item extends EntityBase<UIdentifier> {
 
-    public ${moduleNameCamel}Item(String name, String description) {
+    public ${entityNameCamel}Item(String name, String description) {
         this.id = UIdentifier.generate();
         this.name = name;
         this.description = new Description(id.getValue(), description);
@@ -40,9 +40,9 @@ public class ${moduleNameCamel}Item extends EntityBase<UIdentifier> {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "${moduleNameLower}_id")
+    @JoinColumn(name = "${entityNameLower}_id")
     @Comment("${moduleComment}ID")
-    private ${moduleNameCamel} ${moduleNameLower};
+    private ${entityNameCamel} ${entityNameLower};
 
     @Column(name = "name", length = 100, nullable = false)
     @Comment("名称")
@@ -73,8 +73,8 @@ public class ${moduleNameCamel}Item extends EntityBase<UIdentifier> {
     }
 
 
-    public static ${moduleNameCamel}Item create(String name, String description) {
-        return new ${moduleNameCamel}Item(name, description);
+    public static ${entityNameCamel}Item create(String name, String description) {
+        return new ${entityNameCamel}Item(name, description);
     }
 
 }

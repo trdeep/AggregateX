@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
 * Copyright © ${copyright} 版权所有
 * <p>
-    * ${moduleNameCamel} 「实体标识」
+    * ${entityNameCamel} 「实体标识」
     * <p>
     * Power by AggregateX
     *
@@ -20,25 +20,25 @@ import java.util.UUID;
     @Embeddable
     @EqualsAndHashCode(callSuper = true)
     @Getter
-    public class ${moduleNameCamel}Id extends BaseIdentifier {
+    public class ${entityNameCamel}Id extends BaseIdentifier {
 
-    public ${moduleNameCamel}Id() {
+    public ${entityNameCamel}Id() {
     super();
     }
 
-    public ${moduleNameCamel}Id(String value) {
+    public ${entityNameCamel}Id(String value) {
     super(value);
 
     if (value == null || value.trim().isEmpty()) {
-    throw new IllegalArgumentException("${moduleNameCamel} ID cannot be null or empty");
+    throw new IllegalArgumentException("${entityNameCamel} ID cannot be null or empty");
     }
     }
 
-    public static ${moduleNameCamel}Id generate() {
-    return new ${moduleNameCamel}Id(UUID.randomUUID().toString());
+    public static ${entityNameCamel}Id generate() {
+    return new ${entityNameCamel}Id(UUID.randomUUID().toString());
     }
 
-    public static ${moduleNameCamel}Id of(String id) {
-    return new ${moduleNameCamel}Id(id);
+    public static ${entityNameCamel}Id of(String id) {
+    return new ${entityNameCamel}Id(id);
     }
     }

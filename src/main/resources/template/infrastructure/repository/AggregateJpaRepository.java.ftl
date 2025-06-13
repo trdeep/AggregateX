@@ -1,22 +1,22 @@
 package ${packageName}.${moduleNameLower}.infrastructure.repository;
 
-import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}AggregateRepository;
-import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel};
-import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}Id;
+import ${packageName}.${moduleNameLower}.domain.${entityNameCamel}AggregateRepository;
+import ${packageName}.${moduleNameLower}.domain.${entityNameCamel};
+import ${packageName}.${moduleNameLower}.domain.${entityNameCamel}Id;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel}「聚合仓储（JPA 实现）」
+ * ${entityNameCamel}「聚合仓储（JPA 实现）」
  * <p>
  * Power by AggregateX
  *
  * @author ${author}
  * @since ${dateTime}
  */
-@Repository("${moduleNameLower}AggregateJpaRepository")
-public interface ${moduleNameCamel}AggregateJpaRepository extends JpaRepository<${moduleNameCamel}, ${moduleNameCamel}Id>, ${moduleNameCamel}AggregateRepository {
+@Repository("${entityNameLower}AggregateJpaRepository")
+public interface ${entityNameCamel}AggregateJpaRepository extends JpaRepository<${entityNameCamel}, ${entityNameCamel}Id>, ${entityNameCamel}AggregateRepository {
 
 }

@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Getter
-public class ${moduleNameCamel}ListQuery extends Query<${moduleNameCamel}ListQueryResult> {
+public class ${entityNameCamel}ListQuery extends Query<${entityNameCamel}ListQueryResult> {
 
     private final int page;
     private final int size;
@@ -26,6 +26,6 @@ public class ${moduleNameCamel}ListQuery extends Query<${moduleNameCamel}ListQue
 
     @Override
     public String getQueryName() {
-        return "${moduleNameCamel}ListQuery";
+        return "${entityNameCamel}ListQuery";
     }
 }

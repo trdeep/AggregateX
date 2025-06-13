@@ -3,9 +3,9 @@ package ${packageName}.${moduleNameLower}.infrastructure.repository;
 import cn.treedeep.king.core.domain.AbstractRepository;
 import cn.treedeep.king.core.domain.DomainEventPublisher;
 import cn.treedeep.king.core.domain.EventStore;
-import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}AggregateRepository;
-import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel};
-import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}Id;
+import ${packageName}.${moduleNameLower}.domain.${entityNameCamel}AggregateRepository;
+import ${packageName}.${moduleNameLower}.domain.${entityNameCamel};
+import ${packageName}.${moduleNameLower}.domain.${entityNameCamel}Id;
 import jakarta.annotation.Resource;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Primary;
@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel}「聚合仓储实现（主要）」
+ * ${entityNameCamel}「聚合仓储实现（主要）」
  * <p>
  * Power by AggregateX
  *
@@ -25,13 +25,13 @@ import java.util.Optional;
  * @since ${dateTime}
  */
 @Primary
-@Repository("${moduleNameLower}AggregateRepository")
-public class ${moduleNameCamel}AggregateRepositoryImpl extends AbstractRepository<${moduleNameCamel}, ${moduleNameCamel}Id> implements ${moduleNameCamel}AggregateRepository {
+@Repository("${entityNameLower}AggregateRepository")
+public class ${entityNameCamel}AggregateRepositoryImpl extends AbstractRepository<${entityNameCamel}, ${entityNameCamel}Id> implements ${entityNameCamel}AggregateRepository {
 
-    @Resource(name = "${moduleNameLower}AggregateJpaRepository")
-    private ${moduleNameCamel}AggregateRepository aggregateRepository;
+    @Resource(name = "${entityNameLower}AggregateJpaRepository")
+    private ${entityNameCamel}AggregateRepository aggregateRepository;
 
-    public ${moduleNameCamel}AggregateRepositoryImpl(
+    public ${entityNameCamel}AggregateRepositoryImpl(
             CacheManager cacheManager,
             EventStore eventStore,
             DomainEventPublisher eventPublisher) {
@@ -39,22 +39,22 @@ public class ${moduleNameCamel}AggregateRepositoryImpl extends AbstractRepositor
     }
 
     @Override
-    protected Optional<${moduleNameCamel}> doLoad(${moduleNameCamel}Id id) {
+    protected Optional<${entityNameCamel}> doLoad(${entityNameCamel}Id id) {
         return aggregateRepository.findById(id);
     }
 
     @Override
-    protected void doSave(${moduleNameCamel} aggregate) {
+    protected void doSave(${entityNameCamel} aggregate) {
         aggregateRepository.save(aggregate);
     }
 
     @Override
-    public Optional<${moduleNameCamel}> findByName(String name) {
+    public Optional<${entityNameCamel}> findByName(String name) {
         return aggregateRepository.findByName(name);
     }
 
     @Override
-    public List<${moduleNameCamel}> findAll() {
+    public List<${entityNameCamel}> findAll() {
         return aggregateRepository.findAll();
     }
 

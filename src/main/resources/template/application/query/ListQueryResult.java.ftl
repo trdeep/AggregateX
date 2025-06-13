@@ -1,6 +1,6 @@
 package ${packageName}.${moduleNameLower}.application.query;
 
-import ${packageName}.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
+import ${packageName}.${moduleNameLower}.application.dto.${entityNameCamel}Dto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -18,8 +18,8 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Getter
-public class ${moduleNameCamel}ListQueryResult {
+public class ${entityNameCamel}ListQueryResult {
 
-    private final List<${moduleNameCamel}Dto> ${moduleNameLower}s;
+    private final List<${entityNameCamel}Dto> ${entityNameLower}s;
     private final int total;
 }

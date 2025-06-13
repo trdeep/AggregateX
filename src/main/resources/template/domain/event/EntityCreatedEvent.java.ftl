@@ -1,7 +1,7 @@
 package ${packageName}.${moduleNameLower}.domain.event;
 
 import cn.treedeep.king.core.domain.DomainEvent;
-import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel};
+import ${packageName}.${moduleNameLower}.domain.${entityNameCamel};
 import cn.treedeep.king.shared.utils.JsonUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,17 +21,17 @@ import org.hibernate.annotations.Comment;
     * @since ${dateTime}
     */
     @Entity
-    @Table(name = "${moduleNameLower}_created_events")
+    @Table(name = "${entityNameLower}_created_events")
     @Comment("创建${moduleComment}事件表【事件】")
     @NoArgsConstructor
     @Getter
-    public class ${moduleNameCamel}CreatedEvent extends DomainEvent {
+    public class ${entityNameCamel}CreatedEvent extends DomainEvent {
 
     @Column(name = "name", length = 36)
     @Comment("名称")
     private  String name;
 
-    public ${moduleNameCamel}CreatedEvent(${moduleNameCamel} aggregate) {
+    public ${entityNameCamel}CreatedEvent(${entityNameCamel} aggregate) {
     super();
     this.name = aggregate.getName();
     setAggregateId(aggregate.getId().getValue());

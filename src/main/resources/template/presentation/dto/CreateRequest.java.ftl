@@ -19,14 +19,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Schema(description = "创建${moduleComment}请求")
-public class Create${moduleNameCamel}Request {
+public class Create${entityNameCamel}Request {
 
     @NotBlank(message = "名称不能为空")
     @Size(max = 100, message = "名称长度不能超过100个字符")
-    @Schema(description = "名称", example = "示例${moduleNameCamel}")
+    @Schema(description = "名称", example = "示例${entityNameCamel}")
     private String name;
 
     @Size(max = 500, message = "描述长度不能超过500个字符")
-    @Schema(description = "描述", example = "这是一个示例${moduleNameCamel}")
+    @Schema(description = "描述", example = "这是一个示例${entityNameCamel}")
     private String description;
 }

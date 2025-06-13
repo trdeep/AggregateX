@@ -31,25 +31,63 @@ import java.util.Map;
 public class DDDTemplateGenerator {
 
     private final Path modulePath;
-    private final String moduleNameCamel;
+    private final String entityNameCamel;
     private final Configuration fmConfig;
     private final Map<String, Object> params = new HashMap<>();
 
     public DDDTemplateGenerator(Path modulePath,
                                 String packageName,
-                                String moduleNameCamel,
-                                String moduleNameLower,
+                                String entityNameCamel,
+                                String moduleName,
                                 String moduleComment,
                                 String copyright,
                                 String author) {
 
         this.modulePath = modulePath;
-        this.moduleNameCamel = moduleNameCamel;
+        this.entityNameCamel = entityNameCamel;
 
         params.put("packageName", packageName);
-        params.put("moduleNameCamel", moduleNameCamel);
-        params.put("moduleNameLower", moduleNameLower);
+        params.put("entityNameCamel", entityNameCamel);
+        params.put("moduleNameLower", moduleName.toLowerCase());
         params.put("moduleComment", moduleComment);
+        params.put("copyright", copyright);
+        params.put("author", author);
+        params.put("dateTime", OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        // Initialize FreeMarker configuration
+        this.fmConfig = new Configuration(Configuration.VERSION_2_3_31);
+        this.fmConfig.setDefaultEncoding("UTF-8");
+        this.fmConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        this.fmConfig.setLogTemplateExceptions(false);
+        this.fmConfig.setWrapUncheckedExceptions(true);
+        this.fmConfig.setFallbackOnNullLoopVariable(false);
+
+        // Set the template loader to load from classpath resources
+        this.fmConfig.setClassForTemplateLoading(getClass(), "/");
+        this.fmConfig.setTemplateLoader(new freemarker.cache.ClassTemplateLoader(getClass(), "/template"));
+    }
+
+    /**
+     * 专门用于实体生成的构造函数
+     * 正确分离模块名（用于包名）和实体名（用于类名和变量名）
+     */
+    public DDDTemplateGenerator(Path modulePath,
+                                String packageName,
+                                String moduleName,
+                                String entityNameCamel,
+                                String entityNameLower,
+                                String entityComment,
+                                String copyright,
+                                String author) {
+
+        this.modulePath = modulePath;
+        this.entityNameCamel = entityNameCamel;
+
+        params.put("packageName", packageName);
+        params.put("entityNameCamel", entityNameCamel);
+        params.put("moduleNameLower", moduleName.toLowerCase());
+        params.put("entityNameLower", entityNameLower);
+        params.put("moduleComment", entityComment);
         params.put("copyright", copyright);
         params.put("author", author);
         params.put("dateTime", OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
@@ -125,63 +163,63 @@ public class DDDTemplateGenerator {
 
     private void generateAggregateId() throws IOException {
         String content = processTemplate("domain/EntityId.java.ftl", params);
-        writeFile(modulePath.resolve("domain/" + moduleNameCamel + "Id.java"), content);
+        writeFile(modulePath.resolve("domain/" + entityNameCamel + "Id.java"), content);
     }
 
     private void generateAggregateRoot() throws IOException {
         String content = processTemplate("domain/Entity.java.ftl", params);
-        writeFile(modulePath.resolve("domain/" + moduleNameCamel + ".java"), content);
+        writeFile(modulePath.resolve("domain/" + entityNameCamel + ".java"), content);
     }
 
 
     private void generateDomainEvent() throws IOException {
         String content = processTemplate("domain/event/EntityCreatedEvent.java.ftl", params);
-        writeFile(modulePath.resolve("domain/event/" + moduleNameCamel + "CreatedEvent.java"), content);
+        writeFile(modulePath.resolve("domain/event/" + entityNameCamel + "CreatedEvent.java"), content);
     }
 
     private void generateDomainService() throws IOException {
         String content = processTemplate("domain/service/DomainService.java.ftl", params);
-        writeFile(modulePath.resolve("domain/service/" + moduleNameCamel + "DomainService.java"), content);
+        writeFile(modulePath.resolve("domain/service/" + entityNameCamel + "DomainService.java"), content);
     }
 
     private void generateCommand() throws IOException {
         String content = processTemplate("application/command/CreateCommand.java.ftl", params);
-        writeFile(modulePath.resolve("application/command/Create" + moduleNameCamel + "Command.java"), content);
+        writeFile(modulePath.resolve("application/command/Create" + entityNameCamel + "Command.java"), content);
     }
 
     private void generateCommandHandler() throws IOException {
         String content = processTemplate("application/command/CreateCommandHandler.java.ftl", params);
-        writeFile(modulePath.resolve("application/command/Create" + moduleNameCamel + "CommandHandler.java"), content);
+        writeFile(modulePath.resolve("application/command/Create" + entityNameCamel + "CommandHandler.java"), content);
     }
 
     private void generateQuery() throws IOException {
         String content = processTemplate("application/query/ListQuery.java.ftl", params);
-        writeFile(modulePath.resolve("application/query/" + moduleNameCamel + "ListQuery.java"), content);
+        writeFile(modulePath.resolve("application/query/" + entityNameCamel + "ListQuery.java"), content);
     }
 
     private void generateQueryResult() throws IOException {
         String content = processTemplate("application/query/ListQueryResult.java.ftl", params);
-        writeFile(modulePath.resolve("application/query/" + moduleNameCamel + "ListQueryResult.java"), content);
+        writeFile(modulePath.resolve("application/query/" + entityNameCamel + "ListQueryResult.java"), content);
     }
 
     private void generateQueryHandler() throws IOException {
         String content = processTemplate("application/query/ListQueryHandler.java.ftl", params);
-        writeFile(modulePath.resolve("application/query/" + moduleNameCamel + "ListQueryHandler.java"), content);
+        writeFile(modulePath.resolve("application/query/" + entityNameCamel + "ListQueryHandler.java"), content);
     }
 
     private void generateDto() throws IOException {
         String content = processTemplate("application/dto/Dto.java.ftl", params);
-        writeFile(modulePath.resolve("application/dto/" + moduleNameCamel + "Dto.java"), content);
+        writeFile(modulePath.resolve("application/dto/" + entityNameCamel + "Dto.java"), content);
     }
 
     private void generateDtoConverter() throws IOException {
         String content = processTemplate("application/dto/DtoConverter.java.ftl", params);
-        writeFile(modulePath.resolve("application/dto/" + moduleNameCamel + "DtoConverter.java"), content);
+        writeFile(modulePath.resolve("application/dto/" + entityNameCamel + "DtoConverter.java"), content);
     }
 
     private void generateJpaRepository() throws IOException {
         String content = processTemplate("infrastructure/repository/JpaRepository.java.ftl", params);
-        writeFile(modulePath.resolve("infrastructure/repository/" + moduleNameCamel + "JpaRepository.java"), content);
+        writeFile(modulePath.resolve("infrastructure/repository/" + entityNameCamel + "JpaRepository.java"), content);
     }
 
     private void generateModuleConfig() throws IOException {
@@ -191,17 +229,17 @@ public class DDDTemplateGenerator {
 
     private void generateController() throws IOException {
         String content = processTemplate("presentation/Controller.java.ftl", params);
-        writeFile(modulePath.resolve("presentation/" + moduleNameCamel + "Controller.java"), content);
+        writeFile(modulePath.resolve("presentation/" + entityNameCamel + "Controller.java"), content);
     }
 
     private void generateRequestDto() throws IOException {
         String content = processTemplate("presentation/dto/CreateRequest.java.ftl", params);
-        writeFile(modulePath.resolve("presentation/dto/Create" + moduleNameCamel + "Request.java"), content);
+        writeFile(modulePath.resolve("presentation/dto/Create" + entityNameCamel + "Request.java"), content);
     }
 
     private void generateResponseDto() throws IOException {
         String content = processTemplate("presentation/dto/ListResponse.java.ftl", params);
-        writeFile(modulePath.resolve("presentation/dto/" + moduleNameCamel + "ListResponse.java"), content);
+        writeFile(modulePath.resolve("presentation/dto/" + entityNameCamel + "ListResponse.java"), content);
     }
 
     private void generatePackageInfo(String layer, String layerName, String description) throws IOException {
@@ -213,10 +251,9 @@ public class DDDTemplateGenerator {
         writeFile(modulePath.resolve(layer + "/package-info.java"), content);
     }
 
-    // 新增的领域层文件生成方法
     private void generateAggregateRepository() throws IOException {
         String content = processTemplate("domain/EntityRepository.java.ftl", params);
-        writeFile(modulePath.resolve("domain/" + moduleNameCamel + "AggregateRepository.java"), content);
+        writeFile(modulePath.resolve("domain/" + entityNameCamel + "AggregateRepository.java"), content);
     }
 
     private void generateDescription() throws IOException {
@@ -226,29 +263,27 @@ public class DDDTemplateGenerator {
 
     private void generateItem() throws IOException {
         String content = processTemplate("domain/Item.java.ftl", params);
-        writeFile(modulePath.resolve("domain/" + moduleNameCamel + "Item.java"), content);
+        writeFile(modulePath.resolve("domain/" + entityNameCamel + "Item.java"), content);
     }
 
-    // 新增的应用层文件生成方法
     private void generateItemDto() throws IOException {
         String content = processTemplate("application/dto/ItemDto.java.ftl", params);
-        writeFile(modulePath.resolve("application/dto/" + moduleNameCamel + "ItemDto.java"), content);
+        writeFile(modulePath.resolve("application/dto/" + entityNameCamel + "ItemDto.java"), content);
     }
 
     private void generateApplicationService() throws IOException {
         String content = processTemplate("application/service/ApplicationService.java.ftl", params);
-        writeFile(modulePath.resolve("application/service/" + moduleNameCamel + "ApplicationService.java"), content);
+        writeFile(modulePath.resolve("application/service/" + entityNameCamel + "ApplicationService.java"), content);
     }
 
-    // 新增的基础设施层文件生成方法
     private void generateAggregateJpaRepository() throws IOException {
         String content = processTemplate("infrastructure/repository/AggregateJpaRepository.java.ftl", params);
-        writeFile(modulePath.resolve("infrastructure/repository/" + moduleNameCamel + "AggregateJpaRepository.java"), content);
+        writeFile(modulePath.resolve("infrastructure/repository/" + entityNameCamel + "AggregateJpaRepository.java"), content);
     }
 
     private void generateAggregateRepositoryImpl() throws IOException {
         String content = processTemplate("infrastructure/repository/AggregateRepositoryImpl.java.ftl", params);
-        writeFile(modulePath.resolve("infrastructure/repository/" + moduleNameCamel + "AggregateRepositoryImpl.java"), content);
+        writeFile(modulePath.resolve("infrastructure/repository/" + entityNameCamel + "AggregateRepositoryImpl.java"), content);
     }
 
     public void generateReadmeFiles() throws IOException {

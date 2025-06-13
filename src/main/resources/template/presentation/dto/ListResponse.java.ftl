@@ -1,6 +1,6 @@
 package ${packageName}.${moduleNameLower}.presentation.dto;
 
-import ${packageName}.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
+import ${packageName}.${moduleNameLower}.application.dto.${entityNameCamel}Dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +20,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Getter
 @Schema(description = "${moduleComment}列表响应")
-public class ${moduleNameCamel}ListResponse {
+public class ${entityNameCamel}ListResponse {
 
     @Schema(description = "${moduleComment}列表")
-    private final List<${moduleNameCamel}Dto> ${moduleNameLower}s;
+    private final List<${entityNameCamel}Dto> ${entityNameLower}s;
 
     @Schema(description = "总数量")
     public int getTotal() {
-        return ${moduleNameLower}s != null ? ${moduleNameLower}s.size() : 0;
+        return ${entityNameLower}s != null ? ${entityNameLower}s.size() : 0;
     }
 }

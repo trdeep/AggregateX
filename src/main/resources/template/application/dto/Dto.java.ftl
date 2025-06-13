@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel}「DTO」
+ * ${entityNameCamel}「DTO」
  * <p>
  * Power by AggregateX
  *
@@ -18,11 +18,11 @@ import java.util.List;
  */
 @Getter
 @Builder
-public class ${moduleNameCamel}Dto {
+public class ${entityNameCamel}Dto {
 
     private final String id;
     private final String name;
-    private final List<${moduleNameCamel}ItemDto> items;
+    private final List<${entityNameCamel}ItemDto> items;
     private final String createdAt;
     private final OffsetDateTime updatedAt;
 }

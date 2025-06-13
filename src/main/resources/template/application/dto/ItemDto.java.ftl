@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel}Item「DTO」
+ * ${entityNameCamel}Item「DTO」
  * <p>
  * Power by AggregateX
  *
@@ -17,10 +17,10 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Builder
-public class ${moduleNameCamel}ItemDto {
+public class ${entityNameCamel}ItemDto {
 
     private String id;
-    private String ${moduleNameLower}Id;
+    private String ${entityNameLower}Id;
     private String name;
     private String description;
     private Long createdAt;

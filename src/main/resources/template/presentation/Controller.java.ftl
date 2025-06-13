@@ -2,11 +2,11 @@ package ${packageName}.${moduleNameLower}.presentation;
 
 import cn.treedeep.king.core.application.cqrs.command.CommandBus;
 import cn.treedeep.king.core.application.cqrs.query.QueryBus;
-import ${packageName}.${moduleNameLower}.application.command.Create${moduleNameCamel}Command;
-import ${packageName}.${moduleNameLower}.application.query.${moduleNameCamel}ListQuery;
-import ${packageName}.${moduleNameLower}.application.query.${moduleNameCamel}ListQueryResult;
-import ${packageName}.${moduleNameLower}.presentation.dto.Create${moduleNameCamel}Request;
-import ${packageName}.${moduleNameLower}.presentation.dto.${moduleNameCamel}ListResponse;
+import ${packageName}.${moduleNameLower}.application.command.Create${entityNameCamel}Command;
+import ${packageName}.${moduleNameLower}.application.query.${entityNameCamel}ListQuery;
+import ${packageName}.${moduleNameLower}.application.query.${entityNameCamel}ListQueryResult;
+import ${packageName}.${moduleNameLower}.presentation.dto.Create${entityNameCamel}Request;
+import ${packageName}.${moduleNameLower}.presentation.dto.${entityNameCamel}ListResponse;
 import cn.treedeep.king.shared.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,21 +27,21 @@ import org.springframework.web.bind.annotation.*;
  * @since ${dateTime}
  */
 @RestController
-@RequestMapping("/api/${moduleNameLower}s")
+@RequestMapping("/api/${entityNameLower}s")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "${moduleNameCamel} Management", description = "${moduleComment}管理接口")
-public class ${moduleNameCamel}Controller {
+@Tag(name = "${entityNameCamel} Management", description = "${moduleComment}管理接口")
+public class ${entityNameCamel}Controller {
 
     private final CommandBus commandBus;
     private final QueryBus queryBus;
 
     @Operation(summary = "创建${moduleComment}", description = "创建新的${moduleComment}")
     @PostMapping
-    public ResponseEntity<Result> create${moduleNameCamel}(@Valid @RequestBody Create${moduleNameCamel}Request request) {
-        log.info("Creating ${moduleNameCamel}: {}", request.getName());
+    public ResponseEntity<Result> create${entityNameCamel}(@Valid @RequestBody Create${entityNameCamel}Request request) {
+        log.info("Creating ${entityNameCamel}: {}", request.getName());
 
-        Create${moduleNameCamel}Command command = new Create${moduleNameCamel}Command(
+        Create${entityNameCamel}Command command = new Create${entityNameCamel}Command(
                 request.getName(),
                 request.getDescription()
         );
@@ -52,17 +52,17 @@ public class ${moduleNameCamel}Controller {
 
     @Operation(summary = "获取${moduleComment}列表", description = "分页获取${moduleComment}列表")
     @GetMapping
-    public ResponseEntity<Result> get${moduleNameCamel}List(
+    public ResponseEntity<Result> get${entityNameCamel}List(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String name) {
 
-        log.info("Getting ${moduleNameLower} list: page={}, size={}, name={}", page, size, name);
+        log.info("Getting ${entityNameLower} list: page={}, size={}, name={}", page, size, name);
 
-        ${moduleNameCamel}ListQuery query = new ${moduleNameCamel}ListQuery(page, size, name);
-        ${moduleNameCamel}ListQueryResult queryResult = queryBus.execute(query);
+        ${entityNameCamel}ListQuery query = new ${entityNameCamel}ListQuery(page, size, name);
+        ${entityNameCamel}ListQueryResult queryResult = queryBus.execute(query);
 
-        ${moduleNameCamel}ListResponse response = new ${moduleNameCamel}ListResponse(queryResult.get${moduleNameCamel}s());
+        ${entityNameCamel}ListResponse response = new ${entityNameCamel}ListResponse(queryResult.get${entityNameCamel}s());
         return ResponseEntity.ok(Result.success(response));
     }
 }

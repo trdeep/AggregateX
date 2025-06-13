@@ -1,8 +1,8 @@
 package ${packageName}.${moduleNameLower}.application.query;
 
 import cn.treedeep.king.core.application.cqrs.query.AbstractQueryHandler;
-import ${packageName}.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
-import ${packageName}.${moduleNameLower}.application.service.${moduleNameCamel}ApplicationService;
+import ${packageName}.${moduleNameLower}.application.dto.${entityNameCamel}Dto;
+import ${packageName}.${moduleNameLower}.application.service.${entityNameCamel}ApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,16 +22,16 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ${moduleNameCamel}ListQueryHandler extends AbstractQueryHandler<${moduleNameCamel}ListQuery, ${moduleNameCamel}ListQueryResult> {
+public class ${entityNameCamel}ListQueryHandler extends AbstractQueryHandler<${entityNameCamel}ListQuery, ${entityNameCamel}ListQueryResult> {
 
-    private final ${moduleNameCamel}ApplicationService ${moduleNameLower}ApplicationService;
+    private final ${entityNameCamel}ApplicationService ${entityNameLower}ApplicationService;
 
     @Override
-    protected ${moduleNameCamel}ListQueryResult doHandle(${moduleNameCamel}ListQuery query) {
-        log.info("Processing ${moduleNameCamel}ListQuery");
+    protected ${entityNameCamel}ListQueryResult doHandle(${entityNameCamel}ListQuery query) {
+        log.info("Processing ${entityNameCamel}ListQuery");
 
-        List<${moduleNameCamel}Dto> collect = ${moduleNameLower}ApplicationService.findAll();
+        List<${entityNameCamel}Dto> collect = ${entityNameLower}ApplicationService.findAll();
 
-        return new ${moduleNameCamel}ListQueryResult(collect, collect.size());
+        return new ${entityNameCamel}ListQueryResult(collect, collect.size());
     }
 }

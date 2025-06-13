@@ -1,8 +1,8 @@
 package ${packageName}.${moduleNameLower}.application.service;
 
-import ${packageName}.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
-import ${packageName}.${moduleNameLower}.application.dto.${moduleNameCamel}DtoConverter;
-import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}AggregateRepository;
+import ${packageName}.${moduleNameLower}.application.dto.${entityNameCamel}Dto;
+import ${packageName}.${moduleNameLower}.application.dto.${entityNameCamel}DtoConverter;
+import ${packageName}.${moduleNameLower}.domain.${entityNameCamel}AggregateRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,15 +22,15 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Transactional
-public class ${moduleNameCamel}ApplicationService {
+public class ${entityNameCamel}ApplicationService {
 
-    private final ${moduleNameCamel}AggregateRepository aggregateRepository;
-    private final ${moduleNameCamel}DtoConverter ${moduleNameLower}DtoConverter;
+    private final ${entityNameCamel}AggregateRepository aggregateRepository;
+    private final ${entityNameCamel}DtoConverter ${entityNameLower}DtoConverter;
 
-    public List<${moduleNameCamel}Dto> findAll() {
+    public List<${entityNameCamel}Dto> findAll() {
         return aggregateRepository.findAll()
                 .stream()
-                .map(${moduleNameLower}DtoConverter::toDto)
+                .map(${entityNameLower}DtoConverter::toDto)
                 .toList();
     }
 }

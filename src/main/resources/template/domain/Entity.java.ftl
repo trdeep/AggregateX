@@ -1,7 +1,7 @@
 package ${packageName}.${moduleNameLower}.domain;
 
 import cn.treedeep.king.core.domain.AggregateRoot;
-import ${packageName}.${moduleNameLower}.domain.event.${moduleNameCamel}CreatedEvent;
+import ${packageName}.${moduleNameLower}.domain.event.${entityNameCamel}CreatedEvent;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${moduleNameCamel}「聚合」
+ * ${entityNameCamel}「聚合」
  * <p>
  * Power by AggregateX
  *
@@ -22,35 +22,35 @@ import java.util.List;
  * @since ${dateTime}
  */
 @Entity
-@Table(name = "${moduleNameLower}s")
+@Table(name = "${entityNameLower}s")
 @Comment("${moduleComment}表【聚合】")
 @NoArgsConstructor
 @Getter
-public class ${moduleNameCamel} extends AggregateRoot<${moduleNameCamel}Id> {
+public class ${entityNameCamel} extends AggregateRoot<${entityNameCamel}Id> {
 
     @EmbeddedId
     @Comment("ID")
-    private ${moduleNameCamel}Id id;
+    private ${entityNameCamel}Id id;
 
     @Column(name = "name")
     @Comment("${moduleComment}名称")
     private String name;
 
-    @OneToMany(mappedBy = "${moduleNameLower}", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<${moduleNameCamel}Item> items = new ArrayList<>();
+    @OneToMany(mappedBy = "${entityNameLower}", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<${entityNameCamel}Item> items = new ArrayList<>();
 
 
-    public ${moduleNameCamel}(${moduleNameCamel}Id id, String name, ${moduleNameCamel}Item... ${moduleNameLower}Items) {
+    public ${entityNameCamel}(${entityNameCamel}Id id, String name, ${entityNameCamel}Item... ${entityNameLower}Items) {
         this.id = id;
         this.name = name;
-        this.items.addAll(Arrays.asList(${moduleNameLower}Items));
+        this.items.addAll(Arrays.asList(${entityNameLower}Items));
 
-        for (${moduleNameCamel}Item item : ${moduleNameLower}Items) {
-            item.set${moduleNameCamel}(this);
+        for (${entityNameCamel}Item item : ${entityNameLower}Items) {
+            item.set${entityNameCamel}(this);
         }
 
         // 发布领域事件
-        this.registerEvent(new ${moduleNameCamel}CreatedEvent(this));
+        this.registerEvent(new ${entityNameCamel}CreatedEvent(this));
     }
 
 }

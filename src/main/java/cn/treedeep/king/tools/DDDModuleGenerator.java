@@ -1,8 +1,9 @@
 package cn.treedeep.king.tools;
 
+import cn.treedeep.king.tools.model.EntityInfo;
+import cn.treedeep.king.tools.model.ModuleInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import reactor.util.function.Tuple4;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -169,14 +170,14 @@ public class DDDModuleGenerator {
      * 生成模板文件
      */
     private void generateTemplateFiles(Path modulePath, String packageName, String moduleName, String moduleComment, String copyright, String author) throws IOException {
-        String moduleNameCamel = toPascalCase(moduleName);
+        String entityNameCamel = toPascalCase(moduleName);
         String moduleNameLower = moduleName.toLowerCase();
 
         if (moduleComment.isEmpty()) {
-            moduleComment = moduleNameCamel;
+            moduleComment = entityNameCamel;
         }
 
-        DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(modulePath, packageName, moduleNameCamel, moduleNameLower, moduleComment, copyright, author);
+        DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(modulePath, packageName, entityNameCamel, moduleNameLower, moduleComment, copyright, author);
 
         // 生成领域层文件
         templateGenerator.generateDomainFiles();
@@ -274,35 +275,38 @@ public class DDDModuleGenerator {
 
     /**
      * 批量生成DDD模块 - 新的使用方式
+     * 支持基于 ModuleInfo 和 EntityInfo 的模块生成
      *
      * @param projectPath 项目路径
      * @param packageName 包名
-     * @param isCover     是否覆盖
-     * @param modules     模块信息列表，每个元素为【元组[模块名, 模块注释, 实体类列表, 实体类描述列表]】
-     * @param author      作者
-     * @param copyright   版权信息
+     * @param modules 模块信息列表
+     * @param author 作者
+     * @param copyright 版权信息
      */
-    public void generateModules(String projectPath, String packageName, boolean isCover,
-                                List<Tuple4<String, String, List<String>, List<String>>> modules,
-                                String author,
-                                String copyright) {
+    public void generateModules(String projectPath,
+                               String packageName,
+                               List<ModuleInfo> modules,
+                               String author,
+                               String copyright) {
 
         log.info("🏗️ 开始批量生成模块...");
         log.info("📁 工程目录：{}", projectPath);
         log.info("📦 将生成 {} 个模块", modules.size());
 
         for (int i = 0; i < modules.size(); i++) {
-            Tuple4<String, String, List<String>, List<String>> moduleInfo = modules.get(i);
-            String moduleName = moduleInfo.getT1();
-            String moduleComment = moduleInfo.getT2();
-            List<String> entities = moduleInfo.getT3();
-            List<String> entityDescriptions = moduleInfo.getT4();
+            ModuleInfo moduleInfo = modules.get(i);
+            String moduleName = moduleInfo.getName();
+            String moduleComment = moduleInfo.getComment();
+            List<EntityInfo> entities = moduleInfo.getEntities();
 
             try {
                 log.info("📝 正在生成模块 [{}/{}]: {} - {}", i + 1, modules.size(), moduleName, moduleComment);
 
                 // 为每个模块生成基础结构
-                generateModuleWithEntities(projectPath, packageName, isCover, moduleName, moduleComment, entities, entityDescriptions, copyright, author);
+                generateModuleWithEntities(projectPath, packageName, true, moduleName, moduleComment,
+                                         entities, copyright, author);
+
+                log.info("✅ 模块 '{}' 生成完成", moduleName);
 
             } catch (Exception e) {
                 log.error("❌ 模块 '{}' 生成失败: {}", moduleName, e.getMessage(), e);
@@ -316,23 +320,106 @@ public class DDDModuleGenerator {
      * 生成带多个实体的DDD模块
      */
     private void generateModuleWithEntities(String projectPath,
-                                            String packageName,
-                                            boolean isCover,
-                                            String moduleName,
-                                            String moduleComment,
-                                            List<String> entities,
-                                            List<String> entityDescriptions,
-                                            String copyright,
-                                            String author) throws IOException {
+                                          String packageName,
+                                          boolean isCover,
+                                          String moduleName,
+                                          String moduleComment,
+                                          List<EntityInfo> entities,
+                                          String copyright,
+                                          String author) throws IOException {
 
-        // 调用原有的生成方法
-        generateModule(projectPath, packageName, isCover, moduleName, moduleComment, copyright, author);
+        // 模块信息（moduleName, moduleComment）不生成代码，只作为模块容器
+        // 真正的代码生成基于 EntityInfo 列表，同一模块下的所有实体在同一个DDD分层目录中
 
-        // 如果提供了额外的实体信息，可以在这里扩展生成逻辑
         if (entities != null && !entities.isEmpty()) {
-            log.info("📋 模块 '{}' 包含 {} 个实体: {}", moduleName, entities.size(), entities);
-            // 这里可以根据实体列表生成额外的文件或修改现有模板
-            // 当前保持与原有逻辑兼容
+            log.info("📋 模块 '{}' 包含 {} 个实体", moduleName, entities.size());
+
+            // 创建模块基础目录结构
+            String actualPackageName;
+            String actualPackagePath;
+            if (StringUtils.isBlank(packageName)) {
+                actualPackageName = BASE_PACKAGE_PATH.replace("/", ".");
+                actualPackagePath = BASE_PACKAGE_PATH;
+            } else {
+                actualPackageName = packageName;
+                actualPackagePath = packageName.replace(".", "/");
+            }
+
+            Path javaSourcePath = determineJavaSourcePath(projectPath, actualPackagePath);
+            Path modulePath = javaSourcePath.resolve(moduleName);
+
+            // 创建目录结构
+            log.info("📁 创建模块目录结构...");
+            createDirectoryStructure(modulePath);
+
+            // 为每个实体生成代码文件，但都在同一个模块目录下
+            for (EntityInfo entityInfo : entities) {
+                String entityName = entityInfo.getName();
+                String entityComment = entityInfo.getComment();
+
+                log.info("  🔸 生成实体: {} - {}", entityName, entityComment);
+
+                // 生成实体相关的文件
+                generateEntityFiles(modulePath, actualPackageName, moduleName, entityName, entityComment, copyright, author);
+            }
+
+            // 生成模块级的配置和包信息文件
+            generateModuleLevelFiles(modulePath, actualPackageName, moduleName, moduleComment, copyright, author);
+
+        } else {
+            // 如果没有实体信息，使用传统方式生成（向后兼容）
+            generateModule(projectPath, packageName, isCover, moduleName, moduleComment, copyright, author);
+        }
+    }
+
+    /**
+     * 为单个实体生成文件
+     */
+    private void generateEntityFiles(Path modulePath, String packageName, String moduleName,
+                                   String entityName, String entityComment, String copyright, String author) throws IOException {
+        String entityNameCamel = toPascalCase(entityName);
+        String entityNameLower = entityName.toLowerCase();
+
+        try {
+            // 使用新的构造函数，正确分离模块名和实体名
+            DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(modulePath, packageName, moduleName, entityNameCamel, entityNameLower, entityComment, copyright, author);
+
+            // 为实体生成DDD分层文件
+            log.debug("    - 生成领域层文件");
+            templateGenerator.generateDomainFiles();
+
+            log.debug("    - 生成应用层文件");
+            templateGenerator.generateApplicationFiles();
+
+            log.debug("    - 生成基础设施层文件");
+            templateGenerator.generateInfrastructureFiles();
+
+            log.debug("    - 生成表现层文件");
+            templateGenerator.generatePresentationFiles();
+        } catch (IOException e) {
+            throw new IOException("生成实体 " + entityName + " 的文件时发生错误", e);
+        }
+    }
+
+    /**
+     * 生成模块级别的文件（包信息、README等）
+     */
+    private void generateModuleLevelFiles(Path modulePath, String packageName, String moduleName,
+                                        String moduleComment, String copyright, String author) throws IOException {
+        String entityNameCamel = toPascalCase(moduleName);
+        String moduleNameLower = moduleName.toLowerCase();
+
+        try {
+            // 注意：这里传入 packageName 作为基础包名，DDDTemplateGenerator 会自动构建完整包名
+            DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(modulePath, packageName, entityNameCamel, moduleNameLower, moduleComment, copyright, author);
+
+            // 生成包信息文件
+            templateGenerator.generatePackageInfoFiles();
+
+            // 生成 README.md 文件
+            templateGenerator.generateReadmeFiles();
+        } catch (IOException e) {
+            throw new IOException("生成模块 " + moduleName + " 的配置文件时发生错误", e);
         }
     }
 }
