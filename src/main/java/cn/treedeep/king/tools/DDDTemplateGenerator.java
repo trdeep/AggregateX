@@ -164,18 +164,18 @@ public class DDDTemplateGenerator {
     }
 
     private void generateAggregateId() throws IOException {
-        String content = processTemplate("domain/Id.java.ftl", params);
+        String content = processTemplate("domain/EntityId.java.ftl", params);
         writeFile(modulePath.resolve("domain/" + moduleNameCamel + "Id.java"), content);
     }
 
     private void generateAggregateRoot() throws IOException {
-        String content = processTemplate("domain/Main.java.ftl", params);
+        String content = processTemplate("domain/Entity.java.ftl", params);
         writeFile(modulePath.resolve("domain/" + moduleNameCamel + ".java"), content);
     }
 
 
     private void generateDomainEvent() throws IOException {
-        String content = processTemplate("domain/event/CreatedEvent.java.ftl", params);
+        String content = processTemplate("domain/event/EntityCreatedEvent.java.ftl", params);
         writeFile(modulePath.resolve("domain/event/" + moduleNameCamel + "CreatedEvent.java"), content);
     }
 
@@ -255,8 +255,8 @@ public class DDDTemplateGenerator {
 
     // 新增的领域层文件生成方法
     private void generateAggregateRepository() throws IOException {
-        String content = processTemplate("domain/AggregateRepository.java.ftl", params);
-        writeFile(modulePath.resolve("domain/AggregateRepository.java"), content);
+        String content = processTemplate("domain/EntityRepository.java.ftl", params);
+        writeFile(modulePath.resolve("domain/" + moduleNameCamel + "AggregateRepository.java"), content);
     }
 
     private void generateDescription() throws IOException {
@@ -283,12 +283,12 @@ public class DDDTemplateGenerator {
     // 新增的基础设施层文件生成方法
     private void generateAggregateJpaRepository() throws IOException {
         String content = processTemplate("infrastructure/repository/AggregateJpaRepository.java.ftl", params);
-        writeFile(modulePath.resolve("infrastructure/repository/AggregateJpaRepository.java"), content);
+        writeFile(modulePath.resolve("infrastructure/repository/" + moduleNameCamel + "AggregateJpaRepository.java"), content);
     }
 
     private void generateAggregateRepositoryImpl() throws IOException {
         String content = processTemplate("infrastructure/repository/AggregateRepositoryImpl.java.ftl", params);
-        writeFile(modulePath.resolve("infrastructure/repository/AggregateRepositoryImpl.java"), content);
+        writeFile(modulePath.resolve("infrastructure/repository/" + moduleNameCamel + "AggregateRepositoryImpl.java"), content);
     }
 
     // 新增的 package-info 文件生成方法
@@ -332,7 +332,31 @@ public class DDDTemplateGenerator {
     }
 
     public void generateReadmeFiles() throws IOException {
-        String content = processTemplate("README.md.ftl", params);
-        writeFile(modulePath.resolve("README.md"), content);
+        Path readmePath = modulePath.resolve("README.md");
+
+        if (Files.exists(readmePath)) {
+            // 如果 README.md 已存在，追加内容
+            appendToReadme(readmePath);
+        } else {
+            // 如果不存在，创建新的 README.md
+            String content = processTemplate("README.md.ftl", params);
+            writeFile(readmePath, content);
+        }
+    }
+
+    /**
+     * 追加内容到现有的 README.md 文件
+     */
+    private void appendToReadme(Path readmePath) throws IOException {
+        String moduleComment = (String) params.get("moduleComment");
+        String dateTime = (String) params.get("dateTime");
+
+        String appendContent = String.format("%n%n## %s%n%n> 添加时间: %s%n", moduleComment, dateTime);
+
+        Files.writeString(readmePath, appendContent,
+            java.nio.file.StandardOpenOption.CREATE,
+            java.nio.file.StandardOpenOption.APPEND);
+
+        log.info("📝 已追加模块信息到 README.md");
     }
 }

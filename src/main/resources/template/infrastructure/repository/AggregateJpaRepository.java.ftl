@@ -1,6 +1,6 @@
 package ${packageName}.${moduleNameLower}.infrastructure.repository;
 
-import ${packageName}.${moduleNameLower}.domain.AggregateRepository;
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}AggregateRepository;
 import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel};
 import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}Id;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +17,6 @@ import org.springframework.stereotype.Repository;
  * @since ${dateTime}
  */
 @Repository("${moduleNameLower}AggregateJpaRepository")
-public interface AggregateJpaRepository extends JpaRepository<${moduleNameCamel}, ${moduleNameCamel}Id>, AggregateRepository {
+public interface ${moduleNameCamel}AggregateJpaRepository extends JpaRepository<${moduleNameCamel}, ${moduleNameCamel}Id>, ${moduleNameCamel}AggregateRepository {
 
 }

@@ -1,6 +1,6 @@
 package ${packageName}.${moduleNameLower}.domain.service;
 
-import ${packageName}.${moduleNameLower}.domain.AggregateRepository;
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}AggregateRepository;
 import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel};
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ${moduleNameCamel}DomainService {
 
-    private final AggregateRepository ${moduleNameLower}Repository;
+    private final ${moduleNameCamel}AggregateRepository ${moduleNameLower}Repository;
 
     /**
      * 验证${moduleNameCamel}名称唯一性

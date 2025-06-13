@@ -3,7 +3,7 @@ package ${packageName}.${moduleNameLower}.infrastructure.repository;
 import cn.treedeep.king.core.domain.AbstractRepository;
 import cn.treedeep.king.core.domain.DomainEventPublisher;
 import cn.treedeep.king.core.domain.EventStore;
-import ${packageName}.${moduleNameLower}.domain.AggregateRepository;
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}AggregateRepository;
 import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel};
 import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}Id;
 import jakarta.annotation.Resource;
@@ -26,12 +26,12 @@ import java.util.Optional;
  */
 @Primary
 @Repository("${moduleNameLower}AggregateRepository")
-public class AggregateRepositoryImpl extends AbstractRepository<${moduleNameCamel}, ${moduleNameCamel}Id> implements AggregateRepository {
+public class ${moduleNameCamel}AggregateRepositoryImpl extends AbstractRepository<${moduleNameCamel}, ${moduleNameCamel}Id> implements ${moduleNameCamel}AggregateRepository {
 
     @Resource(name = "${moduleNameLower}AggregateJpaRepository")
-    private AggregateRepository aggregateRepository;
+    private ${moduleNameCamel}AggregateRepository aggregateRepository;
 
-    public AggregateRepositoryImpl(
+    public ${moduleNameCamel}AggregateRepositoryImpl(
             CacheManager cacheManager,
             EventStore eventStore,
             DomainEventPublisher eventPublisher) {

@@ -3,7 +3,7 @@ package ${packageName}.${moduleNameLower}.application.command;
 import cn.treedeep.king.core.application.cqrs.command.AbstractCommandHandler;
 import cn.treedeep.king.core.application.cqrs.command.CommandBus;
 import cn.treedeep.king.core.domain.EventBus;
-import ${packageName}.${moduleNameLower}.domain.AggregateRepository;
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}AggregateRepository;
 import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel};
 import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}Id;
 import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}Item;
@@ -27,12 +27,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class Create${moduleNameCamel}CommandHandler extends AbstractCommandHandler<Create${moduleNameCamel}Command, ${moduleNameCamel}> {
 
-    private final AggregateRepository ${moduleNameLower}Repository;
+    private final ${moduleNameCamel}AggregateRepository ${moduleNameLower}Repository;
     private final ${moduleNameCamel}DomainService ${moduleNameLower}DomainService;
 
     protected Create${moduleNameCamel}CommandHandler(EventBus eventBus,
                                                      CommandBus commandBus,
-                                                     AggregateRepository ${moduleNameLower}Repository,
+                                                     ${moduleNameCamel}AggregateRepository ${moduleNameLower}Repository,
                                                      ${moduleNameCamel}DomainService ${moduleNameLower}DomainService) {
         super(${moduleNameLower}Repository, eventBus, commandBus);
         this.${moduleNameLower}Repository = ${moduleNameLower}Repository;

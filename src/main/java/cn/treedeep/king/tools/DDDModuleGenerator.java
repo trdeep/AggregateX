@@ -106,7 +106,14 @@ public class DDDModuleGenerator {
     /**
      * 生成DDD模块
      */
-    public void generateModule(String projectPath, String packageName, boolean isCover, String moduleName, String moduleComment, String copyright, String author) throws IOException {
+    public void generateModule(String projectPath,
+                               String packageName,
+                               boolean isCover,
+                               String moduleName,
+                               String moduleComment,
+                               String copyright,
+                               String author) throws IOException {
+
         log.info("🏗️ 工程目录：{}", projectPath);
 
         if (StringUtils.isBlank(copyright)) {
@@ -133,24 +140,22 @@ public class DDDModuleGenerator {
         Path modulePath = javaSourcePath.resolve(moduleName);
 
         // 检查模块是否已存在
-        if (Files.exists(modulePath)) {
+        boolean shouldOverwrite = isCover;
+        if (Files.exists(modulePath) && !isCover) {
             log.warn("⚠️ 模块 '{}' 已存在于路径: {}", moduleName, modulePath);
-
-            if (isCover) {
-                log.warn("覆盖操作！");
-                deleteDirectory(modulePath);
-            } else {
-                try (Scanner scanner = new Scanner(System.in)) {
-                    System.out.print("是否要覆盖现有模块? (y/N): ");
-                    String response = scanner.nextLine().trim().toLowerCase();
-                    if (!"y".equals(response) && !"yes".equals(response)) {
-                        log.info("操作已取消");
-                        return;
-                    }
+            try (Scanner scanner = new Scanner(System.in)) {
+                System.out.print("是否要覆盖现有模块文件? (y/N): ");
+                String response = scanner.nextLine().trim().toLowerCase();
+                if (!"y".equals(response) && !"yes".equals(response)) {
+                    log.info("操作已取消");
+                    return;
                 }
-                deleteDirectory(modulePath);
+                shouldOverwrite = true;
             }
+        }
 
+        if (Files.exists(modulePath) && shouldOverwrite) {
+            log.info("📝 将覆盖现有模块文件...");
         }
 
         log.info("📁 创建目录结构...");
@@ -287,6 +292,7 @@ public class DDDModuleGenerator {
     /**
      * 递归删除目录
      */
+    @SuppressWarnings("unused")
     private void deleteDirectory(Path path) throws IOException {
         if (Files.exists(path)) {
             Files.walk(path)

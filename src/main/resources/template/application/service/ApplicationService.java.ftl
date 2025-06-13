@@ -2,7 +2,7 @@ package ${packageName}.${moduleNameLower}.application.service;
 
 import ${packageName}.${moduleNameLower}.application.dto.${moduleNameCamel}Dto;
 import ${packageName}.${moduleNameLower}.application.dto.${moduleNameCamel}DtoConverter;
-import ${packageName}.${moduleNameLower}.domain.AggregateRepository;
+import ${packageName}.${moduleNameLower}.domain.${moduleNameCamel}AggregateRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ import java.util.List;
 @Transactional
 public class ${moduleNameCamel}ApplicationService {
 
-    private final AggregateRepository aggregateRepository;
+    private final ${moduleNameCamel}AggregateRepository aggregateRepository;
     private final ${moduleNameCamel}DtoConverter ${moduleNameLower}DtoConverter;
 
     public List<${moduleNameCamel}Dto> findAll() {
