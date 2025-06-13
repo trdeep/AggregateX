@@ -41,7 +41,7 @@ public class DDDTemplateGenerator {
                                 String moduleNameLower,
                                 String moduleComment,
                                 String copyright,
-                                String author) throws IOException {
+                                String author) {
 
         this.modulePath = modulePath;
         this.moduleNameCamel = moduleNameCamel;
@@ -103,47 +103,7 @@ public class DDDTemplateGenerator {
     }
 
     public void generatePackageInfoFiles() throws IOException {
-        generatePackageInfo("domain", "领域层",
-                "包含核心业务逻辑和领域模型：\n" +
-                        " * - 聚合根: " + moduleNameCamel + "\n" +
-                        " * - 值对象: " + moduleNameCamel + "Id\n" +
-                        " * - 领域事件: " + moduleNameCamel + "CreatedEvent\n" +
-                        " * - 领域服务: " + moduleNameCamel + "DomainService\n" +
-                        " * - 仓储接口: " + moduleNameCamel + "Repository");
-
-        generatePackageInfo("application", "应用层",
-                "协调领域层和基础设施层：\n" +
-                        " * - 命令处理: Create" + moduleNameCamel + "Command\n" +
-                        " * - 查询处理: " + moduleNameCamel + "ListQuery\n" +
-                        " * - 数据传输对象: " + moduleNameCamel + "Dto\n" +
-                        " * - 应用服务: " + moduleNameCamel + "ApplicationService");
-
-        generatePackageInfo("infrastructure", "基础设施层",
-                "提供技术实现和外部依赖：\n" +
-                        " * - 仓储实现: " + moduleNameCamel + "RepositoryImpl\n" +
-                        " * - JPA 仓储: " + moduleNameCamel + "JpaRepository\n" +
-                        " * - 外部服务客户端\n" +
-                        " * - 消息发布器实现");
-
-        generatePackageInfo("presentation", "表现层",
-                "处理用户界面和HTTP请求：\n" +
-                        " * - REST 控制器: " + moduleNameCamel + "Controller\n" +
-                        " * - 请求DTO: Create" + moduleNameCamel + "Request\n" +
-                        " * - 响应DTO: " + moduleNameCamel + "ListResponse\n" +
-                        " * - 数据验证和转换");
-
-        generatePackageInfo("interfaces", "接口层",
-                """
-                        负责系统间通信和外部系统集成：
-                         * - RPC 服务接口
-                         * - 消息队列处理
-                         * - 外部API客户端
-                         * - 系统间数据传输对象""");
-
-        // 生成子包的 package-info 文件
-        generateDomainServicePackageInfo();
-        generateApplicationServicePackageInfo();
-        generateInfrastructureServicePackageInfo();
+        // generatePackageInfo("domain", "领域层","");
     }
 
     private String processTemplate(String templateName, Map<String, Object> params) throws IOException {
@@ -289,46 +249,6 @@ public class DDDTemplateGenerator {
     private void generateAggregateRepositoryImpl() throws IOException {
         String content = processTemplate("infrastructure/repository/AggregateRepositoryImpl.java.ftl", params);
         writeFile(modulePath.resolve("infrastructure/repository/" + moduleNameCamel + "AggregateRepositoryImpl.java"), content);
-    }
-
-    // 新增的 package-info 文件生成方法
-    private void generateDomainServicePackageInfo() throws IOException {
-        params.put("layerName", "领域服务层");
-        params.put("description", """
-                包含领域逻辑和业务规则的服务：
-                 * - 复杂业务逻辑处理
-                 * - 跨聚合根操作
-                 * - 领域规则验证""");
-        params.put("layer", "domain/service");
-
-        String content = processTemplate("domain/service/package-info.java.ftl", params);
-        writeFile(modulePath.resolve("domain/service/package-info.java"), content);
-    }
-
-    private void generateApplicationServicePackageInfo() throws IOException {
-        params.put("layerName", "应用服务层");
-        params.put("description", """
-                应用层服务实现：
-                 * - 业务用例协调
-                 * - 事务管理
-                 * - 领域层和基础设施层的桥梁""");
-        params.put("layer", "application/service");
-
-        String content = processTemplate("application/service/package-info.java.ftl", params);
-        writeFile(modulePath.resolve("application/service/package-info.java"), content);
-    }
-
-    private void generateInfrastructureServicePackageInfo() throws IOException {
-        params.put("layerName", "基础设施服务层");
-        params.put("description", """
-                基础设施层服务实现：
-                 * - 外部系统集成
-                 * - 第三方服务调用
-                 * - 消息发布和订阅""");
-        params.put("layer", "infrastructure/service");
-
-        String content = processTemplate("infrastructure/service/package-info.java.ftl", params);
-        writeFile(modulePath.resolve("infrastructure/service/package-info.java"), content);
     }
 
     public void generateReadmeFiles() throws IOException {

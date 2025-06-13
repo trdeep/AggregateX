@@ -2,6 +2,7 @@ package cn.treedeep.king.tools;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import reactor.util.function.Tuple4;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,6 +11,7 @@ import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -29,80 +31,6 @@ public class DDDModuleGenerator {
 
     private static final String BASE_PACKAGE_PATH = "cn/treedeep/king";
 
-    public static void main(String[] args) {
-        new DDDModuleGenerator().runInteractiveMode();
-    }
-
-    /**
-     * 交互模式运行
-     */
-    private void runInteractiveMode() {
-        printBanner();
-        try (Scanner scanner = new Scanner(System.in)) {
-
-            System.out.println("🎯 AggregateX DDD模块生成器");
-            System.out.println("═══════════════════════════");
-            System.out.println();
-
-            System.out.print("🧑‍💻 请输入作者信息: ");
-            String author = scanner.nextLine().trim();
-
-            System.out.print("©️ 请输入版权信息: ");
-            String copyright = scanner.nextLine().trim();
-            System.out.println();
-
-            boolean continueGenerating = true;
-            while (continueGenerating) {
-
-                // 获取项目路径
-                System.out.print("📁 请输入项目路径 (默认为当前路径 '.'): ");
-                String projectPath = scanner.nextLine().trim();
-                if (projectPath.isEmpty()) {
-                    projectPath = ".";
-                }
-
-                // 获取模块名称
-                System.out.print("📦 请输入模块信息，可空格带注释 (如: order 订单}): ");
-                String moduleInfo = scanner.nextLine().trim();
-
-                if (moduleInfo.isEmpty()) {
-                    log.error("❌ 模块信息不能为空");
-                    continue;
-                }
-
-                System.out.println();
-                System.out.println("🚀 开始生成模块...");
-
-                try {
-
-                    if (moduleInfo.contains(" ")) {
-                        String[] split = moduleInfo.split(" ");
-                        generateModule(projectPath, BASE_PACKAGE_PATH, false, split[0], split[1], copyright, author);
-                    } else {
-                        generateModule(projectPath, BASE_PACKAGE_PATH, false, moduleInfo, null, copyright, author);
-                    }
-
-                    System.out.println();
-                    System.out.println("🎉 模块生成成功!");
-                    System.out.println("📍 请查看生成的文件并根据业务需求进行调整");
-                } catch (Exception e) {
-                    log.error("❌ 模块生成失败", e);
-                }
-
-                // Ask if the user wants to continue generating modules
-                System.out.print("\n是否继续生成模块？ (y/N): ");
-                String response = null;
-                try {
-                    response = scanner.nextLine().trim().toLowerCase();
-                } catch (Exception ignored) {
-                }
-                if (!"y".equals(response) && !"yes".equals(response)) {
-                    continueGenerating = false;
-                }
-            }
-        }
-    }
-
     /**
      * 生成DDD模块
      */
@@ -113,6 +41,7 @@ public class DDDModuleGenerator {
                                String moduleComment,
                                String copyright,
                                String author) throws IOException {
+        printBanner();
 
         log.info("🏗️ 工程目录：{}", projectPath);
 
@@ -341,5 +270,69 @@ public class DDDModuleGenerator {
         System.out.println("   • 运行测试: ./gradlew test");
         System.out.println("   • 生成文档: ./gradlew javadoc");
         System.out.println();
+    }
+
+    /**
+     * 批量生成DDD模块 - 新的使用方式
+     *
+     * @param projectPath 项目路径
+     * @param packageName 包名
+     * @param isCover     是否覆盖
+     * @param modules     模块信息列表，每个元素为【元组[模块名, 模块注释, 实体类列表, 实体类描述列表]】
+     * @param author      作者
+     * @param copyright   版权信息
+     */
+    public void generateModules(String projectPath, String packageName, boolean isCover,
+                                List<Tuple4<String, String, List<String>, List<String>>> modules,
+                                String author,
+                                String copyright) {
+
+        log.info("🏗️ 开始批量生成模块...");
+        log.info("📁 工程目录：{}", projectPath);
+        log.info("📦 将生成 {} 个模块", modules.size());
+
+        for (int i = 0; i < modules.size(); i++) {
+            Tuple4<String, String, List<String>, List<String>> moduleInfo = modules.get(i);
+            String moduleName = moduleInfo.getT1();
+            String moduleComment = moduleInfo.getT2();
+            List<String> entities = moduleInfo.getT3();
+            List<String> entityDescriptions = moduleInfo.getT4();
+
+            try {
+                log.info("📝 正在生成模块 [{}/{}]: {} - {}", i + 1, modules.size(), moduleName, moduleComment);
+
+                // 为每个模块生成基础结构
+                generateModuleWithEntities(projectPath, packageName, isCover, moduleName, moduleComment, entities, entityDescriptions, copyright, author);
+
+            } catch (Exception e) {
+                log.error("❌ 模块 '{}' 生成失败: {}", moduleName, e.getMessage(), e);
+            }
+        }
+
+        log.info("🎉 批量生成完成！");
+    }
+
+    /**
+     * 生成带多个实体的DDD模块
+     */
+    private void generateModuleWithEntities(String projectPath,
+                                            String packageName,
+                                            boolean isCover,
+                                            String moduleName,
+                                            String moduleComment,
+                                            List<String> entities,
+                                            List<String> entityDescriptions,
+                                            String copyright,
+                                            String author) throws IOException {
+
+        // 调用原有的生成方法
+        generateModule(projectPath, packageName, isCover, moduleName, moduleComment, copyright, author);
+
+        // 如果提供了额外的实体信息，可以在这里扩展生成逻辑
+        if (entities != null && !entities.isEmpty()) {
+            log.info("📋 模块 '{}' 包含 {} 个实体: {}", moduleName, entities.size(), entities);
+            // 这里可以根据实体列表生成额外的文件或修改现有模板
+            // 当前保持与原有逻辑兼容
+        }
     }
 }
