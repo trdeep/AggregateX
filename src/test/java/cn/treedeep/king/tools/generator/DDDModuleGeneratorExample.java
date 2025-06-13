@@ -1,3 +1,4 @@
+package cn.treedeep.king.tools.generator;
 
 import cn.treedeep.king.tools.DDDModuleGenerator;
 import cn.treedeep.king.tools.model.EntityInfo;
@@ -6,15 +7,18 @@ import cn.treedeep.king.tools.model.ModuleInfo;
 import java.util.List;
 
 /**
- * AggregateX 项目代码生成器
+ * DDDModuleGenerator 新的使用方式示例
+ *
+ * @author 周广明
+ * @since 2025-06-13
  */
-public class CodeGenerator {
+public class DDDModuleGeneratorExample {
 
     public static void main(String[] args) {
 
         // 工程信息
         String path = "/Users/zhougm/vscode/KingCRM";
-        String packageName = "cn.treedeep.king";
+        String packageName = "cn.treedeep.king1";
 
         // 定义模块信息 - 使用 ModuleInfo 和 EntityInfo
         var modules = List.of(

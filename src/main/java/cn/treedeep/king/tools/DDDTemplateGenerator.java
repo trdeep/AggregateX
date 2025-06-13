@@ -35,41 +35,18 @@ public class DDDTemplateGenerator {
     private final Configuration fmConfig;
     private final Map<String, Object> params = new HashMap<>();
 
-    public DDDTemplateGenerator(Path modulePath,
-                                String packageName,
-                                String entityNameCamel,
-                                String moduleName,
-                                String moduleComment,
-                                String copyright,
-                                String author) {
-
-        this.modulePath = modulePath;
-        this.entityNameCamel = entityNameCamel;
-
-        params.put("packageName", packageName);
-        params.put("entityNameCamel", entityNameCamel);
-        params.put("moduleNameLower", moduleName.toLowerCase());
-        params.put("moduleComment", moduleComment);
-        params.put("copyright", copyright);
-        params.put("author", author);
-        params.put("dateTime", OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-
-        // Initialize FreeMarker configuration
-        this.fmConfig = new Configuration(Configuration.VERSION_2_3_31);
-        this.fmConfig.setDefaultEncoding("UTF-8");
-        this.fmConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        this.fmConfig.setLogTemplateExceptions(false);
-        this.fmConfig.setWrapUncheckedExceptions(true);
-        this.fmConfig.setFallbackOnNullLoopVariable(false);
-
-        // Set the template loader to load from classpath resources
-        this.fmConfig.setClassForTemplateLoading(getClass(), "/");
-        this.fmConfig.setTemplateLoader(new freemarker.cache.ClassTemplateLoader(getClass(), "/template"));
-    }
-
     /**
-     * 专门用于实体生成的构造函数
-     * 正确分离模块名（用于包名）和实体名（用于类名和变量名）
+     * DDDTemplateGenerator 构造函数
+     * 分离模块名（用于包名）和实体名（用于类名和变量名）
+     * 
+     * @param modulePath 模块路径
+     * @param packageName 基础包名 (如: cn.treedeep.king)
+     * @param moduleName 模块名称 (如: identity)
+     * @param entityNameCamel 实体名称驼峰形式 (如: Role)
+     * @param entityNameLower 实体名称小写形式 (如: role)
+     * @param entityComment 实体注释
+     * @param copyright 版权信息
+     * @param author 作者
      */
     public DDDTemplateGenerator(Path modulePath,
                                 String packageName,

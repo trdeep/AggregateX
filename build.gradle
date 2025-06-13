@@ -70,6 +70,7 @@ dependencies {
     // 工具包
     api 'com.google.guava:guava:33.4.8-jre'
     api 'org.apache.commons:commons-lang3:3.17.0'
+    api 'io.projectreactor:reactor-core:3.7.6'
 
     // Spring Retry - 架构级重试机制
     api 'org.springframework.retry:spring-retry:2.0.0'
