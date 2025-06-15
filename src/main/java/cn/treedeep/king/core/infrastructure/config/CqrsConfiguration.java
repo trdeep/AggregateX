@@ -1,6 +1,7 @@
 package cn.treedeep.king.core.infrastructure.config;
 
 import cn.treedeep.king.core.domain.validation.CommandValidator;
+import cn.treedeep.king.core.domain.validation.DefaultCommandValidator;
 import cn.treedeep.king.core.infrastructure.monitoring.CommandMetrics;
 import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.validation.Validator;
@@ -85,7 +86,7 @@ public class CqrsConfiguration {
      */
     @Bean
     public CommandValidator commandValidator(Validator validator) {
-        CommandValidator commandValidator = new CommandValidator(validator);
+        DefaultCommandValidator commandValidator = new DefaultCommandValidator(validator);
         commandValidator.setFailFast(properties.getValidation().isFailFast());
         commandValidator.setValidationEnabled(properties.getValidation().isValidationEnabled());
         return commandValidator;
