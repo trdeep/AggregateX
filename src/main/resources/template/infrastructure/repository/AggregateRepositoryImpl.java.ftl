@@ -1,11 +1,11 @@
 package ${packageName}.${moduleNameLower}.infrastructure.repository;
 
+import ${packageName}.${moduleNameLower}.domain.${entityNameCamel};
+import ${packageName}.${moduleNameLower}.domain.${entityNameCamel}Id;
+import ${packageName}.${moduleNameLower}.domain.repository.${entityNameCamel}AggregateRepository;
 import cn.treedeep.king.core.domain.AbstractRepository;
 import cn.treedeep.king.core.domain.DomainEventPublisher;
 import cn.treedeep.king.core.domain.EventStore;
-import ${packageName}.${moduleNameLower}.domain.${entityNameCamel}AggregateRepository;
-import ${packageName}.${moduleNameLower}.domain.${entityNameCamel};
-import ${packageName}.${moduleNameLower}.domain.${entityNameCamel}Id;
 import jakarta.annotation.Resource;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Primary;
@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${entityNameCamel}「聚合仓储实现（主要）」
+ * ${entityNameCamel}「聚合根仓储实现（主要）」
  * <p>
  * Power by AggregateX
  *
@@ -29,7 +29,7 @@ import java.util.Optional;
 public class ${entityNameCamel}AggregateRepositoryImpl extends AbstractRepository<${entityNameCamel}, ${entityNameCamel}Id> implements ${entityNameCamel}AggregateRepository {
 
     @Resource(name = "${entityNameLower}AggregateJpaRepository")
-    private ${entityNameCamel}AggregateRepository aggregateRepository;
+    private ${entityNameCamel}AggregateJpaRepository aggregateRepository;
 
     public ${entityNameCamel}AggregateRepositoryImpl(
             CacheManager cacheManager,
@@ -49,17 +49,8 @@ public class ${entityNameCamel}AggregateRepositoryImpl extends AbstractRepositor
     }
 
     @Override
-    public Optional<${entityNameCamel}> findByName(String name) {
-        return aggregateRepository.findByName(name);
-    }
-
-    @Override
     public List<${entityNameCamel}> findAll() {
         return aggregateRepository.findAll();
     }
 
-    @Override
-    public boolean existsByName(String name) {
-        return aggregateRepository.existsByName(name);
-    }
 }

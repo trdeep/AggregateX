@@ -3,6 +3,8 @@ package cn.treedeep.king.core.domain;
 import org.jmolecules.ddd.types.Identifier;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import java.util.Optional;
+
 /**
  * 仓储接口
  * <p>
@@ -29,6 +31,11 @@ import org.springframework.data.repository.NoRepositoryBean;
  */
 @NoRepositoryBean
 public interface AggregateRepository<T extends AggregateRoot<ID>, ID extends Identifier> {
+
+    /**
+     * 根据ID查找聚合根
+     */
+    Optional<T> findById(ID id);
 
     /**
      * 保存聚合根

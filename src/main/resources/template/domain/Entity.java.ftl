@@ -1,20 +1,28 @@
 package ${packageName}.${moduleNameLower}.domain;
 
-import cn.treedeep.king.core.domain.AggregateRoot;
-import ${packageName}.${moduleNameLower}.domain.event.${entityNameCamel}CreatedEvent;
-import jakarta.persistence.*;
+import cn.treedeep.king.core.domain.EntityBase;
+import cn.treedeep.king.core.domain.UIdentifier;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+<#-- 根据属性添加必要的import -->
+<#if properties?has_content>
+<#list properties as property>
+<#if property.name()?contains("Time") || property.name()?contains("Date") || property.name()?contains("At")>
+import java.time.OffsetDateTime;
+<#break>
+</#if>
+</#list>
+</#if>
 
 /**
  * Copyright © ${copyright} 版权所有
  * <p>
- * ${entityNameCamel}「聚合」
+ * ${entityNameCamel}「实体」
  * <p>
  * Power by AggregateX
  *
@@ -22,35 +30,40 @@ import java.util.List;
  * @since ${dateTime}
  */
 @Entity
-@Table(name = "${entityNameLower}s")
-@Comment("${moduleComment}表【聚合】")
-@NoArgsConstructor
+@Table(name = "${entityTableName}s")
+@Comment("${entityComment}表")
 @Getter
-public class ${entityNameCamel} extends AggregateRoot<${entityNameCamel}Id> {
+@NoArgsConstructor
+public class ${entityNameCamel} extends EntityBase<UIdentifier> {
 
     @EmbeddedId
     @Comment("ID")
-    private ${entityNameCamel}Id id;
+    private UIdentifier id;
 
-    @Column(name = "name")
-    @Comment("${moduleComment}名称")
+<#if properties?has_content>
+<#list properties as property>
+    @Comment("${property.comment()}")
+    private <#if property.name()?contains("Time") || property.name()?contains("Date")>OffsetDateTime<#else>String</#if> ${property.name()};
+
+</#list>
+
+    public ${entityNameCamel}(<#list properties as property><#if property.name()?contains("Time") || property.name()?contains("Date")>OffsetDateTime<#else>String</#if> ${property.name()}<#if property?has_next>, </#if></#list>) {
+        super();
+        this.id = new UIdentifier();
+<#list properties as property>
+        this.${property.name()} = ${property.name()};
+</#list>
+    }
+<#else>
+    @Comment("名称")
     private String name;
 
-    @OneToMany(mappedBy = "${entityNameLower}", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<${entityNameCamel}Item> items = new ArrayList<>();
-
-
-    public ${entityNameCamel}(${entityNameCamel}Id id, String name, ${entityNameCamel}Item... ${entityNameLower}Items) {
-        this.id = id;
+    public ${entityNameCamel}(String name) {
+        super();
+        this.id = new UIdentifier();
         this.name = name;
-        this.items.addAll(Arrays.asList(${entityNameLower}Items));
-
-        for (${entityNameCamel}Item item : ${entityNameLower}Items) {
-            item.set${entityNameCamel}(this);
-        }
-
-        // 发布领域事件
-        this.registerEvent(new ${entityNameCamel}CreatedEvent(this));
     }
+</#if>
 
+    // TODO 添加${entityComment}实体范畴内的方法
 }
