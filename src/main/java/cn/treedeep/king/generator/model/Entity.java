@@ -38,7 +38,4 @@ public class Entity {
         return new Property(name, comment);
     }
 
-    public record Property(String name, String comment) {
-    }
-
 }

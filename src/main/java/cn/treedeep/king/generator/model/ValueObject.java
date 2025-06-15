@@ -19,4 +19,7 @@ public class ValueObject extends Entity {
         return valueObject;
     }
 
+    public static Property property(String name, String comment) {
+        return new Property(name, comment);
+    }
 }

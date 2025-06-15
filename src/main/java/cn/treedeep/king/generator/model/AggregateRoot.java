@@ -24,4 +24,8 @@ public class AggregateRoot extends Entity {
     public static AggregateRoot create(String name, String comment, Entity... eos) {
         return new AggregateRoot(name, comment, eos);
     }
+
+    public static Property property(String name, String comment) {
+        return new Property(name, comment);
+    }
 }
