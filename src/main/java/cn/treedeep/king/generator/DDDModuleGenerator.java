@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -265,12 +266,22 @@ public class DDDModuleGenerator {
                     aggregateRootName, aggregateRootComment, copyright, author);
 
             // 将聚合根的值对象属性传递给模板（只包含值对象）
-            List<Property> aggregateProperties =
+            List<Property> valueObjectProperties =
                 aggregateRoot.getEos().stream()
                     .filter(entity -> entity instanceof ValueObject)  // 只筛选值对象
                     .map(entity -> new Property(entity.getName(), entity.getComment()))
                     .toList();
-            aggregateGenerator.addProperties(aggregateProperties);
+            
+            // 将所有属性传递给模板：值对象 + 聚合根自身的属性
+            List<Property> allProperties = new ArrayList<>(valueObjectProperties);
+            allProperties.addAll(aggregateRoot.getProperties());
+            
+            aggregateGenerator.addProperties(allProperties);
+            
+            // 单独传递值对象属性用于@Embedded注解
+            aggregateGenerator.addParam("valueObjectProperties", valueObjectProperties);
+            // 单独传递聚合根自身属性用于普通字段
+            aggregateGenerator.addParam("aggregateProperties", aggregateRoot.getProperties());
 
             // 生成聚合根相关文件
             aggregateGenerator.generateAggregateRoot();

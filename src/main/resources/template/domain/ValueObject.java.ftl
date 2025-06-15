@@ -2,7 +2,7 @@ package ${packageName}.${moduleNameLower}.domain;
 
 <#if properties?has_content>
 <#list properties as property>
-<#if property.name()?contains("Id") || property.name()?contains("ID")>
+<#if property.name?contains("Id") || property.name?contains("ID")>
 import cn.treedeep.king.core.domain.UIdentifier;
 <#break>
 </#if>
@@ -40,26 +40,26 @@ import lombok.*;
 public class ${entityNameCamel} extends ValueObjectBase {
 <#if properties?has_content>
 <#list properties as property>
-    <#if property.name()?contains("Id") || property.name()?contains("ID")>
+    <#if property.name?contains("Id") || property.name?contains("ID")>
 
     /**
-     * ${property.comment()}
+     * ${property.comment}
      */
-    private UIdentifier ${property.name()};
+    private UIdentifier ${property.name};
     <#else>
 
     /**
-     * ${property.comment()}
+     * ${property.comment}
      */
-    private String ${property.name()};
+    private String ${property.name};
     </#if>
 </#list>
 
 <#if (properties?size > 1)>
 
-    public ${entityNameCamel}(<#list properties as property><#if property.name()?contains("Id") || property.name()?contains("ID")>UIdentifier<#else>String</#if> ${property.name()}<#if property?has_next>, </#if></#list>) {
+    public ${entityNameCamel}(<#list properties as property><#if property.name?contains("Id") || property.name?contains("ID")>UIdentifier<#else>String</#if> ${property.name}<#if property?has_next>, </#if></#list>) {
 <#list properties as property>
-        this.${property.name()} = ${property.name()};
+        this.${property.name} = ${property.name};
 </#list>
     }
 

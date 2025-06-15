@@ -11,13 +11,17 @@ import org.hibernate.annotations.Comment;
 import static java.sql.DriverManager.println;
 
 <#-- 根据属性添加必要的import -->
-<#if properties?has_content>
-<#list properties as property>
-<#if property.name()?contains("Time") || property.name()?contains("Date") || property.name()?contains("At")>
-import java.time.OffsetDateTime;
+<#assign needTimeImport = false>
+<#if aggregateProperties?has_content>
+<#list aggregateProperties as property>
+<#if property.name?contains("Time") || property.name?contains("Date") || property.name?contains("At")>
+<#assign needTimeImport = true>
 <#break>
 </#if>
 </#list>
+</#if>
+<#if needTimeImport>
+import java.time.OffsetDateTime;
 </#if>
 
 /**
@@ -41,11 +45,21 @@ public class ${entityNameCamel} extends AggregateRoot<${entityNameCamel}Id> {
     @EmbeddedId
     private ${entityNameCamel}Id id;
 
-<#if properties?has_content>
-<#list properties as property>
+<#-- 值对象属性使用@Embedded注解 -->
+<#if valueObjectProperties?has_content>
+<#list valueObjectProperties as property>
     @Embedded
-    @Comment("${property.comment()}")
-    private ${property.name()?cap_first} ${property.name()?uncap_first};
+    @Comment("${property.comment}")
+    private ${property.name?cap_first} ${property.name?uncap_first};
+
+</#list>
+</#if>
+
+<#-- 聚合根自身属性使用普通字段 -->
+<#if aggregateProperties?has_content>
+<#list aggregateProperties as property>
+    @Comment("${property.comment}")
+    private <#if property.name?contains("Time") || property.name?contains("Date") || property.name?contains("At")>OffsetDateTime<#else>String</#if> ${property.name};
 
 </#list>
 </#if>

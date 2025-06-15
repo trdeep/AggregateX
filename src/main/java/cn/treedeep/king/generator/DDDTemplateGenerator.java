@@ -270,6 +270,13 @@ public class DDDTemplateGenerator {
     }
 
     /**
+     * 添加额外的模板参数
+     */
+    public void addParam(String key, Object value) {
+        params.put(key, value);
+    }
+
+    /**
      * 处理模板
      */
     private String processTemplate(String templateName, Map<String, Object> params) throws IOException {

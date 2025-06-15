@@ -12,7 +12,7 @@ import org.hibernate.annotations.Comment;
 <#-- 根据属性添加必要的import -->
 <#if properties?has_content>
 <#list properties as property>
-<#if property.name()?contains("Time") || property.name()?contains("Date") || property.name()?contains("At")>
+<#if property.name?contains("Time") || property.name?contains("Date") || property.name?contains("At")>
 import java.time.OffsetDateTime;
 <#break>
 </#if>
@@ -42,16 +42,16 @@ public class ${entityNameCamel} extends EntityBase<UIdentifier> {
 
 <#if properties?has_content>
 <#list properties as property>
-    @Comment("${property.comment()}")
-    private <#if property.name()?contains("Time") || property.name()?contains("Date")>OffsetDateTime<#else>String</#if> ${property.name()};
+    @Comment("${property.comment}")
+    private <#if property.name?contains("Time") || property.name?contains("Date")>OffsetDateTime<#else>String</#if> ${property.name};
 
 </#list>
 
-    public ${entityNameCamel}(<#list properties as property><#if property.name()?contains("Time") || property.name()?contains("Date")>OffsetDateTime<#else>String</#if> ${property.name()}<#if property?has_next>, </#if></#list>) {
+    public ${entityNameCamel}(<#list properties as property><#if property.name?contains("Time") || property.name?contains("Date")>OffsetDateTime<#else>String</#if> ${property.name}<#if property?has_next>, </#if></#list>) {
         super();
         this.id = new UIdentifier();
 <#list properties as property>
-        this.${property.name()} = ${property.name()};
+        this.${property.name} = ${property.name};
 </#list>
     }
 <#else>
