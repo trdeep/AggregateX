@@ -81,6 +81,7 @@ public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends
      * @return 包含聚合根的Optional，如果不存在则为空
      */
     @Transactional(readOnly = true)
+    @Override
     public Optional<T> findById(ID id) {
         // 1. 尝试从一级缓存获取
         Cache.ValueWrapper cached = getCache().get(id.toString());
@@ -101,6 +102,9 @@ public abstract class AbstractRepository<T extends AggregateRoot<ID>, ID extends
     @Override
     public T save(T aggregate) {
         List<DomainEvent> domainEvents = aggregate.getDomainEvents();
+
+        // 更新版本
+        aggregate.updateVersion();
 
         try {
             // 1. 保存聚合根

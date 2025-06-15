@@ -1,5 +1,7 @@
 package cn.treedeep.king.core.application.cqrs.query;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * 查询处理器接口
  * <p>
@@ -16,7 +18,7 @@ public interface QueryHandler<Q extends Query<R>, R> {
      * @param query 查询请求对象
      * @return 查询结果
      */
-    R handle(Q query);
+    R handle(Q query, CompletableFuture<QueryResult<R>> future);
 
     /**
      * 获取处理器支持的查询类型

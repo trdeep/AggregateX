@@ -1,5 +1,7 @@
 package cn.treedeep.king.core.application.cqrs.command;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * 命令处理器接口
  * <p>
@@ -7,12 +9,16 @@ package cn.treedeep.king.core.application.cqrs.command;
  *
  * @param <T> 要处理的命令类型
  */
-public interface CommandHandler<T extends Command> {
+public interface CommandHandler<T extends Command, R> {
 
     /**
      * 处理命令
      *
      * @param command 要处理的命令对象
      */
-    void handle(T command);
+    void handle(T command, CompletableFuture<CommandResult<R>> future);
+
+    Class<? extends Command> getCommandType();
+
+
 }

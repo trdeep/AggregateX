@@ -4,10 +4,13 @@ import cn.treedeep.king.core.domain.AggregateRepository;
 import cn.treedeep.king.core.domain.AggregateRoot;
 import cn.treedeep.king.core.domain.DomainEvent;
 import cn.treedeep.king.core.domain.EventBus;
+import lombok.Getter;
+import org.jmolecules.ddd.types.Identifier;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 抽象命令处理器基类
@@ -20,50 +23,44 @@ import java.util.Objects;
  * 3. 保存聚合根状态<br>
  * 4. 发布领域事件
  *
- * @param <T> 命令类型，必须继承Command
+ * @param <C> 命令类型，必须继承Command
  * @param <A> 聚合根类型，必须继承AggregateRoot
  */
-public abstract class AbstractCommandHandler<T extends Command, A extends AggregateRoot<?>> implements CommandHandler<T> {
-
-    private final AggregateRepository<A, ?> aggregateRepository;
+@Getter
+public abstract class AbstractCommandHandler<C extends Command, A extends AggregateRoot<? extends Identifier>, R> implements CommandHandler<C, R> {
+    private final Class<C> commandType;
+    private final AggregateRepository<A, ? extends Identifier> aggregateRepository;
     private final EventBus eventBus;
     private final CommandBus commandBus;
 
     /**
      * 构造函数
      *
-     * @param aggregateRepository 聚合根仓储，用于持久化操作
-     * @param eventBus 事件总线，用于发布领域事件
-     * @param commandBus 命令总线，用于注册命令处理器
-     */
-    protected AbstractCommandHandler(AggregateRepository<A, ?> aggregateRepository, EventBus eventBus, CommandBus commandBus) {
-        this.aggregateRepository = aggregateRepository;
-        this.eventBus = eventBus;
-        this.commandBus = commandBus;
-
-        // 在构造时自动注册到命令总线
-        commandBus.register(getCommandType(), this);
-    }
-
-    /**
-     * 获取命令类型
-     * <p>
-     * 通过泛型类型解析获取当前处理器处理的命令类型
-     *
-     * @return 命令类型的Class对象
+     * @param repository 聚合根仓储，用于持久化操作
+     * @param eventBus   事件总线，用于发布事件
+     * @param commandBus 命令总线，用于注册当前命令
      */
     @SuppressWarnings("unchecked")
-    protected Class<T> getCommandType() {
-        return (Class<T>) Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(
-                getClass(), AbstractCommandHandler.class
-        ))[0];
+    protected AbstractCommandHandler(AggregateRepository<A, ? extends Identifier> repository, EventBus eventBus, CommandBus commandBus) {
+        this.aggregateRepository = repository;
+        this.eventBus = eventBus;
+        this.commandBus = commandBus;
+        this.commandType = (Class<C>) Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(getClass(), AbstractCommandHandler.class))[0];
+
+        // 在构造时自动注册到命令总线
+        commandBus.register(this);
     }
+
 
     @Override
     @Transactional
-    public void handle(T command) {
+    public void handle(C command, CompletableFuture<CommandResult<R>> future) {
         // 执行具体的命令处理逻辑
-        A aggregate = handleCommand(command);
+        A aggregate = doHandle(command, future);
+
+        if (aggregate == null) {
+            return;
+        }
 
         // 保存聚合根
         aggregateRepository.save(aggregate);
@@ -83,14 +80,6 @@ public abstract class AbstractCommandHandler<T extends Command, A extends Aggreg
      * @param command 要处理的命令
      * @return 更新后的聚合根
      */
-    protected abstract A handleCommand(T command);
+    protected abstract A doHandle(C command, CompletableFuture<CommandResult<R>> future);
 
-    /**
-     * 获取命令总线实例
-     *
-     * @return 命令总线
-     */
-    public CommandBus getCommandBus() {
-        return commandBus;
-    }
 }

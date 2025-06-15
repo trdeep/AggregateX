@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 查询总线
@@ -30,8 +31,13 @@ public class QueryBus {
      * @param <R>   查询结果类型
      * @return 查询结果
      */
-    @SuppressWarnings("unchecked")
     public <R> R execute(Query<R> query) {
+        return execute(query, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <R> R execute(Query<R> query, CompletableFuture<QueryResult<R>> future) {
+
         Class<? extends Query<?>> queryType = (Class<? extends Query<?>>) query.getClass();
         QueryHandler<Query<R>, R> handler = (QueryHandler<Query<R>, R>) handlers.get(queryType);
 
@@ -39,6 +45,6 @@ public class QueryBus {
             throw new IllegalStateException("No handler registered for query type: " + queryType.getName());
         }
 
-        return handler.handle(query);
+        return handler.handle(query, future);
     }
 }

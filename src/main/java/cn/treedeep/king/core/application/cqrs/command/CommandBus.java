@@ -4,7 +4,6 @@ import cn.treedeep.king.core.domain.validation.CommandValidator;
 import cn.treedeep.king.core.infrastructure.idempotency.CommandIdempotencyControl;
 import cn.treedeep.king.core.infrastructure.monitoring.CommandMetrics;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * {@code
  * // 执行命令
  * commandBus.execute(new CreateOrderCommand(customerId, items));
- * 
+ *
  * // 异步执行命令
  * CompletableFuture<Void> future = commandBus.executeAsync(command);
  * }
@@ -52,16 +51,16 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class CommandBus {
 
-    private final Map<Class<? extends Command>, CommandHandler<?>> handlers = new ConcurrentHashMap<>();
+    private final Map<Class<? extends Command>, CommandHandler<?, ?>> handlers = new ConcurrentHashMap<>();
     private final CommandValidator commandValidator;
     private final CommandMetrics commandMetrics;
     private final CommandIdempotencyControl idempotencyControl;
 
     /**
      * 构造命令总线
-     * 
-     * @param commandValidator 命令验证器
-     * @param commandMetrics 命令指标收集器
+     *
+     * @param commandValidator   命令验证器
+     * @param commandMetrics     命令指标收集器
      * @param idempotencyControl 幂等性控制器
      */
     public CommandBus(CommandValidator commandValidator,
@@ -78,9 +77,13 @@ public class CommandBus {
      * @param commandType 命令类型
      * @param handler     命令处理器
      */
-    public void register(Class<? extends Command> commandType, CommandHandler<?> handler) {
+    public void register(Class<? extends Command> commandType, CommandHandler<?, ?> handler) {
         handlers.put(commandType, handler);
         log.info("Registered command handler for command type: {}", commandType.getSimpleName());
+    }
+
+    public void register(CommandHandler<?, ?> handler) {
+        handlers.put(handler.getCommandType(), handler);
     }
 
     /**
@@ -91,7 +94,9 @@ public class CommandBus {
      */
     @Transactional
     @SuppressWarnings("unchecked")
-    public <T extends Command> void dispatch(T command) {
+    public <T extends Command, R> CompletableFuture<CommandResult<R>> dispatch(T command) {
+        CompletableFuture<CommandResult<R>> future = new CompletableFuture<>();
+
         long startTime = System.currentTimeMillis();
         String commandType = command.getClass().getSimpleName();
 
@@ -99,24 +104,26 @@ public class CommandBus {
             // 检查幂等性
             if (idempotencyControl.isDuplicate(command)) {
                 log.warn("Duplicate command detected - Type: {}, ID: {}", commandType, command.getCommandId());
-                return;
+                return CompletableFuture.failedFuture(new IllegalStateException("Duplicate command detected"));
             }
 
             // 验证命令
             commandValidator.validate(command);
 
             // 获取处理器
-            CommandHandler<T> handler = (CommandHandler<T>) handlers.get(command.getClass());
+            CommandHandler<T, R> handler = (CommandHandler<T, R>) handlers.get(command.getClass());
             if (handler == null) {
-                throw new IllegalStateException("No handler registered for command: " + commandType);
+                return CompletableFuture.failedFuture(new IllegalStateException("No handler registered for command: " + commandType));
             }
 
             // 执行命令
-            handler.handle(command);
+            handler.handle(command, future);
 
             // 记录成功指标
             commandMetrics.recordSuccess(commandType, System.currentTimeMillis() - startTime);
             log.debug("Successfully processed command: {}", commandType);
+
+            return future;
 
         } catch (Exception e) {
             // 记录失败指标
@@ -125,29 +132,8 @@ public class CommandBus {
 
             // 清除幂等性记录，允许重试
             idempotencyControl.clearIdempotencyRecord(command);
-            throw e;
+            return CompletableFuture.failedFuture(e);
         }
     }
 
-
-    /**
-     * 异步处理命令
-     *
-     * @param command 要处理的命令
-     * @param <T> 命令类型
-     * @return 异步结果
-     */
-    @Async("commandExecutor")
-    @Transactional
-    public <T extends Command> CompletableFuture<Void> dispatchAsync(T command) {
-        return CompletableFuture.runAsync(() -> {
-            try {
-                this.dispatch(command);
-            } catch (Exception e) {
-                log.error("Failed to process command asynchronously: {} - {}",
-                        command.getClass().getSimpleName(), e.getMessage(), e);
-                throw e;
-            }
-        });
-    }
 }
