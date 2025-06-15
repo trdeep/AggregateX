@@ -15,6 +15,7 @@ import jakarta.persistence.AttributeConverter;
 </#if>
 import jakarta.persistence.Embeddable;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Copyright © ${copyright} 版权所有
@@ -66,12 +67,12 @@ public class ${entityNameCamel} extends ValueObjectBase {
     public static class ${entityNameCamel}JsonConverter implements AttributeConverter<${entityNameCamel}, String> {
         @Override
         public String convertToDatabaseColumn(${entityNameCamel} ${entityNameLower}) {
-            return JsonUtil.toJson(${entityNameLower});
+            return ${entityNameLower} == null ? null : JsonUtil.toJson(${entityNameLower});
         }
 
         @Override
         public ${entityNameCamel} convertToEntityAttribute(String json) {
-            return JsonUtil.fromJson(json, ${entityNameCamel}.class);
+            return StringUtils.isBlank(json) ? null : JsonUtil.fromJson(json, ${entityNameCamel}.class);
         }
     }
 </#if>

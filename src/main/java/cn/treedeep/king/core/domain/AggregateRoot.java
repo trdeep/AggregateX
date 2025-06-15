@@ -1,6 +1,7 @@
 package cn.treedeep.king.core.domain;
 
 import cn.treedeep.king.core.domain.validation.DomainValidationException;
+import cn.treedeep.king.shared.utils.DateTimeUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
@@ -96,7 +97,7 @@ public abstract class AggregateRoot<ID extends Identifier> extends AbstractAggre
      * 初始化创建时间和最后修改时间为当前时间
      */
     protected AggregateRoot() {
-        this.createdAt = OffsetDateTime.now();
+        this.createdAt = DateTimeUtil.now();
         this.lastModifiedAt = this.createdAt;
     }
 

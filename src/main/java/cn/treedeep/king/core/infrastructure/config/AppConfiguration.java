@@ -1,5 +1,6 @@
 package cn.treedeep.king.core.infrastructure.config;
 
+import cn.treedeep.king.shared.properties.AppProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

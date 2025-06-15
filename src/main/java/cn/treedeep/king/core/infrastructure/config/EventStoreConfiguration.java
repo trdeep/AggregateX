@@ -7,6 +7,7 @@ import cn.treedeep.king.core.infrastructure.eventstore.JpaEventStore;
 import cn.treedeep.king.core.infrastructure.eventstore.SnapshotRepository;
 import cn.treedeep.king.core.infrastructure.eventstore.compression.EventCompressor;
 import cn.treedeep.king.core.infrastructure.monitoring.EventStoreMetrics;
+import cn.treedeep.king.shared.properties.EventStoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

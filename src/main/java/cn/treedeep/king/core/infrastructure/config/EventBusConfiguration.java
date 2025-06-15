@@ -3,6 +3,7 @@ package cn.treedeep.king.core.infrastructure.config;
 import cn.treedeep.king.core.domain.DomainEventPublisher;
 import cn.treedeep.king.core.domain.EventBus;
 import cn.treedeep.king.core.infrastructure.eventbus.SimpleEventBus;
+import cn.treedeep.king.shared.properties.EventBusProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

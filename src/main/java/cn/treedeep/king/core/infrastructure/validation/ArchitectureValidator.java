@@ -373,6 +373,7 @@ public final class ArchitectureValidator {
                 .and().areAnnotatedWith("org.springframework.web.bind.annotation.RestController")
                 .should().dependOnClassesThat().haveNameMatching(".*ResponseEntity.*")
                 .orShould().dependOnClassesThat().haveNameMatching(".*Response.*")
+                .orShould().dependOnClassesThat().haveNameMatching(".*Result.*")
                 .because("REST控制器应该使用适当的响应格式")
                 .allowEmptyShould(true)
                 .check(classes);

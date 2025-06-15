@@ -1,4 +1,4 @@
-package cn.treedeep.king.core.infrastructure.config;
+package cn.treedeep.king.shared.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -8,7 +8,7 @@ import jakarta.validation.ValidationException;
  * <p>
  * 负责验证命令的合法性
  */
-public interface CommandValidator {
+public interface CommandValidator<C extends Command> {
 
     /**
      * 验证命令
@@ -16,6 +16,6 @@ public interface CommandValidator {
      * @param command 要验证的命令
      * @throws ValidationException 如果验证失败
      */
-    void validate(Command command);
+    void validate(C command) throws ValidationException;
 
 }

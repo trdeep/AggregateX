@@ -3,7 +3,7 @@ package cn.treedeep.king.core.infrastructure.eventstore;
 import cn.treedeep.king.core.domain.ConcurrentModificationException;
 import cn.treedeep.king.core.domain.DomainEvent;
 import cn.treedeep.king.core.domain.EventStore;
-import cn.treedeep.king.core.infrastructure.config.EventStoreProperties;
+import cn.treedeep.king.shared.properties.EventStoreProperties;
 import cn.treedeep.king.core.infrastructure.eventstore.compression.EventCompressor;
 import cn.treedeep.king.core.infrastructure.monitoring.EventStoreMetrics;
 import com.fasterxml.jackson.core.JsonProcessingException;

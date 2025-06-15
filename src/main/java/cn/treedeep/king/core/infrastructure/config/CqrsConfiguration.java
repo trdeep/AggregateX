@@ -3,6 +3,7 @@ package cn.treedeep.king.core.infrastructure.config;
 import cn.treedeep.king.core.domain.validation.CommandValidator;
 import cn.treedeep.king.core.domain.validation.DefaultCommandValidator;
 import cn.treedeep.king.core.infrastructure.monitoring.CommandMetrics;
+import cn.treedeep.king.shared.properties.CqrsProperties;
 import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.validation.Validator;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

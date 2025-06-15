@@ -4,7 +4,6 @@ import cn.treedeep.king.core.domain.AggregateRoot;
 import ${packageName}.${moduleNameLower}.domain.event.SayHelloEvent;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
@@ -37,10 +36,13 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "${entityTableName}s")
 @Comment("${entityComment}表")
-@NoArgsConstructor
 @Getter
 @Setter
 public class ${entityNameCamel} extends AggregateRoot<${entityNameCamel}Id> {
+    
+    public ${entityNameCamel}() {
+        super();
+    }
 
     @EmbeddedId
     private ${entityNameCamel}Id id;

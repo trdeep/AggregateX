@@ -3,6 +3,7 @@ package cn.treedeep.king.core.domain.exception;
 import cn.treedeep.king.core.domain.DomainException;
 import cn.treedeep.king.core.domain.ValidationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 全局异常处理器
@@ -89,7 +91,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 "BUSINESS_ERROR",
                 ex.getMessage(),
-                null
+                ex.getMessage()
         );
 
         return ResponseEntity.badRequest().body(errorResponse);
@@ -105,7 +107,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 "STATE_ERROR",
                 ex.getMessage(),
-                null
+                ex.getMessage()
         );
 
         return ResponseEntity.badRequest().body(errorResponse);
@@ -121,11 +123,12 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 "INTERNAL_ERROR",
                 "系统内部错误",
-                null
+                ex.getMessage()
         );
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
+
     /**
      * 处理通用异常
      */
@@ -136,9 +139,10 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 "NO_RESOURCE_FOUND_ERROR",
                 "无法找到资源异常",
-                null
+                ex.getMessage()
         );
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
+
 }
