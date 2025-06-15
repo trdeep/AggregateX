@@ -1,0 +1,70 @@
+{
+  // AggregateX DDD 模块配置示例 - 支持JSON5格式
+  // 本配置展示了如何使用 remarks 字段为模块添加详细说明
+
+  "modules": [
+    {
+      // 用户管理模块
+      "name": "user",
+      "comment": "用户管理模块",
+      "remarks": "## 用户管理模块\n\n这是一个完整的用户管理模块，提供了用户生命周期管理的全部功能。\n\n### 核心功能\n\n1. **用户注册与认证**\n   - 支持邮箱注册\n   - 支持手机号注册\n   - 多因子认证支持\n\n2. **用户信息管理**\n   - 个人资料维护\n   - 头像上传\n   - 偏好设置\n\n3. **权限与角色**\n   - 基于角色的访问控制(RBAC)\n   - 动态权限分配\n   - 权限继承机制\n\n### 技术特性\n\n- 采用领域驱动设计(DDD)架构\n- 支持事件溯源\n- 集成CQRS模式\n- 提供完整的审计日志\n\n### 使用指南\n\n```java\n// 创建用户\nUser user = User.create(\"john@example.com\", \"John Doe\");\nuserRepository.save(user);\n\n// 用户认证\nboolean authenticated = authService.authenticate(email, password);\n```\n\n### API 接口\n\n- `POST /api/users` - 用户注册\n- `POST /api/auth/login` - 用户登录\n- `GET /api/users/{id}` - 获取用户信息\n- `PUT /api/users/{id}` - 更新用户信息\n\n更多详细信息请参考API文档。",
+      "aggregateRoots": [
+        {
+          "name": "User", // 用户聚合根
+          "comment": "用户聚合根，管理用户的完整生命周期",
+          "properties": [
+            {
+              "name": "username",
+              "type": "String",
+              "comment": "用户名，唯一标识"
+            },
+            {
+              "name": "email",
+              "type": "String", 
+              "comment": "用户邮箱地址"
+            },
+            {
+              "name": "createTime",
+              "type": "OffsetDateTime",
+              "comment": "创建时间"
+            },
+          ] // 支持尾随逗号
+        }
+      ]
+    },
+    {
+      // 订单管理模块  
+      "name": "order",
+      "comment": "订单管理模块",
+      "remarks": "## 订单管理模块\n\n订单管理模块负责处理电商业务中的所有订单相关操作。\n\n### 主要职责\n\n- 订单创建与状态管理\n- 支付流程集成\n- 库存扣减与回滚\n- 物流跟踪\n- 退款处理\n\n### 业务流程\n\n1. **订单创建** → 2. **库存锁定** → 3. **支付处理** → 4. **订单确认** → 5. **发货** → 6. **收货确认**\n\n### 集成说明\n\n本模块与以下系统进行集成：\n- 用户模块：获取用户信息\n- 商品模块：验证商品信息和库存\n- 支付网关：处理支付请求\n- 物流系统：安排配送\n\n更多业务规则请参考业务需求文档。",
+      "aggregateRoots": [
+        {
+          "name": "Order",
+          "comment": "订单聚合根",
+          "properties": [
+            {
+              "name": "orderNo",
+              "type": "String",
+              "comment": "订单编号"
+            },
+            {
+              "name": "userId", 
+              "type": "UIdentifier",
+              "comment": "用户ID"
+            },
+            {
+              "name": "totalAmount",
+              "type": "BigDecimal",
+              "comment": "订单总金额"
+            },
+            {
+              "name": "createTime",
+              "type": "OffsetDateTime", 
+              "comment": "创建时间"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

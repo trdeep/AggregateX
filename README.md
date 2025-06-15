@@ -49,16 +49,57 @@ AggregateX 是一个基于领域驱动设计（DDD）原则构建的 Java 框架
 - **一键生成完整模块**: 根据模块名自动生成DDD分层架构代码
 - **标准化模板**: 基于FreeMarker的可定制模板引擎
 - **交互式界面**: 友好的命令行交互体验
+- **JSON5配置支持**: 支持带注释的JSON5配置文件，提升配置可读性
+- **模块文档生成**: 自动生成模块README.md文件，支持详细说明文档
 - **智能命名**: 自动处理各种命名格式转换
+- **配置文件灵活性**: 支持单行注释(`//`)、多行注释(`/* */`)、尾随逗号等JSON5特性
+- **文档自动化**: remarks字段内容自动追加到模块README.md，支持Markdown格式
 
 #### 快速生成模块
 
+**交互式模式：**
 ```bash
 # 运行代码生成器
 java -cp aggregatex.jar cn.treedeep.king.tools.DDDModuleGenerator
 
 # 输入模块信息
 📦 请输入模块名称: user 用户管理
+```
+
+**JSON5配置模式：**
+```json5
+// user-module.json5
+[
+  {
+    "name": "user",
+    "comment": "用户模块",
+    // remarks 字段支持详细的模块说明，内容会被添加到生成的README.md中
+    "remarks": "## 用户管理模块\n\n负责系统用户的完整生命周期管理：\n- 用户注册和激活\n- 身份验证和授权\n- 个人信息维护\n- 登录记录追踪",
+    "aggregateRoots": [
+      {
+        "name": "User",
+        "comment": "用户聚合根",
+        "properties": [
+          {
+            "name": "username",
+            "comment": "用户名",
+            "type": "REGULAR"
+          },
+          {
+            "name": "email",
+            "comment": "邮箱地址", 
+            "type": "REGULAR"
+          }, // JSON5 支持尾随逗号
+        ]
+      }
+    ]
+  }
+]
+```
+
+```bash
+# 使用JSON5配置文件生成
+java -cp aggregatex.jar cn.treedeep.king.tools.DDDModuleGenerator --config user-module.json5
 ```
 
 生成完整的DDD模块结构，包括聚合根、命令处理器、查询处理器、REST控制器等。
@@ -244,6 +285,7 @@ public class Application {
 
 快速生成标准的DDD模块结构：
 
+**交互式模式：**
 ```bash
 # 运行代码生成器
 java -cp build/libs/AggregateX-1.0.0.jar cn.treedeep.king.tools.DDDModuleGenerator
@@ -253,6 +295,36 @@ java -cp build/libs/AggregateX-1.0.0.jar cn.treedeep.king.tools.DDDModuleGenerat
 📦 请输入模块名称，可空格带注释 (如: user 用户, order 订单): user 用户管理
 ```
 
+**JSON5配置模式：**
+```json5
+// config.json5 - 支持注释和尾随逗号的配置文件
+[
+  {
+    "name": "user",
+    "comment": "用户模块",
+    "remarks": "用户管理模块，负责用户注册、登录、权限管理等功能。", // 此内容会自动添加到README.md
+    "aggregateRoots": [
+      {
+        "name": "User",
+        "comment": "用户聚合根",
+        "properties": [
+          {
+            "name": "username",
+            "comment": "用户名",
+            "type": "REGULAR"
+          }, // JSON5支持尾随逗号
+        ]
+      }
+    ]
+  }
+]
+```
+
+```bash
+# 使用JSON5配置文件生成
+java -cp build/libs/AggregateX-1.0.0.jar cn.treedeep.king.tools.DDDModuleGenerator --config config.json5
+```
+
 生成器将自动创建完整的模块结构，包括：
 
 - 聚合根和实体ID
@@ -260,6 +332,7 @@ java -cp build/libs/AggregateX-1.0.0.jar cn.treedeep.king.tools.DDDModuleGenerat
 - REST控制器
 - JPA仓储实现
 - 标准DTO和转换器
+- **模块README.md文档**（包含remarks内容）
 
 ### 3. 核心配置
 
@@ -541,6 +614,105 @@ DDD Module Generator v1.0.0
    • 生成文档: ./gradlew javadoc
 ```
 
+### JSON5配置使用
+
+除了交互式模式，生成器还支持JSON5配置文件，提供更强大的模块定义能力：
+
+#### JSON5格式特性
+
+- **注释支持**: 使用 `//` 单行注释和 `/* */` 多行注释
+- **尾随逗号**: 允许数组和对象最后一个元素后有逗号
+- **更好的可读性**: 支持注释让配置更易维护
+
+#### 配置文件示例
+
+```json5
+// product-module.json5
+[
+  {
+    "name": "product", 
+    "comment": "商品模块",
+    
+    // remarks字段支持Markdown格式的详细说明
+    // 内容会被自动添加到生成的README.md文件中
+    "remarks": "## 商品管理模块\n\n负责商品信息的完整生命周期管理：\n- 商品创建和编辑\n- 库存管理\n- 价格策略\n- 商品分类\n\n## 技术特点\n- 采用DDD领域驱动设计\n- 支持事件驱动架构",
+    
+    "aggregateRoots": [
+      {
+        "name": "Product",
+        "comment": "商品聚合根", 
+        "properties": [
+          {
+            "name": "name",
+            "comment": "商品名称",
+            "type": "REGULAR"
+          },
+          {
+            "name": "price",
+            "comment": "商品价格", 
+            "type": "REGULAR"
+          }, // JSON5支持尾随逗号
+        ]
+      }
+    ],
+    
+    /* 领域事件配置 */
+    "domainEvents": [
+      {
+        "name": "ProductCreatedEvent",
+        "comment": "商品创建事件",
+        "aggregateRootName": "Product",
+        "fields": [
+          {
+            "name": "productId",
+            "type": "String",
+            "comment": "商品ID"
+          }
+        ]
+      }
+    ]
+  }
+]
+```
+
+#### 使用JSON5配置
+
+```bash
+# 使用JSON5配置文件生成模块
+java -cp aggregatex.jar cn.treedeep.king.tools.DDDModuleGenerator --config product-module.json5
+
+# 或者通过编程方式
+List<Module> modules = DDDJsonConfigTool.loadModulesFromJsonFile("product-module.json5");
+DDDModuleGenerator generator = new DDDModuleGenerator();
+generator.generateModules("/path/to/project", "com.example", modules, false);
+```
+
+#### remarks字段的作用
+
+`remarks` 字段支持以下特性：
+
+- **Markdown格式**: 支持完整的Markdown语法
+- **自动生成文档**: 内容会追加到模块的README.md文件中
+- **多行支持**: 使用 `\n` 实现换行格式化
+- **业务文档**: 可以包含模块功能说明、设计思路、使用指南等
+
+生成的README.md示例：
+```markdown
+# 商品模块
+
+## 商品管理模块
+
+负责商品信息的完整生命周期管理：
+- 商品创建和编辑
+- 库存管理
+- 价格策略
+- 商品分类
+
+## 技术特点
+- 采用DDD领域驱动设计
+- 支持事件驱动架构
+```
+
 ### 生成的代码结构
 
 以生成`product`模块为例，生成器会创建以下标准DDD结构：
@@ -742,6 +914,11 @@ java -cp build/libs/AggregateX-1.0.0.jar cn.treedeep.king.tools.DDDModuleGenerat
 
 ## 📚 相关文档
 
+### 框架文档
+- [JSON配置指南](src/main/resources/project/JSON_CONFIG_GUIDE.md) - 详细的JSON5配置文件格式说明
+- [新功能总结](docs/NEW_FEATURES_SUMMARY.md) - 最新功能实现总结
+
+### DDD理论文档
 - [维基百科 - 领域驱动设计](https://zh.wikipedia.org/wiki/%E9%A0%98%E5%9F%9F%E9%A9%85%E5%8B%95%E8%A8%AD%E8%A8%88)
 - [DDD 概念参考](https://domain-driven-design.org/zh/ddd-concept-reference.html)
 - [领域驱动设计DDD在B端营销系统的实践](https://tech.meituan.com/2024/05/27/ddd-in-business.html)
@@ -777,6 +954,8 @@ curl http://localhost:8080/actuator/prometheus
 ### v1.3.0 (2025-06) - 当前版本
 
 - **智能代码生成器**: 内置DDD模块代码生成工具，支持交互式和编程式调用
+- **JSON5配置支持**: 支持带注释的JSON5格式配置文件，提升配置可读性和维护性
+- **模块文档生成**: 新增remarks字段支持，自动生成包含详细说明的模块README.md文件
 - **模板引擎集成**: 基于FreeMarker的灵活模板系统
 - **完整文件生成**: 自动生成领域层、应用层、基础设施层、表现层的标准代码
 - **智能命名处理**: 自动处理各种命名格式转换和包结构规范

@@ -1,0 +1,109 @@
+// 简单的商品模块配置示例 - JSON5 格式
+[
+  {
+    "name": "product",
+    "comment": "商品模块", 
+    "remarks": "## 商品管理模块\n\n负责商品信息的完整生命周期管理，包括：\n- 商品创建和编辑\n- 库存管理\n- 价格策略\n- 商品分类\n\n## 技术特点\n- 采用DDD领域驱动设计\n- 支持事件驱动架构\n- 遵循CQRS模式",
+    "aggregateRoots": [
+      {
+        "name": "Product",
+        "comment": "商品聚合根",
+        "properties": [
+          {
+            "name": "name",
+            "comment": "商品名称",
+            "type": "REGULAR"
+          },
+          {
+            "name": "price", 
+            "comment": "商品价格",
+            "type": "REGULAR"
+          },
+          {
+            "name": "category",
+            "comment": "商品分类",
+            "type": "REGULAR"
+          },
+          {
+            "name": "sku",
+            "comment": "商品SKU",
+            "type": "AGGREGATE_ROOT_PROPERTY"
+          }, // 尾随逗号在JSON5中是允许的
+        ],
+        "entities": [
+          {
+            "name": "ProductImage",
+            "comment": "商品图片",
+            "properties": [
+              {
+                "name": "url",
+                "comment": "图片URL",
+                "type": "REGULAR"
+              },
+              {
+                "name": "description",
+                "comment": "图片描述", 
+                "type": "REGULAR"
+              }
+            ]
+          }
+        ],
+        "valueObjects": [
+          {
+            "name": "Sku",
+            "comment": "商品SKU值对象",
+            "properties": [
+              {
+                "name": "code",
+                "comment": "SKU代码",
+                "type": "REGULAR"
+              },
+              {
+                "name": "barcode",
+                "comment": "条形码",
+                "type": "REGULAR"
+              }
+            ]
+          }
+        ],
+        "methods": [
+          {
+            "name": "updatePrice",
+            "comment": "更新商品价格",
+            "returnType": "void",
+            "parameters": [
+              {
+                "name": "newPrice",
+                "type": "BigDecimal",
+                "comment": "新价格"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    /* 领域事件配置 */
+    "domainEvents": [
+      {
+        "name": "ProductCreatedEvent",
+        "comment": "商品创建事件",
+        "aggregateRootName": "Product",
+        "tableName": "product_created_events",
+        "fields": [
+          {
+            "name": "productId",
+            "type": "String",
+            "comment": "商品ID",
+            "columnName": "product_id"
+          },
+          {
+            "name": "productName",
+            "type": "String", 
+            "comment": "商品名称",
+            "columnName": "product_name"
+          }
+        ]
+      }
+    ]
+  }
+]
