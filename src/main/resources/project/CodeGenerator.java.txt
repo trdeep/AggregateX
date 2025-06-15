@@ -17,11 +17,9 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class CodeGenerator {
 
-    private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
-
-    private static final String PACKAGE_NAME = "cn.treedeep.king.admin";
-    private static final String PROJECT_PATH = "/Users/zhougm/vscode/KingAdmin";
-    private static final String BACKUP_DIR = PROJECT_PATH + "/src/main/resources/module_backups";
+    final static String PACKAGE_NAME = "cn.treedeep.king.admin";
+    final static String PROJECT_PATH = "/Users/zhougm/vscode/KingAdmin";
+    final static String BACKUP_DIR = PROJECT_PATH + "/src/main/resources/module_backups";
 
     public static void main(String[] args) {
         generateByJson();
@@ -52,7 +50,7 @@ public class CodeGenerator {
         }
 
         // 生成带时间戳的备份文件名
-        String timestamp = LocalDateTime.now().format(TIMESTAMP_FORMAT);
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
         String backupFileName = "module-info_" + timestamp + ".json5";
 
         // 构建目标路径
