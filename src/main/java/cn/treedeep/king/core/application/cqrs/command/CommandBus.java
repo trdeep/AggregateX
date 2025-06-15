@@ -7,10 +7,12 @@ import cn.treedeep.king.shared.properties.CqrsProperties;
 import jakarta.annotation.Resource;
 import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -132,7 +134,8 @@ public class CommandBus {
 
             // 验证命令
             commandValidators.stream()
-                    .filter(v -> v.getClass().getSimpleName().startsWith(command.getClass().getSimpleName()))
+                    .filter(v -> v.getClass().getSimpleName().startsWith(commandType) ||
+                            command.getClass().equals(Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(v.getClass(), AbstractCommandValidator.class))[0]))
                     .forEach(v -> v.doValidate(validator, validationEnabled, failFast, command));
 
             // 获取处理器

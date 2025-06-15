@@ -27,7 +27,10 @@ import java.util.concurrent.CompletableFuture;
  * @param <A> 聚合根类型，必须继承AggregateRoot
  */
 @Getter
-public abstract class AbstractCommandHandler<C extends Command, A extends AggregateRoot<? extends Identifier>, AR extends AggregateRepository<A, ? extends Identifier>, R> implements CommandHandler<C, R> {
+public abstract class AbstractCommandHandler<C extends Command,
+        A extends AggregateRoot<? extends Identifier>,
+        AR extends AggregateRepository<A, ? extends Identifier>, R> implements CommandHandler<C, R> {
+
     private final Class<C> commandType;
     protected final AR aggregateRepository;
     protected final EventBus eventBus;
