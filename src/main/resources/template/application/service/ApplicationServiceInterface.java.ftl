@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ApplicationService {
 
-    Optional<${entityNameCamel}> getOne(String name);
+    Optional<${entityNameCamel}> findById(String id);
 
     List<${entityNameCamel}> fandAll();
 }

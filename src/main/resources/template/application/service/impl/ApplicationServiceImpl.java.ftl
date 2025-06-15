@@ -20,13 +20,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     private DomainService domainService;
 
     @Override
-    public Optional<${entityNameCamel}> getOne(String name) {
+    public Optional<${entityNameCamel}> findById(String id) {
         ${entityNameCamel} ${entityNameLower} = new ${entityNameCamel}();
         ${entityNameLower}.setId(new ${entityNameCamel}Id());
 
         // 实际上应该从数据库获取
 
-        log.info("应用服务：创建实体, {}", name);
+        log.info("应用服务：创建实体, {}", id);
         return Optional.of(${entityNameLower});
     }
 

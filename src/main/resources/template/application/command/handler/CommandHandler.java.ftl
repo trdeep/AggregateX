@@ -37,7 +37,7 @@ public class SayHelloCommandHandler extends AbstractCommandHandler<SayHelloComma
 
     @Override
     protected ${entityNameCamel} doHandle(SayHelloCommand command, CompletableFuture<CommandResult<Object>> future) {
-        Optional<${entityNameCamel}> ${entityNameLower} = applicationService.getOne(command.getName());
+        Optional<${entityNameCamel}> ${entityNameLower} = applicationService.findById(command.getCommandId());
         future.complete(new CommandResult<>(command, "异步结果：" + command.getName()));
         ${entityNameLower}.ifPresent(u -> u.sayHello(command.getName()));
         return ${entityNameLower}.orElse(null);
