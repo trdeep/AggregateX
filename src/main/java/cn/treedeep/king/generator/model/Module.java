@@ -2,6 +2,7 @@ package cn.treedeep.king.generator.model;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class Module {
     private final String name;
     private final String comment;
     private final List<AggregateRoot> aggregateRoots;
+    private final List<DomainEvent> domainEvents = new ArrayList<>();
+    private final List<ApplicationService> applicationServices = new ArrayList<>();
 
     private Module(String name, String comment, List<AggregateRoot> aggregateRoots) {
         this.name = name;
@@ -25,6 +28,44 @@ public class Module {
 
     public static Module create(String name, String comment, AggregateRoot... ars) {
         return new Module(name, comment, Arrays.stream(ars).toList());
+    }
+
+    /**
+     * 创建模块，支持混合参数（聚合根 + 领域事件 + 应用服务）
+     */
+    public static Module create(String name, String comment, Object... items) {
+        List<AggregateRoot> aggregateRoots = new ArrayList<>();
+        List<DomainEvent> domainEvents = new ArrayList<>();
+        List<ApplicationService> applicationServices = new ArrayList<>();
+
+        for (Object item : items) {
+            if (item instanceof AggregateRoot) {
+                aggregateRoots.add((AggregateRoot) item);
+            } else if (item instanceof DomainEvent) {
+                domainEvents.add((DomainEvent) item);
+            } else if (item instanceof ApplicationService) {
+                applicationServices.add((ApplicationService) item);
+            }
+        }
+
+        Module module = new Module(name, comment, aggregateRoots);
+        module.domainEvents.addAll(domainEvents);
+        module.applicationServices.addAll(applicationServices);
+        return module;
+    }
+
+    /**
+     * 添加领域事件
+     */
+    public void addDomainEvent(DomainEvent domainEvent) {
+        this.domainEvents.add(domainEvent);
+    }
+
+    /**
+     * 添加应用服务
+     */
+    public void addApplicationService(ApplicationService applicationService) {
+        this.applicationServices.add(applicationService);
     }
 
 }

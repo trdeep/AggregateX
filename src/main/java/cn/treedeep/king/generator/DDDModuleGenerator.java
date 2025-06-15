@@ -93,6 +93,14 @@ public class DDDModuleGenerator {
         log.info("🔗 生成值对象和实体文件...");
         generateEntitiesAndValueObjects(modulePath, actualPackageName, moduleName, module.getAggregateRoots(), author, copyright);
 
+        // 生成模块级的领域事件
+        log.info("📨 生成领域事件文件...");
+        generateDomainEvents(modulePath, actualPackageName, moduleName, module.getDomainEvents(), author, copyright);
+
+        // 生成模块级的应用服务
+        log.info("🔧 生成应用服务文件...");
+        generateApplicationServices(modulePath, actualPackageName, moduleName, module.getApplicationServices(), author, copyright);
+
         log.info("📍 模块位置: {}", modulePath);
     }
 
@@ -303,6 +311,8 @@ public class DDDModuleGenerator {
             aggregateGenerator.addParam("aggregateProperties", aggregateDirectProperties);
             // 单独传递值对象属性用于@Embedded注解
             aggregateGenerator.addParam("valueObjectProperties", aggregateEmbeddedValueObjects);
+            // 传递领域方法
+            aggregateGenerator.addParam("domainMethods", aggregateRoot.getMethods());
 
             // 生成聚合根相关文件
             aggregateGenerator.generateAggregateRoot();
@@ -431,5 +441,79 @@ public class DDDModuleGenerator {
         System.out.println("   • 运行测试: ./gradlew test");
         System.out.println("   • 生成文档: ./gradlew javadoc");
         System.out.println();
+    }
+
+    /**
+     * 生成模块级领域事件
+     */
+    private void generateDomainEvents(Path modulePath, String packageName, String moduleName,
+                                     List<DomainEvent> domainEvents, String author, String copyright) throws IOException {
+        for (DomainEvent domainEvent : domainEvents) {
+            String eventName = domainEvent.getName();
+            String eventComment = domainEvent.getComment();
+            String aggregateRootName = domainEvent.getAggregateRootName();
+
+            // 保持原始驼峰格式，只有在非驼峰格式时才转换
+            String eventNameCamel = isAlreadyCamelCase(eventName) ? eventName : toPascalCase(eventName);
+
+            DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(
+                    modulePath, packageName, moduleName, eventNameCamel,
+                    eventName, eventComment, copyright, author);
+
+            // 添加事件相关的参数
+            templateGenerator.addParam("eventName", eventName);
+            templateGenerator.addParam("eventNameCamel", eventNameCamel);
+            templateGenerator.addParam("eventComment", eventComment);
+            templateGenerator.addParam("aggregateRootName", aggregateRootName);
+            templateGenerator.addParam("tableName", domainEvent.getTableName());
+            templateGenerator.addParam("eventFields", domainEvent.getFields());
+
+            // 添加聚合根类名参数（如果有关联的聚合根）
+            if (aggregateRootName != null && !aggregateRootName.isEmpty()) {
+                templateGenerator.addParam("aggregateRootClass", aggregateRootName);
+            }
+
+            // 生成领域事件文件
+            String content = templateGenerator.processTemplate("domain/event/DomainEventTemplate.java.ftl", templateGenerator.getParams());
+            templateGenerator.writeFile(modulePath.resolve("domain/event/" + eventNameCamel + ".java"), content);
+
+            log.debug("Generated domain event: {}", eventNameCamel);
+        }
+    }
+
+    /**
+     * 生成模块级应用服务
+     */
+    private void generateApplicationServices(Path modulePath, String packageName, String moduleName,
+                                           List<ApplicationService> applicationServices, String author, String copyright) throws IOException {
+        for (ApplicationService applicationService : applicationServices) {
+            String serviceName = applicationService.getName();
+            String serviceComment = applicationService.getComment();
+
+            // 保持原始驼峰格式，只有在非驼峰格式时才转换
+            String serviceNameCamel = isAlreadyCamelCase(serviceName) ? serviceName : toPascalCase(serviceName);
+
+            DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(
+                    modulePath, packageName, moduleName, serviceNameCamel,
+                    serviceName, serviceComment, copyright, author);
+
+            // 添加应用服务相关的参数
+            templateGenerator.addParam("serviceName", serviceName);
+            templateGenerator.addParam("serviceNameCamel", serviceNameCamel);
+            templateGenerator.addParam("serviceComment", serviceComment);
+            templateGenerator.addParam("interfaceName", applicationService.getInterfaceName());
+            templateGenerator.addParam("implementationName", applicationService.getImplementationName());
+            templateGenerator.addParam("serviceMethods", applicationService.getMethods());
+
+            // 生成应用服务接口
+            String interfaceContent = templateGenerator.processTemplate("application/service/ApplicationServiceInterfaceTemplate.java.ftl", templateGenerator.getParams());
+            templateGenerator.writeFile(modulePath.resolve("application/service/" + applicationService.getInterfaceName() + ".java"), interfaceContent);
+
+            // 生成应用服务实现
+            String implContent = templateGenerator.processTemplate("application/service/impl/ApplicationServiceImplTemplate.java.ftl", templateGenerator.getParams());
+            templateGenerator.writeFile(modulePath.resolve("application/service/impl/" + applicationService.getImplementationName() + ".java"), implContent);
+
+            log.debug("Generated application service: {}", serviceNameCamel);
+        }
     }
 }

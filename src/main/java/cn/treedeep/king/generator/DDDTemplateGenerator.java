@@ -277,13 +277,20 @@ public class DDDTemplateGenerator {
     }
 
     /**
+     * 获取参数映射
+     */
+    public Map<String, Object> getParams() {
+        return params;
+    }
+
+    /**
      * 处理模板
      */
-    private String processTemplate(String templateName, Map<String, Object> params) throws IOException {
+    public String processTemplate(String templateName, Map<String, Object> templateParams) throws IOException {
         try {
             Template template = fmConfig.getTemplate(templateName);
             Writer out = new StringWriter();
-            template.process(params, out);
+            template.process(templateParams, out);
             return out.toString();
         } catch (TemplateException e) {
             throw new IOException("Error processing template: " + templateName, e);
@@ -293,7 +300,7 @@ public class DDDTemplateGenerator {
     /**
      * 写入文件
      */
-    private void writeFile(Path filePath, String content) throws IOException {
+    public void writeFile(Path filePath, String content) throws IOException {
         Files.createDirectories(filePath.getParent());
         Files.writeString(filePath, content);
         log.debug("Generated file: {}", filePath);
