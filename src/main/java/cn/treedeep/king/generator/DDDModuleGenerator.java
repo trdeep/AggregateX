@@ -265,23 +265,44 @@ public class DDDModuleGenerator {
                     modulePath, packageName, moduleName, aggregateRootNameCamel,
                     aggregateRootName, aggregateRootComment, copyright, author);
 
-            // 将聚合根的值对象属性传递给模板（只包含值对象）
-            List<Property> valueObjectProperties =
-                aggregateRoot.getEos().stream()
-                    .filter(entity -> entity instanceof ValueObject)  // 只筛选值对象
-                    .map(entity -> new Property(entity.getName(), entity.getComment()))
-                    .toList();
+            // 按照新设计：聚合根只包含直接属性和AggregateRootProperty嵌套的值对象
+            List<Property> aggregateDirectProperties = new ArrayList<>();
+            List<Property> aggregateEmbeddedValueObjects = new ArrayList<>();
             
-            // 将所有属性传递给模板：值对象 + 聚合根自身的属性
-            List<Property> allProperties = new ArrayList<>(valueObjectProperties);
-            allProperties.addAll(aggregateRoot.getProperties());
-            
-            aggregateGenerator.addProperties(allProperties);
-            
+            // 分离普通属性和AggregateRootProperty
+            for (Property property : aggregateRoot.getProperties()) {
+                if (Property.AggregateRootProperty.isAggregateRootProperty(property)) {
+                    // AggregateRootProperty转换为嵌套值对象
+                    // 需要将属性名转换为正确的类型名（首字母大写）
+                    String valueObjectTypeName = property.getName();
+                    if (valueObjectTypeName.endsWith("ValueObject")) {
+                        // 如果属性名以ValueObject结尾，去掉后缀并首字母大写
+                        valueObjectTypeName = valueObjectTypeName.substring(0, valueObjectTypeName.length() - "ValueObject".length());
+                        valueObjectTypeName = Character.toUpperCase(valueObjectTypeName.charAt(0)) + valueObjectTypeName.substring(1);
+                    } else {
+                        // 否则直接首字母大写
+                        valueObjectTypeName = Character.toUpperCase(valueObjectTypeName.charAt(0)) + valueObjectTypeName.substring(1);
+                    }
+                    
+                    // 创建一个新的Property，名称是valueObjectTypeName，这样模板就知道类型了
+                    Property embeddedProperty = new Property(valueObjectTypeName, property.getComment());
+                    aggregateEmbeddedValueObjects.add(embeddedProperty);
+                } else {
+                    // 普通属性
+                    aggregateDirectProperties.add(property);
+                }
+            }
+
+            // 将所有属性传递给模板
+            List<Property> allAggregateProperties = new ArrayList<>(aggregateDirectProperties);
+            allAggregateProperties.addAll(aggregateEmbeddedValueObjects);
+
+            aggregateGenerator.addProperties(allAggregateProperties);
+
+            // 单独传递直接属性用于普通字段
+            aggregateGenerator.addParam("aggregateProperties", aggregateDirectProperties);
             // 单独传递值对象属性用于@Embedded注解
-            aggregateGenerator.addParam("valueObjectProperties", valueObjectProperties);
-            // 单独传递聚合根自身属性用于普通字段
-            aggregateGenerator.addParam("aggregateProperties", aggregateRoot.getProperties());
+            aggregateGenerator.addParam("valueObjectProperties", aggregateEmbeddedValueObjects);
 
             // 生成聚合根相关文件
             aggregateGenerator.generateAggregateRoot();
@@ -310,7 +331,7 @@ public class DDDModuleGenerator {
 
             log.debug("Generated aggregate root: {}", aggregateRootName);
 
-            // 生成聚合根的实体和值对象
+            // 生成聚合根的实体和值对象（这些与聚合根同级，在domain层）
             for (Entity entity : aggregateRoot.getEos()) {
                 String entityName = entity.getName();
                 String entityComment = entity.getComment();
@@ -322,8 +343,22 @@ public class DDDModuleGenerator {
                         modulePath, packageName, moduleName, entityNameCamel,
                         entityName, entityComment, copyright, author);
 
+                // 分离普通属性和值对象属性
+                List<Property> regularProperties = new ArrayList<>();
+                List<Property> entityValueObjectProperties = new ArrayList<>();
+
+                for (Property property : entity.getProperties()) {
+                    if (Property.ValueObjectProperty.isValueObjectProperty(property)) {
+                        entityValueObjectProperties.add(property);
+                    } else {
+                        regularProperties.add(property);
+                    }
+                }
+
                 // 将属性信息传递给模板
                 templateGenerator.addProperties(entity.getProperties());
+                templateGenerator.addParam("regularProperties", regularProperties);
+                templateGenerator.addParam("valueObjectProperties", entityValueObjectProperties);
 
                 if (entity instanceof ValueObject) {
                     templateGenerator.generateValueObject();
@@ -331,6 +366,49 @@ public class DDDModuleGenerator {
                 } else {
                     templateGenerator.generateEntity();
                     log.debug("Generated entity: {}", entityName);
+                }
+            }
+
+            // 生成AggregateRootProperty引用的值对象（确保这些被嵌入的值对象在domain层生成）
+            for (Property property : aggregateRoot.getProperties()) {
+                if (Property.AggregateRootProperty.isAggregateRootProperty(property)) {
+                    // 从属性名推导值对象名称和类型
+                    String valueObjectTypeName = property.getName();
+                    if (valueObjectTypeName.endsWith("ValueObject")) {
+                        valueObjectTypeName = valueObjectTypeName.substring(0, valueObjectTypeName.length() - "ValueObject".length());
+                        valueObjectTypeName = Character.toUpperCase(valueObjectTypeName.charAt(0)) + valueObjectTypeName.substring(1);
+                    } else {
+                        valueObjectTypeName = Character.toUpperCase(valueObjectTypeName.charAt(0)) + valueObjectTypeName.substring(1);
+                    }
+
+                    // 检查这个值对象是否已经在aggregateRoot.getEos()中存在
+                    boolean alreadyExists = false;
+                    for (Entity entity : aggregateRoot.getEos()) {
+                        if (entity.getName().equals(valueObjectTypeName)) {
+                            alreadyExists = true;
+                            break;
+                        }
+                    }
+
+                    // 如果不存在，则创建并生成这个值对象
+                    if (!alreadyExists) {
+                        String valueObjectComment = property.getComment() != null ? property.getComment() : valueObjectTypeName + "值对象";
+                        
+                        DDDTemplateGenerator valueObjectGenerator = new DDDTemplateGenerator(
+                                modulePath, packageName, moduleName, valueObjectTypeName,
+                                valueObjectTypeName, valueObjectComment, copyright, author);
+
+                        // 为简单的值对象创建一个基本的value属性
+                        List<Property> basicProperties = new ArrayList<>();
+                        basicProperties.add(new Property("value", "值"));
+                        
+                        valueObjectGenerator.addProperties(basicProperties);
+                        valueObjectGenerator.addParam("regularProperties", basicProperties);
+                        valueObjectGenerator.addParam("valueObjectProperties", new ArrayList<>());
+                        
+                        valueObjectGenerator.generateValueObject();
+                        log.debug("Generated embedded value object: {}", valueObjectTypeName);
+                    }
                 }
             }
         }

@@ -38,8 +38,7 @@ public class DDDModuleGeneratorExample {
                 Entity.property("loginTime", "登录时间"),
                 Entity.property("ipAddress", "IP地址"),
                 Entity.property("result", "登录结果"),
-                ValueObject.property("deviceFingerprint", "嵌套值对象")
-                // deviceFingerprint  // 嵌套值对象
+                Property.ValueObjectProperty.create("deviceFingerprint", "设备指纹")
         );
 
         var securityLogEntity = Entity.create("SecurityLog", "安全日志",
@@ -57,9 +56,14 @@ public class DDDModuleGeneratorExample {
                 Property.create("status", "账户状态"),
                 Property.create("failedLoginAttempts", "登录失败次数"),
 
+                // phoneValueObject嵌套到聚合根里
+                Property.AggregateRootProperty.create("phoneValueObject", "手机号"),
+
+                // 以下对象生成在domain层
+
                 // 值对象
-                phoneValueObject,
                 deviceFingerprint,
+                phoneValueObject,
 
                 // 实体
                 loginRecordEntity,
