@@ -67,6 +67,9 @@ dependencies {
     api 'com.fasterxml.jackson.core:jackson-databind'
     api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
+    // JSON5支持 - 支持带注释的JSON配置
+    api 'org.json:json:20240303'
+
     // 工具包
     api 'com.google.guava:guava:33.4.8-jre'
     api 'org.apache.commons:commons-lang3:3.17.0'

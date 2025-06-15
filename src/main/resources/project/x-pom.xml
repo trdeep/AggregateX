@@ -79,6 +79,13 @@
             <version>2.3.34</version>
         </dependency>
 
+        <!-- Json5支持 -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version>
+        </dependency>
+
         <!-- 测试依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
