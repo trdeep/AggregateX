@@ -41,6 +41,14 @@ public class DateTimeUtil {
         return format(offsetDateTime, OFFSET_DATE_TIME_FORMATTER);
     }
 
+    public static String formatNowOffset() {
+        return format(now(), OFFSET_DATE_TIME_FORMATTER);
+    }
+
+    public static String formatNowDefault() {
+        return format(now(), DEFAULT_FORMATTER);
+    }
+
     /**
      * 将 {@link OffsetDateTime} 转换为字符串，使用指定的格式。
      *

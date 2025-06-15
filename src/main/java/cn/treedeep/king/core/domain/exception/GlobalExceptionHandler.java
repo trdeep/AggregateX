@@ -62,7 +62,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         log.warn("参数验证失败", ex);
-
         BindingResult bindingResult = ex.getBindingResult();
         Map<String, String> errors = new HashMap<>();
 

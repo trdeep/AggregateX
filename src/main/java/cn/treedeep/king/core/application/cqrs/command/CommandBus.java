@@ -55,7 +55,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class CommandBus {
 
-    @Resource
     private final Map<Class<? extends Command>, CommandHandler<?, ?>> handlers = new ConcurrentHashMap<>();
     private final CommandMetrics commandMetrics;
     private final CommandIdempotencyControl idempotencyControl;

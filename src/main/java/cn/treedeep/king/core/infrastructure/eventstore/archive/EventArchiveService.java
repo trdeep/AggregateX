@@ -3,6 +3,7 @@ package cn.treedeep.king.core.infrastructure.eventstore.archive;
 import cn.treedeep.king.core.domain.DomainEvent;
 import cn.treedeep.king.core.infrastructure.eventstore.EventStoreRepository;
 import cn.treedeep.king.core.infrastructure.monitoring.EventStoreMetrics;
+import cn.treedeep.king.shared.utils.DateTimeUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -95,7 +96,7 @@ public class EventArchiveService {
     @Transactional
     public void scheduledArchiving() {
         log.info("开始执行定期归档任务");
-        OffsetDateTime cutoffDate = OffsetDateTime.now().minusDays(EVENT_RETENTION_DAYS);
+        OffsetDateTime cutoffDate = DateTimeUtil.now().minusDays(EVENT_RETENTION_DAYS);
 
         try {
             // 分页查询老事件并归档

@@ -1,6 +1,7 @@
 package cn.treedeep.king.generator;
 
 import cn.treedeep.king.generator.model.Property;
+import cn.treedeep.king.shared.utils.DateTimeUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -13,8 +14,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +69,7 @@ public class DDDTemplateGenerator {
         params.put("moduleComment", entityComment);
         params.put("copyright", copyright);
         params.put("author", author);
-        params.put("dateTime", OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        params.put("dateTime", DateTimeUtil.formatNowDefault());
 
         // Initialize FreeMarker configuration
         this.fmConfig = new Configuration(Configuration.VERSION_2_3_31);

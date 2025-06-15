@@ -1,6 +1,7 @@
 package cn.treedeep.king.generator;
 
 import cn.treedeep.king.generator.model.*;
+import cn.treedeep.king.shared.utils.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -8,8 +9,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -260,7 +259,7 @@ public class DDDModuleGenerator {
         System.out.println("       /____//____/         /____/                      ");
         System.out.println();
         System.out.println("DDD Module Generator v2.0.0");
-        System.out.println("Generated at: " + OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        System.out.println("Generated at: " + DateTimeUtil.formatNowOffset());
         System.out.println();
     }
 

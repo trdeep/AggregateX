@@ -1,5 +1,6 @@
 package cn.treedeep.king.core.domain;
 
+import cn.treedeep.king.shared.utils.DateTimeUtil;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,13 +48,13 @@ public abstract class DomainEvent extends ApplicationEvent {
     protected DomainEvent() {
         super("DomainEvent");
         this.eventId = UUID.randomUUID().toString();
-        this.occurredOn = OffsetDateTime.now();
+        this.occurredOn = DateTimeUtil.now();
     }
 
     protected DomainEvent(Object source) {
         super(source);
         this.eventId = UUID.randomUUID().toString();
-        this.occurredOn = OffsetDateTime.now();
+        this.occurredOn = DateTimeUtil.now();
     }
 
 }

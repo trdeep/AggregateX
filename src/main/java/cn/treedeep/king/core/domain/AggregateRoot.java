@@ -124,7 +124,7 @@ public abstract class AggregateRoot<ID extends Identifier> extends AbstractAggre
      * 更新最后修改时间
      */
     protected void updateLastModifiedAt() {
-        this.lastModifiedAt = OffsetDateTime.now();
+        this.lastModifiedAt = DateTimeUtil.now();
     }
 
     /**

@@ -6,6 +6,7 @@ import cn.treedeep.king.core.domain.EventStore;
 import cn.treedeep.king.core.infrastructure.eventstore.compression.EventCompressor;
 import cn.treedeep.king.core.infrastructure.monitoring.EventStoreMetrics;
 import cn.treedeep.king.shared.properties.EventStoreProperties;
+import cn.treedeep.king.shared.utils.DateTimeUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.instrument.Timer;
@@ -15,7 +16,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -159,7 +159,7 @@ public class JpaEventStore implements EventStore {
                 snapshot.setAggregateType(lastEvent.getClass().getName());
                 snapshot.setVersion(lastEvent.getAggregateVersion());
                 snapshot.setSnapshotData(objectMapper.writeValueAsString(lastEvent));
-                snapshot.setCreatedAt(OffsetDateTime.now());
+                snapshot.setCreatedAt(DateTimeUtil.now());
 
                 snapshotRepository.save(snapshot);
                 metrics.getSnapshotsSavedCounter().increment();
