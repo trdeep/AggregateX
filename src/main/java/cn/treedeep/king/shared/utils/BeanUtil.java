@@ -1,5 +1,10 @@
 package cn.treedeep.king.shared.utils;
 
+import cn.treedeep.king.core.domain.ValueObjectBase;
+import org.apache.commons.lang3.SerializationUtils;
+
+import java.io.Serializable;
+
 /**
  * Bean工具类
  * <p>
@@ -23,6 +28,10 @@ package cn.treedeep.king.shared.utils;
  * </ul>
  */
 public class BeanUtil extends org.springframework.beans.BeanUtils {
+
+    public static <T extends Serializable> T deepCopy(T source) {
+        return SerializationUtils.clone(source);
+    }
 
     public static void copyPropertiesIgnoreNull(Object source, Object target) {
         if (source == null || target == null) {

@@ -49,7 +49,7 @@ public abstract class BaseIdentifier implements Identifier {
      */
     @Column(name = "id", length = 36, nullable = false)
     @Comment("ID")
-    private final String value;
+    private String value;
 
     /**
      * 默认构造函数，生成UUID作为标识符
@@ -65,6 +65,15 @@ public abstract class BaseIdentifier implements Identifier {
      */
     protected BaseIdentifier(String id) {
         this.value = id;
+    }
+
+    /**
+     * 设置标识符值
+     *
+     * @param value 标识符值
+     */
+    protected void setValue(String value) {
+        this.value = value;
     }
 
     @Override
