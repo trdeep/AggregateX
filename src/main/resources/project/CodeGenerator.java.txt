@@ -1,12 +1,15 @@
 package cn.treedeep.king;
 
-import cn.treedeep.king.generator.DDDModuleGenerator;
 import cn.treedeep.king.generator.config.DDDJsonConfigTool;
-import cn.treedeep.king.generator.model.*;
-import cn.treedeep.king.generator.model.Module;
+import cn.treedeep.king.shared.utils.ResourceUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * AggregateX DDD 项目代码生成器
@@ -14,415 +17,50 @@ import java.util.List;
 @Slf4j
 public class CodeGenerator {
 
-    public static void main(String[] args) {
-        String path = "/Users/zhougm/vscode/KingAdmin";
-        String packageName = "cn.treedeep.king.admin";
+    private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 
-        // javaDSL(path, packageName);
-        jsonDSL(path, packageName);
+    private static final String PACKAGE_NAME = "cn.treedeep.king.admin";
+    private static final String PROJECT_PATH = "/Users/zhougm/vscode/KingAdmin";
+    private static final String BACKUP_DIR = PROJECT_PATH + "/src/main/resources/module_backups";
+
+    public static void main(String[] args) {
+        generateByJson();
     }
 
-    private static void javaDSL(String path, String packageName) {
-        // ====== 值对象定义 ======
-        var phone = ValueObject.create("Phone", "手机号",
-                ValueObject.property("countryCode", "国家代码"),
-                ValueObject.property("phoneNumber", "手机号码")
-        );
-
-        var deviceFingerprint = ValueObject.create("DeviceFingerprint", "设备指纹",
-                ValueObject.property("osType", "操作系统"),
-                ValueObject.property("browserType", "浏览器类型"),
-                ValueObject.property("deviceId", "设备ID")
-        );
-
-        var password = ValueObject.create("Password", "密码对象",
-                ValueObject.property("hash", "密码哈希值"),
-                ValueObject.property("salt", "加密盐值"),
-                ValueObject.property("algorithm", "加密算法")
-        );
-
-        // ====== 实体定义 ======
-        var loginRecord = Entity.create("LoginRecord", "登录记录",
-                Entity.property("loginTime", "登录时间"),
-                Entity.property("ipAddress", "IP地址"),
-                Entity.property("result", "登录结果"),
-                // 直接嵌套值对象作为属性
-                Property.ValueObjectProperty.create("deviceFingerprint", "登录设备信息")
-        );
-
-        var securityLog = Entity.create("SecurityLog", "安全日志",
-                Entity.property("operationTime", "操作时间"),
-                Entity.property("operationType", "操作类型"),
-                Entity.property("detail", "操作详情")
-        );
-
-        // ====== 聚合根定义 ======
-        var userAggregate = AggregateRoot.create("User", "用户聚合根",
-                // 基本属性
-                Property.create("username", "用户名"),
-                Property.create("email", "邮箱"),
-                Property.create("status", "账户状态"),
-                Property.create("failedLoginAttempts", "登录失败次数"),
-
-                // 嵌套值对象作为属性
-                Property.AggregateRootProperty.create("phone", "手机号"),
-                Property.AggregateRootProperty.create("password", "密码"),
-
-                // 嵌套实体作为属性
-                Property.AggregateRootProperty.create("loginRecord", "登录记录集合"),
-                Property.AggregateRootProperty.create("securityLog", "安全日志集合"),
-
-                // 嵌套值对象定义（生成在domain层）
-                deviceFingerprint,
-                phone,
-                password,
-
-                // 嵌套实体定义
-                loginRecord,
-                securityLog
-        );
-
-        // ====== 模块定义 ======
-        var modules = List.of(
-                Module.create("authentication", "认证模块", userAggregate)
-        );
+    private static void generateByJson() {
+        DDDJsonConfigTool tool = new DDDJsonConfigTool();
+        String jsonContent = ResourceUtil.readResource("module-info.json5");
 
         try {
-            DDDModuleGenerator generator = new DDDModuleGenerator();
-            generator.generateModules(path, packageName, modules, true);
-            System.out.println("✅ 模块代码已生成");
+            // 1. 执行代码生成
+            tool.generateFromJsonString(jsonContent, PROJECT_PATH, PACKAGE_NAME);
+
+            // 2. 备份配置文件
+            backupJsonContent(jsonContent);
+
+            log.info("✅ 模块代码已生成，配置文件已备份");
         } catch (Exception e) {
-            System.err.println("❌ 生成失败: " + e.getMessage());
+            log.error("❌ 代码生成失败", e);
         }
     }
 
+    private static void backupJsonContent(String jsonContent) throws IOException {
+        // 创建备份目录（如果不存在）
+        Path backupPath = Paths.get(BACKUP_DIR);
+        if (!Files.exists(backupPath)) {
+            Files.createDirectories(backupPath);
+        }
 
-    private static void jsonDSL(String projectPath, String packageName) {
-        DDDJsonConfigTool tool = new DDDJsonConfigTool();
+        // 生成带时间戳的备份文件名
+        String timestamp = LocalDateTime.now().format(TIMESTAMP_FORMAT);
+        String backupFileName = "module-info_" + timestamp + ".json5";
 
-        String userConfig = """
-                [
-                      {
-                        "name": "auth",
-                        "comment": "认证模块",
-                        "aggregateRoots": [
-                          {
-                            "name": "User",
-                            "comment": "用户聚合根",
-                            "properties": [
-                              {
-                                "name": "username",
-                                "comment": "用户名",
-                                "type": "REGULAR"
-                              },
-                              {
-                                "name": "email",
-                                "comment": "邮箱",
-                                "type": "REGULAR"
-                              },
-                              {
-                                "name": "passwordHash",
-                                "comment": "密码哈希值",
-                                "type": "REGULAR"
-                              },
-                              {
-                                "name": "status",
-                                "comment": "账号状态（ACTIVE, LOCKED）",
-                                "type": "REGULAR"
-                              },
-                              {
-                                "name": "phone",
-                                "comment": "手机号",
-                                "type": "AGGREGATE_ROOT_PROPERTY"
-                              },
-                              {
-                                "name": "createdAt",
-                                "comment": "创建时间",
-                                "type": "REGULAR"
-                              },
-                              {
-                                "name": "lastLoginAt",
-                                "comment": "最后登录时间",
-                                "type": "REGULAR"
-                              },
-                              {
-                                "name": "failedLoginAttempts",
-                                "comment": "连续登录失败次数",
-                                "type": "REGULAR"
-                              }
-                            ],
-                            "entities": [
-                              {
-                                "name": "LoginSession",
-                                "comment": "登录会话",
-                                "properties": [
-                                  {
-                                    "name": "sessionToken",
-                                    "comment": "会话令牌",
-                                    "type": "REGULAR"
-                                  },
-                                  {
-                                    "name": "loginTime",
-                                    "comment": "登录时间",
-                                    "type": "REGULAR"
-                                  },
-                                  {
-                                    "name": "ipAddress",
-                                    "comment": "IP地址",
-                                    "type": "REGULAR"
-                                  },
-                                  {
-                                    "name": "deviceInfo",
-                                    "comment": "设备信息",
-                                    "type": "VALUE_OBJECT_PROPERTY"
-                                  },
-                                  {
-                                    "name": "expiresAt",
-                                    "comment": "过期时间",
-                                    "type": "REGULAR"
-                                  }
-                                ]
-                              }
-                            ],
-                            "valueObjects": [
-                              {
-                                "name": "Phone",
-                                "comment": "手机号值对象",
-                                "properties": [
-                                  {
-                                    "name": "countryCode",
-                                    "comment": "国家代码",
-                                    "type": "REGULAR"
-                                  },
-                                  {
-                                    "name": "number",
-                                    "comment": "手机号码",
-                                    "type": "REGULAR"
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "DeviceInfo",
-                                "comment": "设备信息值对象",
-                                "properties": [
-                                  {
-                                    "name": "deviceType",
-                                    "comment": "设备类型（WEB, ANDROID, IOS）",
-                                    "type": "REGULAR"
-                                  },
-                                  {
-                                    "name": "osVersion",
-                                    "comment": "操作系统版本",
-                                    "type": "REGULAR"
-                                  },
-                                  {
-                                    "name": "browserType",
-                                    "comment": "浏览器类型",
-                                    "type": "REGULAR"
-                                  },
-                                  {
-                                    "name": "deviceFingerprint",
-                                    "comment": "设备指纹",
-                                    "type": "REGULAR"
-                                  }
-                                ]
-                              }
-                            ],
-                            "methods": [
-                              {
-                                "name": "register",
-                                "comment": "注册用户",
-                                "returnType": "void",
-                                "parameters": [
-                                  {
-                                    "name": "password",
-                                    "type": "String",
-                                    "comment": "密码"
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "verifyPassword",
-                                "comment": "验证密码",
-                                "returnType": "boolean",
-                                "parameters": [
-                                  {
-                                    "name": "password",
-                                    "type": "String",
-                                    "comment": "待验证密码"
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "createSession",
-                                "comment": "创建登录会话",
-                                "returnType": "String",  // 返回会话令牌
-                                "parameters": [
-                                  {
-                                    "name": "deviceType",
-                                    "type": "String",
-                                    "comment": "设备类型"
-                                  },
-                                  {
-                                    "name": "ipAddress",
-                                    "type": "String",
-                                    "comment": "IP地址"
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "incrementFailedAttempts",
-                                "comment": "增加登录失败次数",
-                                "returnType": "void",
-                                "parameters": []
-                              },
-                              {
-                                "name": "resetFailedAttempts",
-                                "comment": "重置登录失败次数",
-                                "returnType": "void",
-                                "parameters": []
-                              }
-                            ]
-                          }
-                        ],
-                        "domainEvents": [
-                          {
-                            "name": "UserRegisteredEvent",
-                            "comment": "用户注册事件",
-                            "aggregateRootName": "User",
-                            "tableName": "user_registered_events",
-                            "fields": [
-                              {
-                                "name": "userId",
-                                "type": "String",
-                                "comment": "用户ID",
-                                "columnName": "user_id"
-                              },
-                              {
-                                "name": "username",
-                                "type": "String",
-                                "comment": "用户名",
-                                "columnName": "username"
-                              },
-                              {
-                                "name": "email",
-                                "type": "String",
-                                "comment": "邮箱",
-                                "columnName": "email"
-                              },
-                              {
-                                "name": "registeredAt",
-                                "type": "String",
-                                "comment": "注册时间",
-                                "columnName": "registered_at"
-                              }
-                            ]
-                          },
-                          {
-                            "name": "UserLoggedInEvent",
-                            "comment": "用户登录事件",
-                            "aggregateRootName": "User",
-                            "tableName": "user_logged_in_events",
-                            "fields": [
-                              {
-                                "name": "userId",
-                                "type": "String",
-                                "comment": "用户ID",
-                                "columnName": "user_id"
-                              },
-                              {
-                                "name": "loginTime",
-                                "type": "String",
-                                "comment": "登录时间",
-                                "columnName": "login_time"
-                              },
-                              {
-                                "name": "deviceType",
-                                "type": "String",
-                                "comment": "设备类型",
-                                "columnName": "device_type"
-                              }
-                            ]
-                          }
-                        ],
-                        "applicationServices": [
-                          {
-                            "name": "AuthApplicationService",
-                            "comment": "认证应用服务",
-                            "moduleName": "auth",
-                            "interfaceName": "AuthApplicationService",
-                            "implementationName": "AuthApplicationServiceImpl",
-                            "methods": [
-                              {
-                                "name": "registerUser",
-                                "comment": "用户注册",
-                                "returnType": "void",
-                                "parameters": [
-                                  {
-                                    "name": "username",
-                                    "type": "String",
-                                    "comment": "用户名"
-                                  },
-                                  {
-                                    "name": "email",
-                                    "type": "String",
-                                    "comment": "邮箱"
-                                  },
-                                  {
-                                    "name": "password",
-                                    "type": "String",
-                                    "comment": "密码"
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "login",
-                                "comment": "用户登录",
-                                "returnType": "String",  // 返回访问令牌
-                                "parameters": [
-                                  {
-                                    "name": "username",
-                                    "type": "String",
-                                    "comment": "用户名"
-                                  },
-                                  {
-                                    "name": "password",
-                                    "type": "String",
-                                    "comment": "密码"
-                                  },
-                                  {
-                                    "name": "deviceType",
-                                    "type": "String",
-                                    "comment": "设备类型"
-                                  },
-                                  {
-                                    "name": "ipAddress",
-                                    "type": "String",
-                                    "comment": "IP地址"
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "logout",
-                                "comment": "用户登出",
-                                "returnType": "void",
-                                "parameters": [
-                                  {
-                                    "name": "sessionToken",
-                                    "type": "String",
-                                    "comment": "会话令牌"
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-            """;
+        // 构建目标路径
+        Path targetPath = backupPath.resolve(backupFileName);
 
-        tool.generateFromJsonString(userConfig, projectPath, packageName);
-        log.info("✅ 模块代码已生成");
+        // 直接写入JSON字符串内容
+        Files.writeString(targetPath, jsonContent);
+
+        log.debug("📁 配置内容已备份至: {}", targetPath);
     }
-
 }

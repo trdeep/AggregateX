@@ -144,6 +144,7 @@ public class ModuleConfigConverter {
         ModuleConfigDto dto = new ModuleConfigDto();
         dto.setName(module.getName());
         dto.setComment(module.getComment());
+        dto.setRemarks(module.getRemarks());
 
         // 转换聚合根
         dto.setAggregateRoots(module.getAggregateRoots().stream()
@@ -197,7 +198,7 @@ public class ModuleConfigConverter {
         items.addAll(domainEvents);
         items.addAll(applicationServices);
 
-        return Module.create(dto.getName(), dto.getComment(), items.toArray());
+        return Module.create(dto.getName(), dto.getComment(), dto.getRemarks(), items.toArray());
     }
 
     /**

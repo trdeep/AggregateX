@@ -28,6 +28,11 @@ public class ModuleConfigDto {
     private String comment;
     
     /**
+     * 模块备注信息，用于README.md
+     */
+    private String remarks;
+    
+    /**
      * 聚合根列表
      */
     private List<AggregateRootDto> aggregateRoots;

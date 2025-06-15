@@ -13,6 +13,7 @@ JSON 配置是一个模块数组，每个模块包含以下主要部分：
   {
     "name": "模块名称",
     "comment": "模块描述",
+    "remarks": "模块详细介绍（可选）",
     "aggregateRoots": [聚合根配置],
     "domainEvents": [领域事件配置],
     "applicationServices": [应用服务配置]
@@ -21,6 +22,17 @@ JSON 配置是一个模块数组，每个模块包含以下主要部分：
 ```
 
 ## 核心概念说明
+
+### 模块字段
+
+| 字段名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| `name` | String | 是 | 模块名称，用于生成包路径和文件名 |
+| `comment` | String | 是 | 模块简短描述，用于生成类注释 |
+| `remarks` | String | 否 | 模块详细介绍，会追加到生成的 README.md 文件中 |
+| `aggregateRoots` | Array | 否 | 聚合根配置数组 |
+| `domainEvents` | Array | 否 | 领域事件配置数组 |
+| `applicationServices` | Array | 否 | 应用服务配置数组 |
 
 ### 属性类型 (PropertyDto.type)
 
@@ -39,6 +51,7 @@ JSON 配置是一个模块数组，每个模块包含以下主要部分：
   {
     "name": "user",
     "comment": "用户模块",
+    "remarks": "用户模块负责管理系统中的用户信息，包括用户注册、登录、个人信息维护等功能。\n\n## 主要功能\n- 用户注册和激活\n- 用户登录和身份验证\n- 个人信息管理\n- 登录记录追踪\n\n## 设计说明\n- 采用聚合根模式管理用户实体\n- 使用值对象封装复杂属性\n- 支持领域事件驱动的业务流程",
     "aggregateRoots": [
       {
         "name": "User",
@@ -249,6 +262,98 @@ JSON 配置是一个模块数组，每个模块包含以下主要部分：
 - `Time` (如 `loginTime`, `createTime`)
 - `Date` (如 `birthDate`, `expireDate`)
 - `At` (如 `createdAt`, `updatedAt`)
+
+## JSON5 支持和高级特性
+
+### JSON5 格式支持
+
+AggregateX 支持 JSON5 格式配置文件，JSON5 是 JSON 的超集，提供了更好的可读性和编写体验。
+
+#### JSON5 特性
+
+1. **单行注释**: 使用 `//` 添加单行注释
+2. **多行注释**: 使用 `/* */` 添加多行注释  
+3. **尾随逗号**: 允许数组和对象的最后一个元素后有逗号
+4. **更灵活的字符串**: 支持单引号字符串
+
+#### JSON5 配置示例
+
+```json5
+// 用户模块配置 - JSON5 格式
+[
+  {
+    "name": "user",
+    "comment": "用户模块",
+    
+    // remarks 字段用于详细的模块介绍
+    // 内容会被追加到生成的 README.md 文件中
+    "remarks": "用户模块负责管理系统中的用户信息，包括用户注册、登录、个人信息维护等功能。\n\n## 主要功能\n- 用户注册和激活\n- 用户登录和身份验证\n- 个人信息管理\n- 登录记录追踪",
+    
+    "aggregateRoots": [
+      {
+        "name": "User",
+        "comment": "用户聚合根",
+        "properties": [
+          {
+            "name": "username",
+            "comment": "用户名",
+            "type": "REGULAR"
+          },
+          {
+            "name": "email", 
+            "comment": "邮箱",
+            "type": "REGULAR"
+          }, // 尾随逗号是允许的
+        ],
+        /* 
+         * 实体和值对象配置
+         * 可以使用多行注释进行详细说明
+         */
+        "entities": [
+          // ... 实体配置
+        ],
+        "valueObjects": [
+          // ... 值对象配置  
+        ],
+      }
+    ], // 数组尾随逗号
+  }
+]
+```
+
+### remarks 字段详解
+
+`remarks` 字段是一个可选的字符串字段，用于提供模块的详细介绍和说明文档。
+
+#### 功能特性
+
+- **支持 Markdown 格式**: 可以使用 Markdown 语法编写丰富的文档内容
+- **自动追加到 README.md**: 内容会被自动添加到生成的模块 README.md 文件中
+- **支持换行符**: 使用 `\n` 可以在 JSON 中添加换行
+- **可选字段**: 如果不需要详细说明，可以省略此字段
+
+#### 使用场景
+
+1. **模块功能说明**: 详细描述模块的业务功能和职责
+2. **设计说明**: 解释模块的设计思路和架构决策
+3. **使用指南**: 提供模块的使用方法和注意事项
+4. **业务流程**: 描述关键的业务流程和规则
+
+#### 示例内容
+
+```json5
+{
+  "remarks": "## 用户模块说明\n\n### 功能概述\n用户模块是系统的核心模块之一，负责管理用户的完整生命周期。\n\n### 主要功能\n- **用户注册**: 支持邮箱和手机号注册\n- **身份验证**: 集成多种登录方式\n- **权限管理**: 基于角色的访问控制\n\n### 技术特点\n- 采用DDD领域驱动设计\n- 支持事件驱动架构\n- 遵循CQRS模式"
+}
+```
+
+### 文件格式检测
+
+AggregateX 会自动检测配置文件格式：
+
+- **JSON5 检测**: 如果文件包含 `//` 注释或尾随逗号，自动识别为 JSON5 格式
+- **自动转换**: JSON5 内容会被自动转换为标准 JSON 进行处理
+- **兼容性**: 标准 JSON 格式仍然完全支持
 
 ## 最佳实践
 
@@ -548,5 +653,74 @@ src/main/java/包名/模块名/
 3. **命名冲突**: 确保同一模块内的类名不重复
 4. **JSON格式**: 确保 JSON 格式正确，所有字段都有值
 5. **⚠️ 对象类型**: 方法中使用的自定义对象类型需要手动创建，生成器不会自动生成
+6. **JSON5 注释**: 使用 JSON5 格式时，注释仅用于配置文件，不会影响生成的代码
+7. **remarks 内容**: remarks 字段支持 Markdown 格式，会直接追加到生成的 README.md 文件
+
+## 快速开始示例
+
+### 1. 创建简单的 JSON5 配置文件
+
+```json5
+// 文件名: my-module.json5
+[
+  {
+    "name": "product",
+    "comment": "商品模块", 
+    "remarks": "## 商品管理模块\n\n负责商品信息的完整生命周期管理，包括：\n- 商品创建和编辑\n- 库存管理\n- 价格策略\n- 商品分类",
+    "aggregateRoots": [
+      {
+        "name": "Product",
+        "comment": "商品聚合根",
+        "properties": [
+          {
+            "name": "name",
+            "comment": "商品名称",
+            "type": "REGULAR"
+          },
+          {
+            "name": "price", 
+            "comment": "商品价格",
+            "type": "REGULAR"
+          }
+        ]
+      }
+    ]
+  }
+]
+```
+
+### 2. 使用配置文件生成代码
+
+```bash
+# 使用 JSON5 配置文件生成模块
+java -cp AggregateX.jar cn.treedeep.king.tools.DDDModuleGenerator \
+  --config my-module.json5 \
+  --project-path ./my-project
+```
+
+### 3. 检查生成结果
+
+生成的文件结构：
+```
+my-project/src/main/java/com/example/product/
+├── README.md                    # 包含 remarks 内容
+├── domain/
+│   ├── Product.java            # 商品聚合根
+│   └── ProductId.java          # 商品ID
+└── ... 其他生成的文件
+```
+
+生成的 README.md 内容：
+```markdown
+# 商品模块
+
+## 商品管理模块
+
+负责商品信息的完整生命周期管理，包括：
+- 商品创建和编辑
+- 库存管理
+- 价格策略
+- 商品分类
+```
 
 通过遵循这个配置指南，可以确保生成的代码结构清晰、符合 DDD 设计原则，并且易于维护。

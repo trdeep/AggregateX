@@ -87,7 +87,7 @@ public class DDDModuleGenerator {
         generatePackageInfoFiles(modulePath, actualPackageName, moduleName, moduleComment, author, copyright);
 
         log.info("📝 生成 README.md 文件...");
-        generateReadmeFile(modulePath, moduleName, moduleComment, module.getAggregateRoots(), author, copyright);
+        generateReadmeFile(modulePath, moduleName, moduleComment, module.getRemarks(), module.getAggregateRoots(), author, copyright);
 
         // 生成聚合根中的值对象和实体
         log.info("🔗 生成值对象和实体文件...");
@@ -180,12 +180,15 @@ public class DDDModuleGenerator {
     /**
      * 生成 README.md 文件
      */
-    private void generateReadmeFile(Path modulePath, String moduleName, String moduleComment,
+    private void generateReadmeFile(Path modulePath, String moduleName, String moduleComment, String remarks,
                                     List<AggregateRoot> aggregateRoots, String author, String copyright) throws IOException {
 
         DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(
                 modulePath, "", moduleName, toPascalCase(moduleName),
                 moduleName.toLowerCase(), moduleComment, copyright, author);
+
+        // 添加 remarks 参数到模板变量中
+        templateGenerator.addParam("moduleRemarks", remarks != null ? remarks : "");
 
         templateGenerator.generateReadmeFiles();
     }
