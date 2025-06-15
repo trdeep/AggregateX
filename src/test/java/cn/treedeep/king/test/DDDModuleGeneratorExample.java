@@ -2,7 +2,7 @@ package cn.treedeep.king.test;
 
 import cn.treedeep.king.generator.DDDModuleGenerator;
 import cn.treedeep.king.generator.model.*;
-import cn.treedeep.king.generator.model.Module;
+import cn.treedeep.king.generator.model.ModuleInfo;
 
 import java.util.List;
 
@@ -76,7 +76,7 @@ public class DDDModuleGeneratorExample {
 
         // ====== 模块定义 ======
         var modules = List.of(
-                Module.create("authentication", "认证模块", userAggregate
+                ModuleInfo.create("authentication", "认证模块", userAggregate
                         ,
                         // 领域事件
                         DomainEvent.create("UserRegisteredEvent", "用户注册事件"),
@@ -98,7 +98,6 @@ public class DDDModuleGeneratorExample {
             System.out.println("✅ 认证模块生成成功");
         } catch (Exception e) {
             System.err.println("❌ 生成失败: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 

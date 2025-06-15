@@ -1,7 +1,7 @@
 package cn.treedeep.king.generator;
 
 import cn.treedeep.king.generator.model.*;
-import cn.treedeep.king.generator.model.Module;
+import cn.treedeep.king.generator.model.ModuleInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,20 +36,20 @@ public class DDDModuleGenerator {
     /**
      * 生成模块
      */
-    public void generateModules(String projectPath, String packageName, List<Module> modules, boolean isCover) {
+    public void generateModules(String projectPath, String packageName, List<ModuleInfo> modules, boolean isCover) {
         generateModules(projectPath, packageName, modules, isCover, DEFAULT_AUTHOR, DEFAULT_COPYRIGHT);
     }
 
     /**
      * 生成模块
      */
-    public void generateModules(String projectPath, String packageName, List<Module> modules, boolean isCover, String author, String copyright) {
+    public void generateModules(String projectPath, String packageName, List<ModuleInfo> modules, boolean isCover, String author, String copyright) {
         log.info("🏗️ 开始生成模块...");
         log.info("📁 工程目录：{}", projectPath);
         log.info("📦 将生成 {} 个模块", modules.size());
 
         for (int i = 0; i < modules.size(); i++) {
-            Module module = modules.get(i);
+            ModuleInfo module = modules.get(i);
             try {
                 log.info("📝 正在生成模块 [{}/{}]: {} - {}", i + 1, modules.size(), module.getName(), module.getComment());
                 generateModule(projectPath, packageName, module, isCover, author, copyright);
@@ -66,7 +66,7 @@ public class DDDModuleGenerator {
     /**
      * 生成单个模块
      */
-    private void generateModule(String projectPath, String packageName, Module module, boolean isCover, String author, String copyright) throws IOException {
+    private void generateModule(String projectPath, String packageName, ModuleInfo module, boolean isCover, String author, String copyright) throws IOException {
 
         String moduleName = module.getName();
         String moduleComment = module.getComment();
@@ -279,7 +279,7 @@ public class DDDModuleGenerator {
             // 按照新设计：聚合根只包含直接属性和AggregateRootProperty嵌套的值对象
             List<Property> aggregateDirectProperties = new ArrayList<>();
             List<Property> aggregateEmbeddedValueObjects = new ArrayList<>();
-            
+
             // 分离普通属性和AggregateRootProperty
             for (Property property : aggregateRoot.getProperties()) {
                 if (Property.AggregateRootProperty.isAggregateRootProperty(property)) {
@@ -294,7 +294,7 @@ public class DDDModuleGenerator {
                         // 否则直接首字母大写
                         valueObjectTypeName = Character.toUpperCase(valueObjectTypeName.charAt(0)) + valueObjectTypeName.substring(1);
                     }
-                    
+
                     // 创建一个新的Property，名称是valueObjectTypeName，这样模板就知道类型了
                     Property embeddedProperty = new Property(valueObjectTypeName, property.getComment());
                     aggregateEmbeddedValueObjects.add(embeddedProperty);
@@ -406,7 +406,7 @@ public class DDDModuleGenerator {
                     // 如果不存在，则创建并生成这个值对象
                     if (!alreadyExists) {
                         String valueObjectComment = property.getComment() != null ? property.getComment() : valueObjectTypeName + "值对象";
-                        
+
                         DDDTemplateGenerator valueObjectGenerator = new DDDTemplateGenerator(
                                 modulePath, packageName, moduleName, valueObjectTypeName,
                                 valueObjectTypeName, valueObjectComment, copyright, author);
@@ -414,11 +414,11 @@ public class DDDModuleGenerator {
                         // 为简单的值对象创建一个基本的value属性
                         List<Property> basicProperties = new ArrayList<>();
                         basicProperties.add(new Property("value", "值"));
-                        
+
                         valueObjectGenerator.addProperties(basicProperties);
                         valueObjectGenerator.addParam("regularProperties", basicProperties);
                         valueObjectGenerator.addParam("valueObjectProperties", new ArrayList<>());
-                        
+
                         valueObjectGenerator.generateValueObject();
                         log.debug("Generated embedded value object: {}", valueObjectTypeName);
                     }

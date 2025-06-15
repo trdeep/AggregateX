@@ -1,6 +1,6 @@
 package cn.treedeep.king.generator.config;
 
-import cn.treedeep.king.generator.model.Module;
+import cn.treedeep.king.generator.model.ModuleInfo;
 import cn.treedeep.king.shared.utils.Json5Parser;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,7 +47,7 @@ public class DDDJsonConfigTool {
      * @param modules 模块列表
      * @param outputPath 输出路径
      */
-    public void exportModulesToJson(List<Module> modules, String outputPath) {
+    public void exportModulesToJson(List<ModuleInfo> modules, String outputPath) {
         log.info("📤 导出模块配置到JSON文件: {}", outputPath);
         jsonGenerator.exportConfigToJson(modules, outputPath);
 
@@ -128,7 +128,7 @@ public class DDDJsonConfigTool {
             }
 
             // 解析JSON为模块对象
-            List<Module> modules = converter.jsonToModules(processedJson);
+            List<ModuleInfo> modules = converter.jsonToModules(processedJson);
 
             // 生成代码
             jsonGenerator.getGenerator().generateModules(projectPath, packageName, modules, true);
@@ -150,7 +150,7 @@ public class DDDJsonConfigTool {
      * @param configPath 配置文件路径
      * @return 模块列表
      */
-    public List<Module> loadModulesFromConfig(String configPath) {
+    public List<ModuleInfo> loadModulesFromConfig(String configPath) {
         log.info("📋 从配置文件加载模块: {}", configPath);
         return converter.loadModulesFromJsonFile(configPath);
     }
@@ -163,7 +163,7 @@ public class DDDJsonConfigTool {
      * @param modules 模块列表
      * @return JSON字符串
      */
-    public String modulesToJsonString(List<Module> modules) {
+    public String modulesToJsonString(List<ModuleInfo> modules) {
         return converter.modulesToJson(modules);
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
  * @since 2025-06-13
  */
 @Getter
-public class Module {
+public class ModuleInfo {
     private final String name;
     private final String comment;
     private final String remarks; // 模块备注信息，用于README.md
@@ -21,32 +21,32 @@ public class Module {
     private final List<DomainEvent> domainEvents = new ArrayList<>();
     private final List<ApplicationService> applicationServices = new ArrayList<>();
 
-    private Module(String name, String comment, String remarks, List<AggregateRoot> aggregateRoots) {
+    private ModuleInfo(String name, String comment, String remarks, List<AggregateRoot> aggregateRoots) {
         this.name = name;
         this.comment = comment;
         this.remarks = remarks;
         this.aggregateRoots = aggregateRoots;
     }
 
-    public static Module create(String name, String comment, AggregateRoot... ars) {
+    public static ModuleInfo create(String name, String comment, AggregateRoot... ars) {
         return create(name, comment, null, ars);
     }
 
-    public static Module create(String name, String comment, String remarks, AggregateRoot... ars) {
-        return new Module(name, comment, remarks, Arrays.stream(ars).toList());
+    public static ModuleInfo create(String name, String comment, String remarks, AggregateRoot... ars) {
+        return new ModuleInfo(name, comment, remarks, Arrays.stream(ars).toList());
     }
 
     /**
      * 创建模块，支持混合参数（聚合根 + 领域事件 + 应用服务）
      */
-    public static Module create(String name, String comment, Object... items) {
+    public static ModuleInfo create(String name, String comment, Object... items) {
         return create(name, comment, null, items);
     }
 
     /**
      * 创建模块，支持混合参数（聚合根 + 领域事件 + 应用服务）
      */
-    public static Module create(String name, String comment, String remarks, Object... items) {
+    public static ModuleInfo create(String name, String comment, String remarks, Object... items) {
         List<AggregateRoot> aggregateRoots = new ArrayList<>();
         List<DomainEvent> domainEvents = new ArrayList<>();
         List<ApplicationService> applicationServices = new ArrayList<>();
@@ -61,7 +61,7 @@ public class Module {
             }
         }
 
-        Module module = new Module(name, comment, remarks, aggregateRoots);
+        ModuleInfo module = new ModuleInfo(name, comment, remarks, aggregateRoots);
         module.domainEvents.addAll(domainEvents);
         module.applicationServices.addAll(applicationServices);
         return module;

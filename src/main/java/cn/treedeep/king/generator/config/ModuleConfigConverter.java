@@ -1,7 +1,7 @@
 package cn.treedeep.king.generator.config;
 
 import cn.treedeep.king.generator.model.*;
-import cn.treedeep.king.generator.model.Module;
+import cn.treedeep.king.generator.model.ModuleInfo;
 import cn.treedeep.king.shared.utils.Json5Parser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -39,7 +39,7 @@ public class ModuleConfigConverter {
      * @param modules 模块列表
      * @return JSON字符串
      */
-    public String modulesToJson(List<Module> modules) {
+    public String modulesToJson(List<ModuleInfo> modules) {
         try {
             List<ModuleConfigDto> dtoList = modules.stream()
                     .map(this::moduleToDto)
@@ -57,7 +57,7 @@ public class ModuleConfigConverter {
      * @param modules 模块列表
      * @param filePath 文件路径
      */
-    public void saveModulesToJsonFile(List<Module> modules, String filePath) {
+    public void saveModulesToJsonFile(List<ModuleInfo> modules, String filePath) {
         try {
             List<ModuleConfigDto> dtoList = modules.stream()
                     .map(this::moduleToDto)
@@ -83,7 +83,7 @@ public class ModuleConfigConverter {
      * @param json JSON字符串
      * @return 模块列表
      */
-    public List<Module> jsonToModules(String json) {
+    public List<ModuleInfo> jsonToModules(String json) {
         try {
             ModuleConfigDto[] dtoArray = objectMapper.readValue(json, ModuleConfigDto[].class);
             return Stream.of(dtoArray)
@@ -103,7 +103,7 @@ public class ModuleConfigConverter {
      * @param filePath 文件路径
      * @return 模块列表
      */
-    public List<Module> loadModulesFromJsonFile(String filePath) {
+    public List<ModuleInfo> loadModulesFromJsonFile(String filePath) {
         try {
             if (!Files.exists(Path.of(filePath))) {
                 throw new RuntimeException("配置文件不存在: " + filePath);
@@ -125,7 +125,7 @@ public class ModuleConfigConverter {
 
             // 解析JSON
             ModuleConfigDto[] dtoArray = objectMapper.readValue(processedJson, ModuleConfigDto[].class);
-            List<Module> modules = Stream.of(dtoArray)
+            List<ModuleInfo> modules = Stream.of(dtoArray)
                     .map(this::dtoToModule)
                     .toList();
 
@@ -140,7 +140,7 @@ public class ModuleConfigConverter {
     /**
      * 将Module转换为DTO
      */
-    private ModuleConfigDto moduleToDto(Module module) {
+    private ModuleConfigDto moduleToDto(ModuleInfo module) {
         ModuleConfigDto dto = new ModuleConfigDto();
         dto.setName(module.getName());
         dto.setComment(module.getComment());
@@ -167,7 +167,7 @@ public class ModuleConfigConverter {
     /**
      * 将DTO转换为Module
      */
-    private Module dtoToModule(ModuleConfigDto dto) {
+    private ModuleInfo dtoToModule(ModuleConfigDto dto) {
         // 转换聚合根
         List<AggregateRoot> aggregateRoots = new ArrayList<>();
         if (dto.getAggregateRoots() != null) {
@@ -198,7 +198,7 @@ public class ModuleConfigConverter {
         items.addAll(domainEvents);
         items.addAll(applicationServices);
 
-        return Module.create(dto.getName(), dto.getComment(), dto.getRemarks(), items.toArray());
+        return ModuleInfo.create(dto.getName(), dto.getComment(), dto.getRemarks(), items.toArray());
     }
 
     /**

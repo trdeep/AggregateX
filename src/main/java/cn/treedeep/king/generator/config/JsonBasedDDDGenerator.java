@@ -1,7 +1,7 @@
 package cn.treedeep.king.generator.config;
 
 import cn.treedeep.king.generator.DDDModuleGenerator;
-import cn.treedeep.king.generator.model.Module;
+import cn.treedeep.king.generator.model.ModuleInfo;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Files;
@@ -38,7 +38,7 @@ public class JsonBasedDDDGenerator {
      * @param author 作者
      * @param copyright 版权信息
      */
-    public void generateFromJsonConfig(String configFilePath, String projectPath, String packageName, 
+    public void generateFromJsonConfig(String configFilePath, String projectPath, String packageName,
                                      boolean isCover, String author, String copyright) {
         try {
             log.info("🔧 开始从JSON配置生成DDD模块...");
@@ -53,7 +53,7 @@ public class JsonBasedDDDGenerator {
             }
 
             // 从JSON文件加载模块配置
-            List<Module> modules = converter.loadModulesFromJsonFile(configFilePath);
+            List<ModuleInfo> modules = converter.loadModulesFromJsonFile(configFilePath);
             log.info("📋 加载了 {} 个模块配置", modules.size());
 
             // 打印模块信息
@@ -66,7 +66,7 @@ public class JsonBasedDDDGenerator {
 
             // 生成代码
             generator.generateModules(projectPath, packageName, modules, isCover, author, copyright);
-            
+
             log.info("✅ JSON配置生成完成！");
 
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class JsonBasedDDDGenerator {
      * @param modules 模块列表
      * @param outputFilePath 输出文件路径
      */
-    public void exportConfigToJson(List<Module> modules, String outputFilePath) {
+    public void exportConfigToJson(List<ModuleInfo> modules, String outputFilePath) {
         try {
             converter.saveModulesToJsonFile(modules, outputFilePath);
             log.info("✅ 配置已导出到: {}", outputFilePath);
@@ -110,7 +110,7 @@ public class JsonBasedDDDGenerator {
      */
     public boolean validateJsonConfig(String configFilePath) {
         try {
-            List<Module> modules = converter.loadModulesFromJsonFile(configFilePath);
+            List<ModuleInfo> modules = converter.loadModulesFromJsonFile(configFilePath);
             log.info("✅ 配置文件格式验证通过: {}", configFilePath);
             log.info("📋 包含 {} 个模块", modules.size());
             return true;
@@ -128,7 +128,7 @@ public class JsonBasedDDDGenerator {
     public void createExampleConfig(String outputFilePath) {
         try {
             log.info("🔧 创建示例配置文件...");
-            
+
             // 这里可以创建一个示例配置，或者从现有的示例生成
             String exampleJson = """
                 [
@@ -216,16 +216,16 @@ public class JsonBasedDDDGenerator {
                   }
                 ]
                 """;
-            
+
             Path path = Paths.get(outputFilePath);
             Path parentDir = path.getParent();
             if (parentDir != null && !Files.exists(parentDir)) {
                 Files.createDirectories(parentDir);
             }
-            
+
             Files.writeString(path, exampleJson);
             log.info("✅ 示例配置文件已创建: {}", outputFilePath);
-            
+
         } catch (Exception e) {
             log.error("❌ 创建示例配置文件失败", e);
             throw new RuntimeException("创建示例配置文件失败", e);
