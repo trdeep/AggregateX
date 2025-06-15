@@ -263,6 +263,14 @@ public class DDDTemplateGenerator {
     }
 
     /**
+     * 生成模块配置
+     */
+    public void generateModuleConfig() throws IOException {
+        String content = processTemplate("infrastructure/ModuleConfig.java.ftl", params);
+        writeFile(modulePath.resolve("infrastructure/ModuleConfig.java"), content);
+    }
+
+    /**
      * 添加属性信息到模板参数
      */
     public void addProperties(List<Property> properties) {

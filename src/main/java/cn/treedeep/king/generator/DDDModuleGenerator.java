@@ -101,6 +101,10 @@ public class DDDModuleGenerator {
         log.info("🔧 生成应用服务文件...");
         generateApplicationServices(modulePath, actualPackageName, moduleName, module.getApplicationServices(), author, copyright);
 
+        // 生成模块配置
+        log.info("⚙️ 生成模块配置文件...");
+        generateModuleConfig(modulePath, actualPackageName, moduleName, moduleComment, author, copyright);
+
         log.info("📍 模块位置: {}", modulePath);
     }
 
@@ -518,5 +522,18 @@ public class DDDModuleGenerator {
 
             log.debug("Generated application service: {}", serviceNameCamel);
         }
+    }
+
+    /**
+     * 生成模块配置
+     */
+    private void generateModuleConfig(Path modulePath, String packageName, String moduleName,
+                                    String moduleComment, String author, String copyright) throws IOException {
+        DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(
+                modulePath, packageName, moduleName, toPascalCase(moduleName),
+                moduleName.toLowerCase(), moduleComment, copyright, author);
+
+        templateGenerator.generateModuleConfig();
+        log.debug("Generated module config for module: {}", moduleName);
     }
 }
