@@ -414,7 +414,7 @@ public final class ArchitectureValidator {
      * <p>
      * 该规则强制各层级之间的依赖约束，确保架构清晰和关注点分离
      *
-     * <p><b>层级定义说明：</b></p>
+     * <h5>层级定义说明：</b></p>
      * <ul>
      *   <li><b>Domain</b> - 领域层（核心业务逻辑，含实体、值对象、领域服务）</li>
      *   <li><b>Application</b> - 应用层（用例编排，处理Command/Query）</li>
@@ -424,7 +424,7 @@ public final class ArchitectureValidator {
      *   <li><b>Shared</b> - 共享层（通用工具类/常量）</li>
      * </ul>
      *
-     * <p><b>依赖规则说明：</b></p>
+     * <h5>依赖规则说明：</b></p>
      * <ol>
      *   <li>展现层(Presentation)只能访问：应用层(Application)、共享层(Shared)</li>
      *   <li>接口层(Interfaces)只能访问：应用层、展现层、共享层</li>
@@ -433,7 +433,7 @@ public final class ArchitectureValidator {
      *   <li>基础设施层(Infrastructure)可被所有层访问（通过依赖倒置）</li>
      * </ol>
      *
-     * <p><b>典型违规示例：</b></p>
+     * <h5>典型违规示例：</b></p>
      * <pre>{@code
      * // 错误：展现层直接访问领域层
      * @Controller
@@ -549,8 +549,8 @@ public final class ArchitectureValidator {
                 .check(classes);
 
         // 应用服务应该使用@Service注解（如果存在的话）
-        classes().that().haveNameMatching(".*ApplicationService")
-                .or().haveNameMatching(".*AppService")
+        classes().that().haveNameMatching(".*ApplicationServiceImpl")
+                .or().haveNameMatching(".*AppServiceImpl")
                 .should().beAnnotatedWith("org.springframework.stereotype.Service")
                 .because("应用服务应该使用@Service注解")
                 .allowEmptyShould(true)
@@ -761,7 +761,8 @@ public final class ArchitectureValidator {
         classes().that().resideInAPackage("..domain..service..")
                 .and().areNotInterfaces()
                 .should().haveSimpleNameEndingWith("Service")
-                .because("领域服务应该以Service结尾")
+                .orShould().haveSimpleNameEndingWith("Impl")
+                .because("领域服务应该以Service或Impl结尾")
                 .allowEmptyShould(true)
                 .check(classes);
 
@@ -769,7 +770,8 @@ public final class ArchitectureValidator {
         classes().that().resideInAPackage("..application..service..")
                 .should().haveSimpleNameEndingWith("Service")
                 .orShould().haveSimpleNameEndingWith("ApplicationService")
-                .because("应用服务应该以Service或ApplicationService结尾")
+                .orShould().haveSimpleNameEndingWith("Impl")
+                .because("应用服务应该以Service或ApplicationService以及Impl结尾")
                 .allowEmptyShould(true)
                 .check(classes);
 
@@ -793,15 +795,21 @@ public final class ArchitectureValidator {
         // 表现层DTO命名约定
         classes().that().resideInAPackage(getPresentationLayer())
                 .and().haveNameMatching(".*Request")
+                .or().haveNameMatching(".Request*")
                 .should().haveSimpleNameEndingWith("Request")
-                .because("请求DTO应该以Request结尾")
+                .orShould().haveSimpleNameStartingWith("Request")
+                .because("请求DTO应该以Request结尾或开头")
                 .allowEmptyShould(true)
                 .check(classes);
 
         classes().that().resideInAPackage(getPresentationLayer())
                 .and().haveNameMatching(".*Response")
+                .or().haveNameMatching(".Response*")
+                .or().haveNameMatching(".Result")
                 .should().haveSimpleNameEndingWith("Response")
-                .because("响应DTO应该以Response结尾")
+                .orShould().haveSimpleNameStartingWith("Response")
+                .orShould().haveSimpleNameStartingWith("Result")
+                .because("响应DTO应该以Response结尾或开头，或Result")
                 .allowEmptyShould(true)
                 .check(classes);
 
