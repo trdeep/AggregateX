@@ -3,7 +3,6 @@ package cn.treedeep.king.core.domain.exception;
 import cn.treedeep.king.core.domain.DomainException;
 import cn.treedeep.king.core.domain.ValidationException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,7 +14,6 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 全局异常处理器

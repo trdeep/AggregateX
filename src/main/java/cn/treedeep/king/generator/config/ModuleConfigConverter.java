@@ -1,7 +1,6 @@
 package cn.treedeep.king.generator.config;
 
 import cn.treedeep.king.generator.model.*;
-import cn.treedeep.king.generator.model.ModuleInfo;
 import cn.treedeep.king.shared.utils.Json5Parser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

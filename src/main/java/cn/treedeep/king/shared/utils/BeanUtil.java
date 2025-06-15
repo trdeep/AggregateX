@@ -1,6 +1,5 @@
 package cn.treedeep.king.shared.utils;
 
-import cn.treedeep.king.core.domain.ValueObjectBase;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.Serializable;

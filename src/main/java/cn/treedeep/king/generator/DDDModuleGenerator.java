@@ -1,7 +1,6 @@
 package cn.treedeep.king.generator;
 
 import cn.treedeep.king.generator.model.*;
-import cn.treedeep.king.generator.model.ModuleInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
