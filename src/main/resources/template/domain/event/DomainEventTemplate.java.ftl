@@ -78,4 +78,9 @@ public class ${eventName} extends DomainEvent {
 </#list>
 </#if>
     }
+
+    public ${eventName}() {
+        super();
+    }
+
 }

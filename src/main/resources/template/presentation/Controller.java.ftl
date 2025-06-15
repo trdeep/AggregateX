@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("/api/hi")
+@RequestMapping("/api/say")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "SayHello Management", description = "👋你好～")
@@ -33,7 +33,7 @@ public class SayHelloController {
     private QueryBus queryBus;
 
     @Operation(summary = "创建对话", description = "say hello")
-    @GetMapping("/sayHello")
+    @GetMapping("/hello")
     public ResponseEntity<String> hello(@Parameter String name) {
         CompletableFuture<CommandResult<String>> dispatch = commandBus.dispatch(new SayHelloCommand(name));
         String result = dispatch.getNow(null).getResult();
@@ -42,7 +42,7 @@ public class SayHelloController {
 
     @Operation(summary = "获取对话列表", description = "list")
     @GetMapping("/records")
-    public ResponseEntity<ListQueryResult> getRecords() {
+    public ResponseEntity<ListQueryResult> records() {
         ListQueryResult queryResult = queryBus.execute(new SayHelloQuery("查询条件"));
         return ResponseEntity.ok(queryResult);
     }
