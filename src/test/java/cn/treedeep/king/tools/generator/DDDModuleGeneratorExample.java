@@ -7,7 +7,6 @@ import cn.treedeep.king.generator.model.Module;
 import cn.treedeep.king.generator.model.ValueObject;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * DDDModuleGenerator 新的使用方式示例
@@ -17,17 +16,17 @@ import java.util.Map;
  */
 public class DDDModuleGeneratorExample {
 
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
         // 工程信息
         String path = "/Users/zhougm/vscode/KingAdmin";
-        String packageName = "cn.treedeep.king1";
+        String packageName = "cn.treedeep.king.admin";
 
 
         // 定义带有属性的值对象
-        var phoneValueObject = ValueObject.create("Phone", "手机");
-        phoneValueObject.getProperties().add(Entity.property("phoneNumber", "手机号码"));
-        phoneValueObject.getProperties().add(Entity.property("countryCode", "国家代码"));
+        var phoneValueObject = ValueObject.create("Phone", "手机",
+                Entity.property("phoneNumber", "手机号码"),
+                Entity.property("countryCode", "国家代码"));
 
         // 定义带有属性的实体
         var loginRecordEntity = Entity.create("LoginRecord", "登录记录",
@@ -40,7 +39,7 @@ public class DDDModuleGeneratorExample {
         var modules = List.of(
                 Module.create("authentication", "认证",
                         AggregateRoot.create("User", "用户聚合根",
-                                Entity.create("User", "用户实体",
+                                Entity.create("Info", "信息实体",
                                         Entity.property("username", "用户名"),
                                         Entity.property("email", "邮箱")),
                                 Entity.create("Role", "角色实体"),
@@ -49,7 +48,6 @@ public class DDDModuleGeneratorExample {
                         )
                 )
         );
-
 
         try {
             DDDModuleGenerator generator = new DDDModuleGenerator();
@@ -61,6 +59,7 @@ public class DDDModuleGeneratorExample {
 
         } catch (Exception e) {
             System.err.println("❌ 模块生成失败: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
