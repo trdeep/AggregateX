@@ -45,10 +45,6 @@ public class ${implementationName} implements ${interfaceName} {
     @Resource
     private DomainService domainService;
 
-    // @Resource
-    // private ${entityNameCamel}AggregateRepository ${entityNameLower}Repository;
-
-
 <#-- 生成自定义服务方法实现 -->
 <#if serviceMethods?has_content>
 <#list serviceMethods as method>
