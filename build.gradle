@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'cn.treedeep'
-version = '1.0.0'
+version = '1.0.1'
 description = 'AggregateX - DDD & Event Sourcing Infrastructure Framework'
 
 // 配置为基础架构包，不生成可执行jar
