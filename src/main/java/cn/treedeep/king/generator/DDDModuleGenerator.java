@@ -1,9 +1,7 @@
 package cn.treedeep.king.generator;
 
-import cn.treedeep.king.generator.model.AggregateRoot;
-import cn.treedeep.king.generator.model.Entity;
+import cn.treedeep.king.generator.model.*;
 import cn.treedeep.king.generator.model.Module;
-import cn.treedeep.king.generator.model.ValueObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -190,17 +188,17 @@ public class DDDModuleGenerator {
         if (input == null || input.isEmpty()) {
             return false;
         }
-        
+
         // 检查是否包含下划线、短横线或空格
         if (input.contains("_") || input.contains("-") || input.contains(" ")) {
             return false;
         }
-        
+
         // 检查首字母是否大写
         if (!Character.isUpperCase(input.charAt(0))) {
             return false;
         }
-        
+
         // 检查是否包含大写字母（表示驼峰格式）
         boolean hasUpperCase = false;
         for (int i = 1; i < input.length(); i++) {
@@ -209,7 +207,7 @@ public class DDDModuleGenerator {
                 break;
             }
         }
-        
+
         return hasUpperCase;
     }
 
@@ -261,19 +259,19 @@ public class DDDModuleGenerator {
             String aggregateRootName = aggregateRoot.getName();
             String aggregateRootComment = aggregateRoot.getComment();
             String aggregateRootNameCamel = isAlreadyCamelCase(aggregateRootName) ? aggregateRootName : toPascalCase(aggregateRootName);
-            
+
             DDDTemplateGenerator aggregateGenerator = new DDDTemplateGenerator(
                     modulePath, packageName, moduleName, aggregateRootNameCamel,
                     aggregateRootName, aggregateRootComment, copyright, author);
-            
+
             // 将聚合根的值对象属性传递给模板（只包含值对象）
-            List<cn.treedeep.king.generator.model.Entity.Property> aggregateProperties = 
+            List<Property> aggregateProperties =
                 aggregateRoot.getEos().stream()
                     .filter(entity -> entity instanceof ValueObject)  // 只筛选值对象
-                    .map(entity -> new cn.treedeep.king.generator.model.Entity.Property(entity.getName(), entity.getComment()))
+                    .map(entity -> new Property(entity.getName(), entity.getComment()))
                     .toList();
             aggregateGenerator.addProperties(aggregateProperties);
-            
+
             // 生成聚合根相关文件
             aggregateGenerator.generateAggregateRoot();
             aggregateGenerator.generateAggregateRootId();
@@ -282,7 +280,7 @@ public class DDDModuleGenerator {
             aggregateGenerator.generateAggregateJpaRepository();
             aggregateGenerator.generateDomainServiceInterface();
             aggregateGenerator.generateDomainServiceImpl();
-            
+
             // 生成应用层代码
             aggregateGenerator.generateCommand();
             aggregateGenerator.generateCommandHandler();
@@ -292,30 +290,30 @@ public class DDDModuleGenerator {
             aggregateGenerator.generateDto();
             aggregateGenerator.generateApplicationServiceInterface();
             aggregateGenerator.generateApplicationServiceImpl();
-            
+
             // 生成领域事件
             aggregateGenerator.generateDomainEvent();
-            
+
             // 生成表现层代码
             aggregateGenerator.generateController();
-            
+
             log.debug("Generated aggregate root: {}", aggregateRootName);
-            
+
             // 生成聚合根的实体和值对象
             for (Entity entity : aggregateRoot.getEos()) {
                 String entityName = entity.getName();
                 String entityComment = entity.getComment();
-                
+
                 // 保持原始驼峰格式，只有在非驼峰格式时才转换
                 String entityNameCamel = isAlreadyCamelCase(entityName) ? entityName : toPascalCase(entityName);
-                
+
                 DDDTemplateGenerator templateGenerator = new DDDTemplateGenerator(
                         modulePath, packageName, moduleName, entityNameCamel,
                         entityName, entityComment, copyright, author);
 
                 // 将属性信息传递给模板
                 templateGenerator.addProperties(entity.getProperties());
-                
+
                 if (entity instanceof ValueObject) {
                     templateGenerator.generateValueObject();
                     log.debug("Generated value object: {}", entityName);

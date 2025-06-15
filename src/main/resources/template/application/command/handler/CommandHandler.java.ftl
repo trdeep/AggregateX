@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Component
-public class SayHelloCommandHandler extends AbstractCommandHandler<SayHelloCommand, ${entityNameCamel}, String> {
+public class SayHelloCommandHandler extends AbstractCommandHandler<SayHelloCommand, ${entityNameCamel}, Object> {
 
     @Resource
     private ApplicationService applicationService;
@@ -36,7 +36,7 @@ public class SayHelloCommandHandler extends AbstractCommandHandler<SayHelloComma
     }
 
     @Override
-    protected ${entityNameCamel} doHandle(SayHelloCommand command, CompletableFuture<CommandResult<String>> future) {
+    protected ${entityNameCamel} doHandle(SayHelloCommand command, CompletableFuture<CommandResult<Object>> future) {
         Optional<${entityNameCamel}> ${entityNameLower} = applicationService.getOne(command.getName());
         future.complete(new CommandResult<>(command, "异步结果：" + command.getName()));
         ${entityNameLower}.ifPresent(u -> u.sayHello(command.getName()));

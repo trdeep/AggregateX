@@ -1,5 +1,6 @@
 package cn.treedeep.king.generator;
 
+import cn.treedeep.king.generator.model.Property;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -264,7 +265,7 @@ public class DDDTemplateGenerator {
     /**
      * 添加属性信息到模板参数
      */
-    public void addProperties(List<cn.treedeep.king.generator.model.Entity.Property> properties) {
+    public void addProperties(List<Property> properties) {
         params.put("properties", properties);
     }
 
