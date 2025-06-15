@@ -1,7 +1,9 @@
 package cn.treedeep.king.core.application.cqrs.query;
 
+import cn.treedeep.king.core.domain.AggregateRepository;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.jmolecules.ddd.types.Identifier;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,18 +25,21 @@ import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Getter
-public abstract class AbstractQueryHandler<Q extends Query<R>, R> implements QueryHandler<Q, R> {
+public abstract class AbstractQueryHandler<Q extends Query<R>, AR extends AggregateRepository<?, ? extends Identifier>, R> implements QueryHandler<Q, R> {
     private final Class<Q> queryType;
-    private final QueryBus queryBus;
+    protected final QueryBus queryBus;
+    protected final AR aggregateRepository;
 
     /**
      * 构造函数
      *
-     * @param queryBus 查询总线，用于注册当前命令
+     * @param repository 聚合根仓储
+     * @param queryBus   查询总线
      */
     @SuppressWarnings("unchecked")
-    protected AbstractQueryHandler(QueryBus queryBus) {
+    protected AbstractQueryHandler(AR repository, QueryBus queryBus) {
         this.queryBus = queryBus;
+        this.aggregateRepository = repository;
         this.queryType = (Class<Q>) Objects.requireNonNull(GenericTypeResolver.resolveTypeArguments(getClass(), AbstractQueryHandler.class))[0];
 
         // 在构造时自动注册到查询总线

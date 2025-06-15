@@ -1,5 +1,6 @@
 package cn.treedeep.king.generator;
 
+import cn.treedeep.king.generator.model.ApplicationService;
 import cn.treedeep.king.generator.model.Property;
 import cn.treedeep.king.shared.utils.DateTimeUtil;
 import freemarker.template.Configuration;
@@ -63,6 +64,7 @@ public class DDDTemplateGenerator {
         params.put("packageName", packageName);
         params.put("entityNameCamel", entityNameCamel);
         params.put("moduleNameLower", moduleName.toLowerCase());
+        params.put("moduleNameCamel", ApplicationService.capitalizeFirstLetter(moduleName));
         params.put("entityNameLower", entityNameOriginal.toLowerCase());
         params.put("entityTableName", toSnakeCase(entityNameCamel));
         params.put("entityComment", entityComment);
@@ -170,15 +172,15 @@ public class DDDTemplateGenerator {
      */
     public void generateDomainServiceInterface() throws IOException {
         String content = processTemplate("domain/service/DomainServiceInterface.java.ftl", params);
-        writeFile(modulePath.resolve("domain/service/DomainService.java"), content);
+        writeFile(modulePath.resolve("domain/service/" + params.get("moduleNameCamel") + "DomainService.java"), content);
     }
 
     /**
      * 生成领域服务实现
      */
     public void generateDomainServiceImpl() throws IOException {
-        String content = processTemplate("domain/service/impl/DomainServiceImpl.java.ftl", params);
-        writeFile(modulePath.resolve("domain/service/impl/DomainServiceImpl.java"), content);
+        String content = processTemplate("domain/service/DomainServiceImpl.java.ftl", params);
+        writeFile(modulePath.resolve("domain/service/" + params.get("moduleNameCamel") + "DomainServiceImpl.java"), content);
     }
 
     /**
@@ -227,22 +229,6 @@ public class DDDTemplateGenerator {
     public void generateDto() throws IOException {
         String content = processTemplate("application/dto/Dto.java.ftl", params);
         writeFile(modulePath.resolve("application/dto/" + params.get("entityNameCamel") + "Dto.java"), content);
-    }
-
-    /**
-     * 生成应用服务接口
-     */
-    public void generateApplicationServiceInterface() throws IOException {
-        String content = processTemplate("application/service/ApplicationServiceInterface.java.ftl", params);
-        writeFile(modulePath.resolve("application/service/ApplicationService.java"), content);
-    }
-
-    /**
-     * 生成应用服务实现
-     */
-    public void generateApplicationServiceImpl() throws IOException {
-        String content = processTemplate("application/service/impl/ApplicationServiceImpl.java.ftl", params);
-        writeFile(modulePath.resolve("application/service/impl/ApplicationServiceImpl.java"), content);
     }
 
     /**

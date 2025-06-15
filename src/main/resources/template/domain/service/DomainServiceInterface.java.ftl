@@ -14,7 +14,7 @@ import java.util.List;
  * @author ${author}
  * @since ${dateTime}
  */
-public interface DomainService {
+public interface ${moduleNameCamel}DomainService {
 
     void sayHello(String name);
 

@@ -116,6 +116,18 @@ public class ApplicationService {
         return interfaceName + "Impl";
     }
 
+    public static String capitalizeFirstLetter(String moduleName) {
+        if (moduleName == null || moduleName.isEmpty()) {
+            return moduleName;
+        }
+
+        // 将整个字符串转换为小写
+        String lowerCaseName = moduleName.toLowerCase();
+
+        // 将第一个字母转换为大写
+        return lowerCaseName.substring(0, 1).toUpperCase() + lowerCaseName.substring(1);
+    }
+
     /**
      * 服务方法类
      */

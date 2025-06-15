@@ -335,8 +335,6 @@ public class DDDModuleGenerator {
             aggregateGenerator.generateQueryHandler();
             aggregateGenerator.generateQueryResult();
             aggregateGenerator.generateDto();
-            aggregateGenerator.generateApplicationServiceInterface();
-            aggregateGenerator.generateApplicationServiceImpl();
 
             // 生成领域事件
             aggregateGenerator.generateDomainEvent();
@@ -515,8 +513,8 @@ public class DDDModuleGenerator {
             templateGenerator.writeFile(modulePath.resolve("application/service/" + applicationService.getInterfaceName() + ".java"), interfaceContent);
 
             // 生成应用服务实现
-            String implContent = templateGenerator.processTemplate("application/service/impl/ApplicationServiceImplTemplate.java.ftl", templateGenerator.getParams());
-            templateGenerator.writeFile(modulePath.resolve("application/service/impl/" + applicationService.getImplementationName() + ".java"), implContent);
+            String implContent = templateGenerator.processTemplate("application/service/ApplicationServiceImplTemplate.java.ftl", templateGenerator.getParams());
+            templateGenerator.writeFile(modulePath.resolve("application/service/" + applicationService.getImplementationName() + ".java"), implContent);
 
             log.debug("Generated application service: {}", serviceNameCamel);
         }

@@ -27,21 +27,21 @@ import java.util.concurrent.CompletableFuture;
  * @param <A> 聚合根类型，必须继承AggregateRoot
  */
 @Getter
-public abstract class AbstractCommandHandler<C extends Command, A extends AggregateRoot<? extends Identifier>, R> implements CommandHandler<C, R> {
+public abstract class AbstractCommandHandler<C extends Command, A extends AggregateRoot<? extends Identifier>, AR extends AggregateRepository<A, ? extends Identifier>, R> implements CommandHandler<C, R> {
     private final Class<C> commandType;
-    private final AggregateRepository<A, ? extends Identifier> aggregateRepository;
-    private final EventBus eventBus;
-    private final CommandBus commandBus;
+    protected final AR aggregateRepository;
+    protected final EventBus eventBus;
+    protected final CommandBus commandBus;
 
     /**
      * 构造函数
      *
-     * @param repository 聚合根仓储，用于持久化操作
-     * @param eventBus   事件总线，用于发布事件
-     * @param commandBus 命令总线，用于注册当前命令
+     * @param repository 聚合根仓储
+     * @param eventBus   事件总线
+     * @param commandBus 命令总线
      */
     @SuppressWarnings("unchecked")
-    protected AbstractCommandHandler(AggregateRepository<A, ? extends Identifier> repository, EventBus eventBus, CommandBus commandBus) {
+    protected AbstractCommandHandler(AR repository, EventBus eventBus, CommandBus commandBus) {
         this.aggregateRepository = repository;
         this.eventBus = eventBus;
         this.commandBus = commandBus;

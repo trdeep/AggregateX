@@ -1,9 +1,8 @@
-package ${packageName}.${moduleNameLower}.domain.service.impl;
+package ${packageName}.${moduleNameLower}.domain.service;
 
 import ${packageName}.${moduleNameLower}.domain.${entityNameCamel};
 import ${packageName}.${moduleNameLower}.domain.event.SayHelloEvent;
 import ${packageName}.${moduleNameLower}.domain.repository.${entityNameCamel}AggregateRepository;
-import ${packageName}.${moduleNameLower}.domain.service.DomainService;
 import jakarta.annotation.Resource;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ import java.util.List;
  * @since ${dateTime}
  */
 @Service("${moduleNameLower}_DomainService")
-public class DomainServiceImpl implements DomainService {
+public class ${moduleNameCamel}DomainServiceImpl implements ${moduleNameCamel}DomainService {
 
     @Resource(name = "${entityNameLower}AggregateRepository")
     private ${entityNameCamel}AggregateRepository ${entityNameLower}Repository;

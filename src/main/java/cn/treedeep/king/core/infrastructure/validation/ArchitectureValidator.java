@@ -537,6 +537,7 @@ public final class ArchitectureValidator {
                 .or().haveNameMatching(".*Dto")
                 .or().haveNameMatching(".*VO")
                 .or().haveNameMatching(".*Vo")
+                .or().haveNameMatching(".*Result")
                 .should().resideInAPackage(getApplicationLayer())
                 .because("Web API的数据传输对象应该在应用层定义")
                 .allowEmptyShould(true)
@@ -810,7 +811,7 @@ public final class ArchitectureValidator {
                 .should().haveSimpleNameEndingWith("Response")
                 .orShould().haveSimpleNameStartingWith("Response")
                 .orShould().haveSimpleNameStartingWith("Result")
-                .because("响应DTO应该以Response结尾或开头，或Result")
+                .because("响应DTO应该以Response结尾或开头，或Result结尾")
                 .allowEmptyShould(true)
                 .check(classes);
 
