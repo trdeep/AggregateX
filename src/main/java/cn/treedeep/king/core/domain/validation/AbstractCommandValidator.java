@@ -14,55 +14,18 @@ import java.util.Set;
  * 负责验证命令的合法性
  */
 @Setter
-public class DefaultCommandValidator implements CommandValidator {
-
-    private final Validator validator;
-
-    /**
-     * 设置是否启用快速失败模式
-     * <p>
-     * 在快速失败模式下，发现第一个验证错误时就会抛出异常
-     */
-    private boolean failFast = true;
-
-    /**
-     * 设置是否启用验证
-     * <p>
-     * 如果禁用验证，validate方法将直接返回而不进行任何验证
-     */
-    private boolean validationEnabled = true;
-
-    public DefaultCommandValidator(Validator validator) {
-        this.validator = validator;
-    }
-
-
-    /**
-     * 验证命令标识符
-     */
-    private void validateCommandIdentifier(Command command) {
-        if (command.getCommandId() == null || command.getCommandId().trim().isEmpty()) {
-            throw new ValidationException("Command ID cannot be empty");
-        }
-    }
-
-    /**
-     * 验证时间戳
-     */
-    private void validateTimestamp(Command command) {
-        if (command.getTimestamp() <= 0) {
-            throw new ValidationException("Command timestamp must be greater than 0");
-        }
-    }
+public abstract class AbstractCommandValidator<C extends Command> implements CommandValidator<C> {
 
     /**
      * 验证命令
      *
-     * @param command 要验证的命令
+     * @param validator         用于验证命令的Validator实例
+     * @param validationEnabled 设置是否启用快速失败模式（如果禁用验证，validate方法将直接返回而不进行任何验证）
+     * @param failFast          设置是否启用快速失败模式（在快速失败模式下，发现第一个验证错误时就会抛出异常）
+     * @param command           要验证的命令
      * @throws ValidationException 如果验证失败
      */
-    @Override
-    public void validate(Command command) {
+    public void doValidate(Validator validator, boolean validationEnabled, boolean failFast, C command) {
         if (!validationEnabled) {
             return;
         }
@@ -83,6 +46,28 @@ public class DefaultCommandValidator implements CommandValidator {
                 // 收集所有错误
                 throw new ValidationException(buildValidationMessage(violations));
             }
+        }
+
+        // 自定义验证
+        validate(command);
+    }
+
+
+    /**
+     * 验证命令标识符
+     */
+    private void validateCommandIdentifier(C command) {
+        if (command.getCommandId() == null || command.getCommandId().trim().isEmpty()) {
+            throw new ValidationException("Command ID cannot be empty");
+        }
+    }
+
+    /**
+     * 验证时间戳
+     */
+    private void validateTimestamp(C command) {
+        if (command.getTimestamp() <= 0) {
+            throw new ValidationException("Command timestamp must be greater than 0");
         }
     }
 

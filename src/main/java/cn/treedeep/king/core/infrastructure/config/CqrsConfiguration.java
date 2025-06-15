@@ -1,7 +1,5 @@
 package cn.treedeep.king.core.infrastructure.config;
 
-import cn.treedeep.king.core.domain.validation.CommandValidator;
-import cn.treedeep.king.core.domain.validation.DefaultCommandValidator;
 import cn.treedeep.king.core.infrastructure.monitoring.CommandMetrics;
 import cn.treedeep.king.shared.properties.CqrsProperties;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -79,19 +77,6 @@ public class CqrsConfiguration {
         return executor;
     }
 
-    /**
-     * 配置命令验证器
-     *
-     * @param validator JSR-303验证器
-     * @return 配置好的命令验证器
-     */
-    @Bean
-    public CommandValidator commandValidator(Validator validator) {
-        DefaultCommandValidator commandValidator = new DefaultCommandValidator(validator);
-        commandValidator.setFailFast(properties.getValidation().isFailFast());
-        commandValidator.setValidationEnabled(properties.getValidation().isValidationEnabled());
-        return commandValidator;
-    }
 
     /**
      * 配置命令指标收集器

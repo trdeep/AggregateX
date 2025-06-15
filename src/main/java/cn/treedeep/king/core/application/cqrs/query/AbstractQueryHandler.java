@@ -1,6 +1,5 @@
 package cn.treedeep.king.core.application.cqrs.query;
 
-import cn.treedeep.king.core.application.cqrs.command.AbstractCommandHandler;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.GenericTypeResolver;

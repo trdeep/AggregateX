@@ -1,13 +1,17 @@
 package cn.treedeep.king.core.application.cqrs.command;
 
-import cn.treedeep.king.core.domain.validation.CommandValidator;
+import cn.treedeep.king.core.domain.validation.AbstractCommandValidator;
 import cn.treedeep.king.core.infrastructure.idempotency.CommandIdempotencyControl;
 import cn.treedeep.king.core.infrastructure.monitoring.CommandMetrics;
+import cn.treedeep.king.shared.properties.CqrsProperties;
+import jakarta.annotation.Resource;
+import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,25 +55,45 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class CommandBus {
 
+    @Resource
     private final Map<Class<? extends Command>, CommandHandler<?, ?>> handlers = new ConcurrentHashMap<>();
-    private final CommandValidator commandValidator;
     private final CommandMetrics commandMetrics;
     private final CommandIdempotencyControl idempotencyControl;
+
+    private final Validator validator;
+
+    /**
+     * 设置是否启用快速失败模式
+     * <p>
+     * 在快速失败模式下，发现第一个验证错误时就会抛出异常
+     */
+    private final boolean failFast;
+
+    /**
+     * 设置是否启用验证
+     * <p>
+     * 如果禁用验证，validate方法将直接返回而不进行任何验证
+     */
+    private final boolean validationEnabled;
+
+
+    @Resource
+    private Set<? extends AbstractCommandValidator> commandValidators;
 
     /**
      * 构造命令总线
      *
-     * @param commandValidator   命令验证器
      * @param commandMetrics     命令指标收集器
      * @param idempotencyControl 幂等性控制器
      */
-    public CommandBus(CommandValidator commandValidator,
-                      CommandMetrics commandMetrics,
-                      CommandIdempotencyControl idempotencyControl) {
-        this.commandValidator = commandValidator;
+    public CommandBus(CqrsProperties properties, Validator validator, CommandMetrics commandMetrics, CommandIdempotencyControl idempotencyControl) {
         this.commandMetrics = commandMetrics;
         this.idempotencyControl = idempotencyControl;
+        this.validator = validator;
+        this.failFast = properties.getValidation().isFailFast();
+        this.validationEnabled = properties.getValidation().isValidationEnabled();
     }
+
 
     /**
      * 注册命令处理器
@@ -108,7 +132,9 @@ public class CommandBus {
             }
 
             // 验证命令
-            commandValidator.validate(command);
+            commandValidators.stream()
+                    .filter(v -> v.getClass().getSimpleName().startsWith(command.getClass().getSimpleName()))
+                    .forEach(v -> v.doValidate(validator, validationEnabled, failFast, command));
 
             // 获取处理器
             CommandHandler<T, R> handler = (CommandHandler<T, R>) handlers.get(command.getClass());
