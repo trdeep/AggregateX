@@ -10,7 +10,7 @@ import org.hibernate.annotations.Comment;
 
 @Entity
 @Table(name = "say_hello_events")
-@Comment("XXX事件表")
+@Comment("SayHello事件表")
 @NoArgsConstructor
 @Getter
 public class SayHelloEvent extends DomainEvent {
