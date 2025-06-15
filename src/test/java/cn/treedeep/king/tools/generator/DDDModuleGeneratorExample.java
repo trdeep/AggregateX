@@ -1,10 +1,13 @@
 package cn.treedeep.king.tools.generator;
 
-import cn.treedeep.king.tools.DDDModuleGenerator;
-import cn.treedeep.king.tools.model.EntityInfo;
-import cn.treedeep.king.tools.model.ModuleInfo;
+import cn.treedeep.king.generator.DDDModuleGenerator;
+import cn.treedeep.king.generator.model.AggregateRoot;
+import cn.treedeep.king.generator.model.Entity;
+import cn.treedeep.king.generator.model.Module;
+import cn.treedeep.king.generator.model.ValueObject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * DDDModuleGenerator 新的使用方式示例
@@ -17,16 +20,36 @@ public class DDDModuleGeneratorExample {
     public static void main(String[] args) {
 
         // 工程信息
-        String path = "/Users/zhougm/vscode/KingCRM";
+        String path = "/Users/zhougm/vscode/KingAdmin";
         String packageName = "cn.treedeep.king1";
 
-        // 定义模块信息 - 使用 ModuleInfo 和 EntityInfo
+
+        // 定义带有属性的值对象
+        var phoneValueObject = ValueObject.create("Phone", "手机");
+        phoneValueObject.getProperties().add(Entity.property("phoneNumber", "手机号码"));
+        phoneValueObject.getProperties().add(Entity.property("countryCode", "国家代码"));
+
+        // 定义带有属性的实体
+        var loginRecordEntity = Entity.create("LoginRecord", "登录记录",
+                Entity.property("loginTime", "登录时间"),
+                Entity.property("ipAddress", "登录IP地址"),
+                Entity.property("deviceInfo", "登录设备信息"),
+                Entity.property("userId", "用户ID"));
+
+        // 定义模块信息
         var modules = List.of(
-                ModuleInfo.create("identity", "认证", List.of(
-                        new EntityInfo("User", "用户实体"),
-                        new EntityInfo("Role", "角色实体")
-                ))
+                Module.create("authentication", "认证",
+                        AggregateRoot.create("User", "用户聚合根",
+                                Entity.create("User", "用户实体",
+                                        Entity.property("username", "用户名"),
+                                        Entity.property("email", "邮箱")),
+                                Entity.create("Role", "角色实体"),
+                                phoneValueObject,
+                                loginRecordEntity
+                        )
+                )
         );
+
 
         try {
             DDDModuleGenerator generator = new DDDModuleGenerator();
