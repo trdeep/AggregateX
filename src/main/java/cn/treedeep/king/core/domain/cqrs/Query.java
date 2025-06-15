@@ -1,6 +1,7 @@
 package cn.treedeep.king.core.domain.cqrs;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * 查询基类
@@ -13,7 +14,7 @@ public abstract class Query implements Serializable {
     private final long timestamp;
 
     protected Query() {
-        this.queryId = java.util.UUID.randomUUID().toString();
+        this.queryId = UUID.randomUUID().toString();
         this.timestamp = System.currentTimeMillis();
     }
 

@@ -1,5 +1,6 @@
 package cn.treedeep.king.core.infrastructure.config;
 
+import cn.treedeep.king.core.domain.DomainEventPublisher;
 import cn.treedeep.king.core.domain.EventBus;
 import cn.treedeep.king.core.infrastructure.eventbus.SimpleEventBus;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class EventBusConfiguration {
      * 配置事件总线实现
      */
     @Bean
-    public EventBus eventBus(ThreadPoolTaskExecutor eventProcessingExecutor) {
+    public EventBus eventBus(ThreadPoolTaskExecutor eventProcessingExecutor, DomainEventPublisher domainEventPublisher) {
         log.info("Configuring event bus implementation: {}", properties.getType());
 
         log.info("Event bus configured with retry policy: max attempts={}, initial delay={}ms",
@@ -48,7 +49,7 @@ public class EventBusConfiguration {
         return switch (properties.getType().toLowerCase()) {
             case "simple" -> {
                 log.info("Using simple event bus implementation with {} mode", properties.isAsync() ? "async" : "sync");
-                yield new SimpleEventBus();
+                yield new SimpleEventBus(domainEventPublisher);
             }
             case "rabbitmq" -> {
                 log.info("Using RabbitMQ event bus implementation");

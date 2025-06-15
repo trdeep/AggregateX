@@ -113,11 +113,6 @@ public class CqrsProperties {
      * <p>
      * 配置命令和查询的验证行为参数
      */
-    /**
-     * 验证配置属性
-     * <p>
-     * 配置命令和查询的验证行为参数
-     */
     @Data
     public static class ValidationProperties {
         /**

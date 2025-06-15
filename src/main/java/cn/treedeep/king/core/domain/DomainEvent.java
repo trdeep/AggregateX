@@ -1,8 +1,10 @@
 package cn.treedeep.king.core.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
+import org.springframework.context.ApplicationEvent;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -16,8 +18,9 @@ import java.util.UUID;
 @Table(name = "domain_events")
 @Comment("领域事件表 - 请勿直接使用，而是继承自定义事件")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Data
-public abstract class DomainEvent {
+@Getter
+@Setter
+public abstract class DomainEvent extends ApplicationEvent {
 
     @Id
     @Comment("事件ID")
@@ -42,6 +45,13 @@ public abstract class DomainEvent {
 
 
     protected DomainEvent() {
+        super("DomainEvent");
+        this.eventId = UUID.randomUUID().toString();
+        this.occurredOn = OffsetDateTime.now();
+    }
+
+    protected DomainEvent(Object source) {
+        super(source);
         this.eventId = UUID.randomUUID().toString();
         this.occurredOn = OffsetDateTime.now();
     }
