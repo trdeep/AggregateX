@@ -42,7 +42,9 @@ public class QueryBus {
         QueryHandler<Query<R>, R> handler = (QueryHandler<Query<R>, R>) handlers.get(queryType);
 
         if (handler == null) {
-            throw new IllegalStateException("No handler registered for query type: " + queryType.getName());
+            IllegalStateException ex = new IllegalStateException("No handler registered for query type: " + queryType.getName());
+            future.completeExceptionally(ex);
+            throw ex;
         }
 
         return handler.handle(query, future);
