@@ -26,7 +26,10 @@ import java.io.Serializable;
  * <li>查询结果的对象组装</li>
  * </ul>
  */
-public class BeanUtil extends org.springframework.beans.BeanUtils {
+public final class BeanUtil extends org.springframework.beans.BeanUtils {
+    private BeanUtil() {
+        throw new IllegalStateException("工具类不允许实例化");
+    }
 
     public static <T extends Serializable> T deepCopy(T source) {
         return SerializationUtils.clone(source);

@@ -6,7 +6,10 @@ import org.springframework.util.FileCopyUtils;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class ResourceUtil {
+public final class ResourceUtil {
+    private ResourceUtil() {
+        throw new IllegalStateException("工具类不允许实例化");
+    }
 
     public static String readResource(String path) {
         try {

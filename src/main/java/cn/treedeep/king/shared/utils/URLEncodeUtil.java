@@ -4,7 +4,10 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-public class URLEncodeUtil {
+public final class URLEncodeUtil {
+    private URLEncodeUtil() {
+        throw new IllegalStateException("工具类不允许实例化");
+    }
 
     public static String encodeUtf8(String value) {
         if (value == null) {

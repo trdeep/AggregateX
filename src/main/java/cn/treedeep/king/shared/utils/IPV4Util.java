@@ -13,7 +13,10 @@ import java.util.List;
  * @author Rubin
  * @since 2025/1/26 20:42
  */
-public class IPV4Util {
+public final class IPV4Util {
+    private IPV4Util() {
+        throw new IllegalStateException("工具类不允许实例化");
+    }
 
     /**
      * 获取局域网IP地址

@@ -14,7 +14,10 @@ import java.util.Optional;
  * 提供基于Jackson库的JSON工具方法。
  */
 @Slf4j
-public class JsonUtil {
+public final class JsonUtil {
+    private JsonUtil() {
+        throw new IllegalStateException("工具类不允许实例化");
+    }
 
     private static final ObjectMapper objectMapper = SpringBeanUtil.getBean("defaultObjectMapper", ObjectMapper.class);
 

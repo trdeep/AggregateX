@@ -10,7 +10,10 @@ import java.time.format.DateTimeParseException;
  * 提供日期时间格式化、解析和时间戳转换的工具方法
  */
 @Slf4j
-public class DateTimeUtil {
+public final class DateTimeUtil {
+    private DateTimeUtil() {
+        throw new IllegalStateException("工具类不允许实例化");
+    }
 
     /**
      * 默认的日期时间格式化器，格式为 "yyyy-MM-dd HH:mm:ss"。

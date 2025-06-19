@@ -21,7 +21,10 @@ import java.util.regex.Pattern;
  * @since 2025-06-15
  */
 @Slf4j
-public class Json5Parser {
+public final class Json5Parser {
+    private Json5Parser() {
+        throw new IllegalStateException("工具类不允许实例化");
+    }
 
     // 匹配单行注释的正则表达式 (但不包括在字符串内的 //)
     private static final Pattern SINGLE_LINE_COMMENT = Pattern.compile(
