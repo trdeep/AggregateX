@@ -26,6 +26,7 @@ import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.sli
  * <li>领域服务与应用服务的职责分离</li>
  * <li>事件驱动架构的规范性</li>
  * <li>表现层设计原则和约束</li>
+ * <li>防腐层模式的正确实现</li>
  * <li>包依赖关系和循环依赖检测</li>
  * </ul>
  * <p>
@@ -81,6 +82,10 @@ public final class ArchitectureValidator {
         return properties.getLayers().getShared();
     }
 
+    private String getAntiCorruptionLayer() {
+        return properties.getLayers().getAntiCorruption();
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void validateArchitecture() {
         if (!properties.isEnabled()) {
@@ -102,6 +107,7 @@ public final class ArchitectureValidator {
             validateInfrastructureLayer(importedClasses);
             validateInterfacesLayer(importedClasses);
             validatePresentationLayer(importedClasses);
+            validateAntiCorruptionLayer(importedClasses);
             validatePackageDependencies(importedClasses);
             validateNamingConventions(importedClasses);
 
@@ -160,12 +166,19 @@ public final class ArchitectureValidator {
 
         // 验证表现层设计原则
         validatePresentationDesignPatterns(classes);
+
+        // 验证防腐层设计原则
+        validateAntiCorruptionLayerPrinciples(classes);
     }
 
     /**
      * 验证聚合根设计原则
      */
     private void validateAggregateRootPrinciples(JavaClasses classes) {
+        if (properties.isVerboseLogging()) {
+            log.debug("🎯 验证聚合根设计原则...");
+        }
+
         // 聚合根应该在领域层
         classes().that().haveNameMatching(".*Aggregate.*")
                 .and().resideInAPackage(getDomainLayer())
@@ -179,6 +192,10 @@ public final class ArchitectureValidator {
      * 验证领域服务设计原则
      */
     private void validateDomainServicePrinciples(JavaClasses classes) {
+        if (properties.isVerboseLogging()) {
+            log.debug("⚙️ 验证领域服务设计原则...");
+        }
+
         // 领域服务应该在领域层的service包中
         classes().that().haveNameMatching(".*DomainService")
                 .and().resideInAPackage("..domain..service..")
@@ -234,7 +251,8 @@ public final class ArchitectureValidator {
         }
 
         // 领域事件应该在领域层定义
-        classes().that().haveNameMatching(".*Event")
+        classes().that().haveNameMatching(".*DomainEvent")
+                .or().haveNameMatching(".*Event")
                 .and().resideInAPackage(getDomainLayer())
                 .should().resideInAPackage(getDomainLayer())
                 .because("领域事件应该定义在领域层")
@@ -266,7 +284,8 @@ public final class ArchitectureValidator {
                 .check(classes);
 
         // 所有领域事件必须继承DomainEvent
-        classes().that().haveNameMatching(".*Event")
+        classes().that().haveNameMatching(".*DomainEvent")
+                .or().haveNameMatching(".*Event")
                 .and().resideInAPackage(getDomainLayer())
                 .and().areNotInterfaces()
                 .should().beAssignableTo("cn.treedeep.king.core.domain.DomainEvent")
@@ -319,7 +338,8 @@ public final class ArchitectureValidator {
 
         // 值对象应该在领域层定义
         classes().that().haveNameMatching(".*Value")
-                .or().haveNameMatching(".*VO")
+                .or().haveNameMatching(".*ValueObject")
+                .or().haveNameMatching(".*DomainVO")
                 .or().areAnnotatedWith("jakarta.persistence.Embeddable")
                 .should().resideInAPackage(getDomainLayer())
                 .because("值对象应该定义在领域层")
@@ -380,11 +400,12 @@ public final class ArchitectureValidator {
 
         // 验证Web API的DTO命名规范
         classes().that().resideInAPackage(getPresentationLayer())
-                .and().haveNameMatching(".*DTO")
-                .or().haveNameMatching(".*Request")
+                .and().haveNameMatching(".*Request")
                 .or().haveNameMatching(".*Response")
                 .or().haveNameMatching(".*ViewModel")
-                .or().haveNameMatching(".*VO")
+                .or().haveNameMatching(".*WebDTO")
+                .or().haveNameMatching(".*PresentationDTO")
+                .or().haveNameMatching(".*Form")
                 .should().resideInAPackage(getPresentationLayer())
                 .because("Web API的数据传输对象应该在表现层定义")
                 .allowEmptyShould(true)
@@ -409,6 +430,61 @@ public final class ArchitectureValidator {
                 .check(classes);
     }
 
+    /**
+     * 验证防腐层设计原则
+     */
+    private void validateAntiCorruptionLayerPrinciples(JavaClasses classes) {
+        if (properties.isVerboseLogging()) {
+            log.debug("🛡️ 验证防腐层设计原则...");
+        }
+
+        // 防腐层适配器应该实现依赖倒置原则
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Adapter")
+                .and().areNotInterfaces()
+                .should().beAssignableTo("Adapter")
+                .orShould().haveSimpleNameEndingWith("Adapter")
+                .because("防腐层适配器应该遵循适配器模式")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层转换器应该遵循命名规范
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Translator")
+                .or().haveNameMatching(".*Converter")
+                .should().haveSimpleNameEndingWith("Translator")
+                .orShould().haveSimpleNameEndingWith("Converter")
+                .because("防腐层转换器应该遵循命名规范")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层组件应该处理外部系统调用
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().areNotInterfaces()
+                .should().accessClassesThat().haveNameMatching(".*Client")
+                .orShould().accessClassesThat().haveNameMatching(".*Api")
+                .because("防腐层应该处理外部系统调用")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层网关应该封装外部API调用
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Gateway")
+                .and().areNotInterfaces()
+                .should().accessClassesThat().haveNameMatching(".*Client")
+                .orShould().accessClassesThat().haveNameMatching(".*Api")
+                .because("防腐层网关应该封装外部API调用")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层不应该暴露外部技术细节到领域层
+        noClasses().that().resideInAPackage(getDomainLayer())
+                .should().dependOnClassesThat().resideInAPackage("..external..")
+                .because("领域层不应该依赖外部技术细节，应通过防腐层隔离")
+                .allowEmptyShould(true)
+                .check(classes);
+    }
+
 
     /**
      * 定义基于DDD的分层架构规则
@@ -422,6 +498,7 @@ public final class ArchitectureValidator {
      *   <li><b>Infrastructure</b> - 基础设施层（数据库、消息队列等技术支持）</li>
      *   <li><b>Interfaces</b> - 接口层（系统对外交互，含API/消息监听等）</li>
      *   <li><b>Presentation</b> - 展现层（用户交互，如Controller/DTO转换）</li>
+     *   <li><b>AntiCorruption</b> - 防腐层（隔离外部系统，防止外部模型污染）</li>
      *   <li><b>Shared</b> - 共享层（通用工具类/常量）</li>
      * </ul>
      *
@@ -429,8 +506,9 @@ public final class ArchitectureValidator {
      * <ol>
      *   <li>展现层(Presentation)只能访问：应用层(Application)、共享层(Shared)</li>
      *   <li>接口层(Interfaces)只能访问：应用层、展现层、共享层</li>
-     *   <li>应用层(Application)只能访问：领域层(Domain)、共享层</li>
+     *   <li>应用层(Application)只能访问：领域层(Domain)、共享层、防腐层(AntiCorruption)</li>
      *   <li>领域层(Domain)只能访问：共享层（禁止依赖技术实现）</li>
+     *   <li>防腐层(AntiCorruption)只能访问：领域层、共享层</li>
      *   <li>基础设施层(Infrastructure)可被所有层访问（通过依赖倒置）</li>
      * </ol>
      *
@@ -463,13 +541,15 @@ public final class ArchitectureValidator {
                 .layer("Interfaces").definedBy(getInterfacesLayer())
                 .layer("Presentation").definedBy(getPresentationLayer())
                 .layer("Shared").definedBy(getSharedLayer())
+                .layer("AntiCorruption").definedBy(getAntiCorruptionLayer())
 
                 // 依赖约束规则
                 .whereLayer("Presentation").mayOnlyAccessLayers("Application", "Shared")
                 .whereLayer("Interfaces").mayOnlyAccessLayers("Application", "Presentation", "Shared")
-                .whereLayer("Application").mayOnlyAccessLayers("Domain", "Shared")
+                .whereLayer("Application").mayOnlyAccessLayers("Domain", "Shared", "AntiCorruption")
                 .whereLayer("Domain").mayOnlyAccessLayers("Shared")
-                .whereLayer("Infrastructure").mayOnlyBeAccessedByLayers("Domain", "Application", "Interfaces", "Presentation", "Shared")
+                .whereLayer("AntiCorruption").mayOnlyAccessLayers("Domain", "Shared")
+                .whereLayer("Infrastructure").mayOnlyBeAccessedByLayers("Domain", "Application", "Interfaces", "Presentation", "Shared", "AntiCorruption")
                 .allowEmptyShould(true);
 
         layeredArchitectureRule.check(classes);
@@ -531,15 +611,15 @@ public final class ArchitectureValidator {
         }
 
 
-        // Web API的DTO在应用层定义
+        // 应用层命令和查询DTO应该在应用层定义
         classes().that().resideInAPackage(getApplicationLayer())
-                .or().haveNameMatching(".*DTO")
-                .or().haveNameMatching(".*Dto")
-                .or().haveNameMatching(".*VO")
-                .or().haveNameMatching(".*Vo")
+                .and().haveNameMatching(".*Command")
+                .or().haveNameMatching(".*Query")
+                .or().haveNameMatching(".*AppDTO")
+                .or().haveNameMatching(".*ApplicationDTO")
                 .or().haveNameMatching(".*Result")
                 .should().resideInAPackage(getApplicationLayer())
-                .because("Web API的数据传输对象应该在应用层定义")
+                .because("应用层的Command、Query和结果DTO应该在应用层定义")
                 .allowEmptyShould(true)
                 .check(classes);
 
@@ -610,22 +690,34 @@ public final class ArchitectureValidator {
                 .allowEmptyShould(true)
                 .check(classes);
 
-        // 外部系统集成接口应该在接口层
+        // 协议集成组件应该在接口层（纯协议转换，不涉及外部系统防腐）
         classes().that().haveNameMatching(".*Integration")
-                .or().haveNameMatching(".*Gateway")
-                .or().haveNameMatching(".*Adapter")
-                .or().haveNameMatching(".*ExternalService")
+                .and().areNotInnerClasses()
+                .and().resideInAPackage("..interfaces..")
                 .should().resideInAPackage(getInterfacesLayer())
-                .because("外部系统集成接口应该在接口层")
+                .because("协议集成组件应该在接口层")
                 .allowEmptyShould(true)
                 .check(classes);
 
-        // 系统间通信的DTO应该在接口层，接口层可以访问表现层
+        // API客户端应该在接口层
+        classes().that().haveNameMatching(".*ApiClient")
+                .or().haveNameMatching(".*RemoteClient")
+                .should().resideInAPackage(getInterfacesLayer())
+                .because("API客户端应该在接口层")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 系统间通信的DTO应该在接口层
         classes().that().resideInAPackage(getInterfacesLayer())
-                .and().haveNameMatching(".*IMessage")
-                .or().haveNameMatching(".*IEvent")
-                .or().haveNameMatching(".*ICommand")
-                .or().haveNameMatching(".*IQuery")
+                .and().haveNameMatching(".*Message")
+                .or().haveNameMatching(".*IntegrationEvent")
+                .or().haveNameMatching(".*ExternalEvent")
+                .or().haveNameMatching(".*RemoteCommand")
+                .or().haveNameMatching(".*RemoteQuery")
+                .or().haveNameMatching(".*IntegrationDTO")
+                .or().haveNameMatching(".*ExternalDTO")
+                .or().haveNameMatching(".*ApiRequest")
+                .or().haveNameMatching(".*ApiResponse")
                 .should().resideInAPackage(getInterfacesLayer())
                 .because("系统间通信的DTO应该在接口层")
                 .allowEmptyShould(true)
@@ -652,6 +744,7 @@ public final class ArchitectureValidator {
         classes().that().areAnnotatedWith("org.springframework.stereotype.Controller")
                 .or().areAnnotatedWith("org.springframework.web.bind.annotation.RestController")
                 .should().resideInAPackage(getPresentationLayer())
+                .orShould().resideInAPackage(getInterfacesLayer())
                 .because("Web控制器应该在表现层")
                 .allowEmptyShould(true)
                 .check(classes);
@@ -662,6 +755,8 @@ public final class ArchitectureValidator {
                 .or().haveNameMatching(".*Response")
                 .or().haveNameMatching(".*ViewModel")
                 .or().haveNameMatching(".*Form")
+                .or().haveNameMatching(".*WebDTO")
+                .or().haveNameMatching(".*PresentationDTO")
                 .should().resideInAPackage(getPresentationLayer())
                 .because("Web API特定的数据传输对象应该在表现层定义")
                 .allowEmptyShould(true)
@@ -737,6 +832,155 @@ public final class ArchitectureValidator {
     }
 
     /**
+     * 校验防腐层约束
+     */
+    private void validateAntiCorruptionLayer(JavaClasses classes) {
+        if (properties.isVerboseLogging()) {
+            log.debug("🛡️ 校验防腐层约束...");
+        }
+
+        // 防腐层应该在基础设施层的acl包中
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .should().resideInAPackage("..infrastructure..acl..")
+                .because("防腐层应该在基础设施层的acl包中")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层适配器应该遵循命名约定
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Adapter")
+                .should().haveSimpleNameEndingWith("Adapter")
+                .because("防腐层适配器应该以Adapter结尾")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层转换器应该遵循命名约定
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Translator")
+                .should().haveSimpleNameEndingWith("Translator")
+                .orShould().haveSimpleNameEndingWith("Converter")
+                .because("防腐层转换器应该以Translator或Converter结尾")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层网关应该遵循命名约定
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Gateway")
+                .should().haveSimpleNameEndingWith("Gateway")
+                .because("防腐层网关应该以Gateway结尾")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层客户端应该遵循命名约定
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Client")
+                .should().haveSimpleNameEndingWith("Client")
+                .orShould().haveSimpleNameEndingWith("Service")
+                .because("防腐层客户端应该以Client或Service结尾")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层组件不应该直接暴露外部模型给领域层
+        noClasses().that().resideInAPackage(getAntiCorruptionLayer())
+                .should().dependOnClassesThat().resideInAPackage("..domain..")
+                .andShould().haveNameMatching(".*External.*")
+                .because("防腐层不应该将外部模型暴露给领域层")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层实现应该使用Spring注解
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().areNotInterfaces()
+                .and().areNotEnums()
+                .and().haveNameMatching(".*Impl")
+                .should().beAnnotatedWith("org.springframework.stereotype.Component")
+                .orShould().beAnnotatedWith("org.springframework.stereotype.Service")
+                .because("防腐层实现类应该使用@Component或@Service注解")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层接口应该在领域层定义
+        classes().that().areInterfaces()
+                .and().haveNameMatching(".*Gateway")
+                .or().haveNameMatching(".*ExternalService")
+                .or().haveNameMatching(".*ThirdPartyService")
+                .should().resideInAPackage(getDomainLayer())
+                .because("防腐层接口应该定义在领域层，实现在基础设施层")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层不应该让外部异常泄露到领域层
+        noClasses().that().resideInAPackage(getAntiCorruptionLayer())
+                .should().dependOnClassesThat().haveNameMatching(".*Exception")
+                .andShould().dependOnClassesThat().resideInAPackage("..external..")
+                .because("防腐层应该转换外部异常，不能让其泄露到领域层")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 验证外部系统集成组件在防腐层（涉及外部系统的防腐处理）
+        classes().that().haveNameMatching(".*Integration")
+                .and().resideInAPackage("..acl..")
+                .or().haveNameMatching(".*ExternalApi")
+                .or().haveNameMatching(".*ThirdParty.*")
+                .should().resideInAPackage(getAntiCorruptionLayer())
+                .because("外部系统集成组件应该在防腐层")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层专有组件验证
+        classes().that().haveNameMatching(".*Gateway")
+                .or().haveNameMatching(".*Adapter")
+                .or().haveNameMatching(".*ExternalService")
+                .or().haveNameMatching(".*ThirdPartyService")
+                .should().resideInAPackage(getAntiCorruptionLayer())
+                .because("Gateway、Adapter、ExternalService等组件应该在防腐层")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层数据传输对象应该独立于外部模型
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*ExternalDTO")
+                .or().haveNameMatching(".*ThirdPartyDTO")
+                .or().haveNameMatching(".*AdapterDTO")
+                .or().haveNameMatching(".*GatewayDTO")
+                .or().haveNameMatching(".*ExternalData")
+                .should().resideInAPackage(getAntiCorruptionLayer())
+                .because("防腐层外部数据传输对象应该在防腐层内部定义")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层配置应该集中管理
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Config")
+                .or().haveNameMatching(".*Configuration")
+                .should().beAnnotatedWith("org.springframework.context.annotation.Configuration")
+                .because("防腐层配置类应该使用@Configuration注解")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层不应该直接依赖应用层
+        noClasses().that().resideInAPackage(getAntiCorruptionLayer())
+                .should().dependOnClassesThat().resideInAPackage(getApplicationLayer())
+                .because("防腐层不应该直接依赖应用层")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层不应该直接依赖表现层
+        noClasses().that().resideInAPackage(getAntiCorruptionLayer())
+                .should().dependOnClassesThat().resideInAPackage(getPresentationLayer())
+                .because("防腐层不应该直接依赖表现层")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层不应该直接依赖接口层
+        noClasses().that().resideInAPackage(getAntiCorruptionLayer())
+                .should().dependOnClassesThat().resideInAPackage(getInterfacesLayer())
+                .because("防腐层不应该直接依赖接口层")
+                .allowEmptyShould(true)
+                .check(classes);
+    }
+
+    /**
      * 校验包依赖关系 - 避免循环依赖
      */
     private void validatePackageDependencies(JavaClasses classes) {
@@ -753,6 +997,17 @@ public final class ArchitectureValidator {
 
     /**
      * 校验命名约定
+     * <p>
+     * <b>DTO分层命名约定说明：</b>
+     * <ul>
+     *   <li><b>领域层</b>：*Value、*ValueObject、*DomainVO、*Event、*DomainEvent - 领域值对象和领域事件</li>
+     *   <li><b>应用层</b>：*Command、*Query、*AppDTO、*ApplicationDTO、*Result - 应用层业务对象</li>
+     *   <li><b>表现层</b>：*Request、*Response、*ViewModel、*Form、*WebDTO、*PresentationDTO - Web API数据传输</li>
+     *   <li><b>接口层</b>：*Message、*IntegrationEvent、*ExternalEvent、*RemoteCommand、*RemoteQuery、*IntegrationDTO、*ExternalDTO、*ApiRequest、*ApiResponse - 系统间通信</li>
+     *   <li><b>防腐层</b>：*ExternalDTO、*ThirdPartyDTO、*AdapterDTO、*GatewayDTO、*ExternalData - 外部系统数据转换</li>
+     * </ul>
+     * <p>
+     * 这种命名约定避免了不同层级间的冲突，确保了架构的清晰性。
      */
     private void validateNamingConventions(JavaClasses classes) {
         if (properties.isVerboseLogging()) {
@@ -820,6 +1075,53 @@ public final class ArchitectureValidator {
                 .should().haveSimpleNameEndingWith("ViewModel")
                 .orShould().haveSimpleNameEndingWith("VM")
                 .because("视图模型应该以ViewModel或VM结尾")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层组件命名约定
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Adapter")
+                .should().haveSimpleNameEndingWith("Adapter")
+                .because("防腐层适配器应该以Adapter结尾")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Gateway")
+                .should().haveSimpleNameEndingWith("Gateway")
+                .because("防腐层网关应该以Gateway结尾")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Translator")
+                .or().haveNameMatching(".*Converter")
+                .should().haveSimpleNameEndingWith("Translator")
+                .orShould().haveSimpleNameEndingWith("Converter")
+                .because("防腐层转换器应该以Translator或Converter结尾")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Facade")
+                .should().haveSimpleNameEndingWith("Facade")
+                .because("防腐层外观应该以Facade结尾")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 接口层组件命名约定
+        classes().that().resideInAPackage(getInterfacesLayer())
+                .and().haveNameMatching(".*Integration")
+                .should().haveSimpleNameEndingWith("Integration")
+                .because("接口层集成组件应该以Integration结尾")
+                .allowEmptyShould(true)
+                .check(classes);
+
+        // 防腐层集成组件命名约定
+        classes().that().resideInAPackage(getAntiCorruptionLayer())
+                .and().haveNameMatching(".*Integration")
+                .should().haveSimpleNameEndingWith("Integration")
+                .because("防腐层集成组件应该以Integration结尾")
                 .allowEmptyShould(true)
                 .check(classes);
     }

@@ -139,6 +139,7 @@ public class DDDModuleGenerator {
     private void createModuleDirectories(Path modulePath) throws IOException {
         // 领域层目录
         Files.createDirectories(modulePath.resolve("domain"));
+        // Files.createDirectories(modulePath.resolve("domain/dto"));
         Files.createDirectories(modulePath.resolve("domain/event"));
         Files.createDirectories(modulePath.resolve("domain/service"));
         Files.createDirectories(modulePath.resolve("domain/repository"));
@@ -156,6 +157,7 @@ public class DDDModuleGenerator {
         // 基础设施层目录
         Files.createDirectories(modulePath.resolve("infrastructure"));
         Files.createDirectories(modulePath.resolve("infrastructure/acl"));
+        // Files.createDirectories(modulePath.resolve("infrastructure/acl/dto"));
         Files.createDirectories(modulePath.resolve("infrastructure/repository"));
         Files.createDirectories(modulePath.resolve("infrastructure/service"));
 

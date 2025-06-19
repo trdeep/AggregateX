@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "app.architecture.validation")
+@ConfigurationProperties(prefix = "app.ddd.validation")
 public class ArchitectureValidationProperties {
 
     /**
@@ -123,5 +123,10 @@ public class ArchitectureValidationProperties {
          * 共享层包模式
          */
         public final String shared = "..shared..";
+
+        /**
+         * 防腐层包模式
+         */
+        private final String antiCorruption = "..acl..";
     }
 }

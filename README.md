@@ -17,6 +17,7 @@ AggregateX 是一个基于领域驱动设计（DDD）原则构建的 Java 框架
 - **应用层**: 命令/查询处理、应用服务
 - **基础设施层**: 仓储实现、外部服务集成
 - **表现层**: REST API控制器
+- **防腐层**: 外部系统隔离、模型转换
 
 ### CQRS & 事件溯源
 
@@ -104,6 +105,7 @@ generator.generateFromJsonConfig("user-module.json5", "/path/to/project",
 
 - 分层依赖关系验证
 - 聚合根设计原则检查
+- 防腐层模式验证
 - 命名约定验证
 
 ### 监控指标
