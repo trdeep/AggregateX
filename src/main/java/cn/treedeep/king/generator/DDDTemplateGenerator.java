@@ -95,6 +95,7 @@ public class DDDTemplateGenerator {
         generatePackageInfo("domain");
         generatePackageInfo("domain/service");
         generatePackageInfo("infrastructure");
+        generatePackageInfo("infrastructure/acl");
         generatePackageInfo("infrastructure/service");
         generatePackageInfo("interfaces");
         generatePackageInfo("presentation");

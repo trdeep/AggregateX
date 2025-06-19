@@ -155,6 +155,7 @@ public class DDDModuleGenerator {
 
         // 基础设施层目录
         Files.createDirectories(modulePath.resolve("infrastructure"));
+        Files.createDirectories(modulePath.resolve("infrastructure/acl"));
         Files.createDirectories(modulePath.resolve("infrastructure/repository"));
         Files.createDirectories(modulePath.resolve("infrastructure/service"));
 
