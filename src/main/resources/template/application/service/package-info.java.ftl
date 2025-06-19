@@ -30,13 +30,14 @@
  *     <td><b>典型操作</b></td>
  *     <td>
  *       <pre>
+    {@code
  * @Transactional
  * public OrderResult placeOrder(OrderCommand cmd) {
  *   // 1. 校验库存（调用领域服务）
  *   // 2. 创建订单聚合
  *   // 3. 支付处理（跨聚合协调）
  *   // 4. 发布OrderPlacedEvent
- * }</pre>
+ * }}</pre>
  *     </td>
  *   </tr>
  *   <tr>

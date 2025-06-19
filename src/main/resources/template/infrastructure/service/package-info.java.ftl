@@ -48,9 +48,9 @@
  *
  * <h5>服务类型：</h5>
  * <ul>
- *   <li><b>适配器服务：</h5>实现领域接口（如：SmsServiceAdapter）</li>
- *   <li><b>技术工具服务：</h5>提供通用技术能力（如：EncryptionService）</li>
- *   <li><b>第三方集成服务：</h5>封装外部系统调用（如：PaymentGatewayService）</li>
+ *   <li><h5>适配器服务：</h5>实现领域接口（如：SmsServiceAdapter）</li>
+ *   <li><h5>技术工具服务：</h5>提供通用技术能力（如：EncryptionService）</li>
+ *   <li><h5>第三方集成服务：</h5>封装外部系统调用（如：PaymentGatewayService）</li>
  * </ul>
  *
  * @see ${packageName}.${moduleNameLower}.domain 领域模型层
