@@ -12,6 +12,11 @@ public abstract class Query<T> extends cn.treedeep.king.core.domain.cqrs.Query {
     @Override
     @SuppressWarnings("unchecked")
     public Class<T> getResultType() {
-        return (Class<T>) getClass();
+        return (Class<T>) this.getClass();
+    }
+
+    @Override
+    public  String getQueryName(){
+        return this.getClass().getSimpleName();
     }
 }

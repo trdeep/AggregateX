@@ -5,6 +5,7 @@ import cn.treedeep.king.core.domain.AggregateRoot;
 import cn.treedeep.king.core.domain.DomainEvent;
 import cn.treedeep.king.core.domain.EventBus;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.jmolecules.ddd.types.Identifier;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,26 +24,20 @@ import java.util.concurrent.CompletableFuture;
  * 3. 保存聚合根状态<br>
  * 4. 发布领域事件
  *
- * @param <C> 命令类型，必须继承Command
- * @param <A> 聚合根类型，必须继承AggregateRoot
+ * @param <C>  命令类型，必须继承Command
+ * @param <A>  聚合根类型，必须继承AggregateRoot
+ * @param <AR> 聚合根仓储类型，必须继承AggregateRepository
+ * @param <R>  返回结果类型
  */
+@Slf4j
 @Getter
-public abstract class AbstractCommandHandler<C extends Command,
-        A extends AggregateRoot<? extends Identifier>,
+public abstract class AbstractCommandHandler<C extends Command, A extends AggregateRoot<? extends Identifier>,
         AR extends AggregateRepository<A, ? extends Identifier>, R> implements CommandHandler<C, R> {
-
     private final Class<C> commandType;
     protected final AR aggregateRepository;
     protected final EventBus eventBus;
     protected final CommandBus commandBus;
 
-    /**
-     * 构造函数
-     *
-     * @param repository 聚合根仓储
-     * @param eventBus   事件总线
-     * @param commandBus 命令总线
-     */
     @SuppressWarnings("unchecked")
     protected AbstractCommandHandler(AR repository, EventBus eventBus, CommandBus commandBus) {
         this.aggregateRepository = repository;
@@ -62,6 +57,7 @@ public abstract class AbstractCommandHandler<C extends Command,
         A aggregate = doHandle(command, future);
 
         if (aggregate == null) {
+            log.warn("Aggregate not found - Type: {}, ID: {}", command.getClass().getSimpleName(), command.getAggregateId());
             return;
         }
 

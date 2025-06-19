@@ -46,10 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <pre>
  * {@code
  * // 执行命令
- * commandBus.execute(new CreateOrderCommand(customerId, items));
- *
- * // 异步执行命令
- * CompletableFuture<Void> future = commandBus.executeAsync(command);
+ * commandBus.dispatch(new CreateOrderCommand(customerId, items));
  * }
  * </pre>
  */
