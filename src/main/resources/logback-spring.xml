@@ -5,10 +5,12 @@
 
     <!-- 日志文件存储路径 -->
     <springProperty scope="context" name="LOG_HOME" source="logback.path" defaultValue=".king/logs"/>
+    <!-- 项目名称配置 -->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="AggregateX"/>
     <contextName>log</contextName>
 
-    <!-- 控制台输出 -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- 开发环境控制台输出 -->
+    <appender name="CONSOLE_DEV" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
         </filter>
@@ -18,19 +20,62 @@
         </encoder>
     </appender>
 
+    <!-- 默认控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
     <!-- 通用文件输出配置 -->
     <property name="FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{56}.%method:%L - %msg%n"/>
-    <property name="MAX_FILE_SIZE" value="10MB"/>
-    <property name="MAX_HISTORY" value="30"/>
+    <!-- 单个日志文件最大大小 -->
+    <property name="MAX_FILE_SIZE" value="50MB"/>
+    <!-- 日志文件保留天数 -->
+    <property name="MAX_HISTORY" value="90"/>
+    <!-- 所有日志文件总大小限制 -->
+    <property name="TOTAL_SIZE_CAP" value="10GB"/>
+    <!-- 压缩配置 -->
+    <property name="COMPRESSION_MODE" value="gz"/>
+
+    <!-- DEBUG级别日志 -->
+    <appender name="FILE_DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}-debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 压缩归档文件命名：自动添加.gz后缀进行压缩 -->
+            <fileNamePattern>${LOG_HOME}/archived/${APP_NAME}-debug.%d{yyyy-MM-dd}.%i.log.${COMPRESSION_MODE}</fileNamePattern>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+            <!-- 启动时清理过期日志 -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
 
     <!-- INFO级别日志 -->
     <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/info.log</file>
+        <file>${LOG_HOME}/${APP_NAME}-info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 压缩归档文件命名：自动添加.gz后缀进行压缩 -->
+            <fileNamePattern>${LOG_HOME}/archived/${APP_NAME}-info.%d{yyyy-MM-dd}.%i.log.${COMPRESSION_MODE}</fileNamePattern>
             <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
             <maxHistory>${MAX_HISTORY}</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+            <!-- 启动时清理过期日志 -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
         <encoder>
             <pattern>${FILE_PATTERN}</pattern>
@@ -45,12 +90,15 @@
 
     <!-- WARN级别日志 -->
     <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/warn.log</file>
+        <file>${LOG_HOME}/${APP_NAME}-warn.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 压缩归档文件命名：自动添加.gz后缀进行压缩 -->
+            <fileNamePattern>${LOG_HOME}/archived/${APP_NAME}-warn.%d{yyyy-MM-dd}.%i.log.${COMPRESSION_MODE}</fileNamePattern>
             <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
             <maxHistory>${MAX_HISTORY}</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+            <!-- 启动时清理过期日志 -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
         <encoder>
             <pattern>${FILE_PATTERN}</pattern>
@@ -65,12 +113,15 @@
 
     <!-- ERROR级别日志 -->
     <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/error.log</file>
+        <file>${LOG_HOME}/${APP_NAME}-error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 压缩归档文件命名：自动添加.gz后缀进行压缩 -->
+            <fileNamePattern>${LOG_HOME}/archived/${APP_NAME}-error.%d{yyyy-MM-dd}.%i.log.${COMPRESSION_MODE}</fileNamePattern>
             <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
             <maxHistory>${MAX_HISTORY}</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+            <!-- 启动时清理过期日志 -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
         <encoder>
             <pattern>${FILE_PATTERN}</pattern>
@@ -83,26 +134,44 @@
         </filter>
     </appender>
 
-    <!-- 默认配置（当没有激活任何profile时使用） -->
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE_INFO"/>
-        <appender-ref ref="FILE_WARN"/>
-        <appender-ref ref="FILE_ERROR"/>
-    </root>
+    <!-- 默认配置：非开发环境使用完整的日志输出 -->
+    <springProfile name="!dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE_INFO"/>
+            <appender-ref ref="FILE_WARN"/>
+            <appender-ref ref="FILE_ERROR"/>
+            <appender-ref ref="FILE_DEBUG"/>
+        </root>
+    </springProfile>
 
     <!-- 开发环境配置 -->
     <springProfile name="dev">
-        <logger name="com.baomidou.mybatisplus" level="DEBUG"/>
-        <logger name="com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor" level="WARN"/>
-        <logger name="org.apache.ibatis" level="DEBUG"/>
-        <logger name="com.ulisesbocchio.jasyptspringboot" level="WARN"/>
-        <logger name="cn.treedeep.king" level="DEBUG"/>
+        <!-- 开发环境只使用控制台输出，不产生文件 -->
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </root>
+        <!-- 只有以下指定的包才输出DEBUG级别日志，使用additivity="false"避免重复输出 -->
+        <logger name="com.baomidou.mybatisplus" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </logger>
+        <logger name="com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor" level="WARN" additivity="false">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </logger>
+        <logger name="org.apache.ibatis" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </logger>
+        <logger name="com.ulisesbocchio.jasyptspringboot" level="WARN" additivity="false">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </logger>
+        <logger name="cn.treedeep.king" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </logger>
     </springProfile>
 
     <!-- 生产环境配置 -->
     <springProfile name="prod">
+        <!-- 生产环境继承非开发环境的配置，只需要添加特定的logger设置 -->
         <logger name="cn.treedeep.king" level="INFO"/>
     </springProfile>
 </configuration>
-
