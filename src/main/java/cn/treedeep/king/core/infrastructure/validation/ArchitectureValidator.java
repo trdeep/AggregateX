@@ -111,6 +111,7 @@ public final class ArchitectureValidator {
             validatePackageDependencies(importedClasses);
             validateNamingConventions(importedClasses);
 
+            System.out.println();
             log.info("✅ DDD架构校验通过 - 代码结构符合领域驱动设计规范");
         } catch (Exception e) {
             log.error("❌ DDD架构校验失败: {}", e.getMessage());
@@ -143,6 +144,7 @@ public final class ArchitectureValidator {
      */
     private void validateDomainDrivenDesignPrinciples(JavaClasses classes) {
         if (properties.isVerboseLogging()) {
+            System.out.println();
             log.debug("🎯 校验DDD核心设计原则...");
         }
 
@@ -176,7 +178,7 @@ public final class ArchitectureValidator {
      */
     private void validateAggregateRootPrinciples(JavaClasses classes) {
         if (properties.isVerboseLogging()) {
-            log.debug("🎯 验证聚合根设计原则...");
+            log.debug("🏛️ 验证聚合根设计原则...");
         }
 
         // 聚合根应该在领域层

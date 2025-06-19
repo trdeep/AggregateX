@@ -52,7 +52,7 @@ public class ArchitectureValidationProperties {
     /**
      * 是否启用详细日志
      */
-    private boolean verboseLogging = false;
+    private boolean verboseLogging = true;
 
     /**
      * 日志是否显示忽略的类文件
